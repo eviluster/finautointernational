@@ -1,3 +1,173 @@
+<script lang="ts">
+import { defineComponent, ref, onMounted, computed } from "vue";
+import Datatable from "@/components/kt-datatable/KTDataTable.vue";
+import ExportCustomerModal from "@/components/modals/forms/otros/ExportCustomerModal.vue";
+import AddLocalidadModal from "@/components/modals/forms/AddLocalidadModal.vue";
+import EditLocalidadModal from "@/components/modals/forms/EditLocalidadModal.vue";
+import api from "@/services/api";
+import { useLocalidadStore } from "@/stores/localidad";
+import arraySort from "array-sort";
+import { MenuComponent } from "@/assets/ts/components";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+
+export default defineComponent({
+  name: "CustomersListing",
+  components: {
+    Datatable,
+    ExportCustomerModal,
+    AddLocalidadModal,
+    EditLocalidadModal,
+  },
+  setup() {
+    const tableHeader = ref([
+      {
+        columnName: "Nombre",
+        columnLabel: "name",
+        sortEnabled: true,
+        columnWidth: 250,
+      },
+      {
+        columnName: "Descripcion",
+        columnLabel: "description",
+        sortEnabled: true,
+        columnWidth: 230,
+      },
+      {
+        columnName: "Actions",
+        columnLabel: "actions",
+        sortEnabled: false,
+        columnWidth: 135,
+      },
+    ]);
+    const localidadStore = useLocalidadStore();
+    // Datos reactivos
+    const localidads = computed(() => localidadStore.localidads);
+
+    const tableData = computed(() => localidads.value);
+    const initCustomers = ref<any[]>([]);
+    const selectedIds = ref<string[]>([]);
+    const search = ref<string>("");
+    const selectedLocalidad = ref<any>(null);
+
+    type Sort = {
+      label: string;
+      order: "asc" | "desc";
+    };
+
+    // Refresca tableData e initCustomers a partir de las localidads
+    const refreshTableData = () => {
+      initCustomers.value = [...tableData.value];
+    };
+
+    onMounted(async () => {
+      await localidadStore.fetchLocalidads();
+      refreshTableData();
+    });
+
+    const deleteLocalidad = async (id: string) => {
+      const result = await Swal.fire({
+        icon: "warning",
+        text: "¿Quieres eliminar esta localidad?",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (!result.isConfirmed) {
+        return;
+      } else {
+        await localidadStore.deleteLocalidad(id);
+        Swal.fire({
+          text: "Localidad eliminada correctamente",
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+        });
+      }
+      await localidadStore.fetchLocalidads(); // Recargar las localidads
+    };
+
+    const deleteFewLocalidads = () => {
+      selectedIds.value.forEach((id) => deleteLocalidad(id));
+      selectedIds.value = [];
+    };
+
+    const searchItems = async () => {
+      const query = search.value.trim();
+      if (query) {
+        console.log(query);
+        try {
+          const { data } = await api.get("/localidads/search-by-field", {
+            params: {
+              "name.es": query,
+              "name.en": "",
+              "description.es": "",
+              "description.en": "",
+            },
+          });
+          console.log(data.data);
+
+          if (data.isSuccess) {
+            tableData.value = data.data;
+          } else {
+            tableData.value = [];
+          }
+        } catch (error) {
+          console.error("Error al realizar la búsqueda:", error);
+          tableData.value = [];
+        }
+      } else {
+        // Si no hay término de búsqueda, se restauran los datos iniciales
+        tableData.value = [...initCustomers.value];
+      }
+      if (
+        typeof MenuComponent !== "undefined" &&
+        MenuComponent.reinitialization
+      ) {
+        MenuComponent.reinitialization();
+      }
+    };
+
+    // Ordena la tabla según el criterio recibido
+    const sort = (sort: Sort) => {
+      const reverse: boolean = sort.order === "asc";
+      if (sort.label) {
+        arraySort(tableData.value, sort.label, { reverse });
+      }
+    };
+
+    // Actualiza la lista de IDs seleccionados
+    const onItemSelect = (selectedItems: string[]) => {
+      selectedIds.value = selectedItems;
+    };
+
+    // Asigna la localidad seleccionada para edición
+    const editLocalidad = (localidad: any) => {
+      selectedLocalidad.value = localidad;
+    };
+
+    return {
+      tableHeader,
+      tableData,
+      localidads,
+      search,
+      selectedIds,
+      selectedLocalidad,
+      deleteLocalidad,
+      deleteFewLocalidads,
+      searchItems,
+      sort,
+      onItemSelect,
+      editLocalidad,
+    };
+  },
+});
+</script>
+
 <template>
   <div class="card">
     <div class="card-header border-0 pt-6">
@@ -14,7 +184,7 @@
             v-model="search"
             @input="searchItems()"
             class="form-control form-control-solid w-250px ps-15"
-            placeholder="Buscar Localidad"
+            placeholder="Buscar localidad"
           />
         </div>
         <!--end::Search-->
@@ -39,7 +209,7 @@
             Export
           </button>
           <!--end::Export-->
-          <!--begin::Add localidad-->
+          <!--begin::Add Localidad-->
           <button
             type="button"
             class="btn btn-primary"
@@ -47,9 +217,9 @@
             data-bs-target="#kt_modal_add_localidad"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Añadir Localidad
+            Añadir localidad
           </button>
-          <!--end::Add Localidad-->
+          <!--end::Add localidad-->
         </div>
         <!--end::Toolbar-->
         <!--begin::Group actions-->
@@ -65,7 +235,7 @@
           <button
             type="button"
             class="btn btn-danger"
-            @click="deleteFewCustomers()"
+            @click="deleteFewLocalidads()"
           >
             Delete Selected
           </button>
@@ -106,16 +276,16 @@
         checkbox-label="id"
       >
         <template v-slot:name="{ row: localidad }">
-          {{ localidad.name }}
+          {{ localidad.name.es }}
         </template>
-        <template v-slot:municipio="{ row: localidad }">
+        <template v-slot:description="{ row: localidad }">
           <a href="#" class="text-gray-600 text-hover-primary mb-1">
-            {{ localidad.municipio }}
+            {{ localidad.description.es }}
           </a>
         </template>
         <template v-slot:actions="{ row: localidad }">
           <a
-            href="#"
+            nolink
             class="btn btn-sm btn-light btn-active-light-primary"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end"
@@ -131,7 +301,7 @@
             <!--begin::Menu item-->
             <div class="menu-item px-3">
               <router-link
-                to="/apps/localidades/localidad-details"
+                to="/apps/localidads/localidad-details"
                 class="menu-link px-3"
                 @click="editLocalidad(localidad)"
                 data-bs-toggle="modal"
@@ -142,7 +312,7 @@
             <!--end::Menu item-->
             <!--begin::Menu item-->
             <div class="menu-item px-3">
-              <a @click="deleteCustomer(localidad.id)" class="menu-link px-3"
+              <a @click="deleteLocalidad(localidad.id)" class="menu-link px-3"
                 >Delete</a
               >
             </div>
@@ -159,127 +329,4 @@
   <AddLocalidadModal></AddLocalidadModal>
 </template>
 
-<script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, onMounted, ref } from "vue";
-import Datatable from "@/components/kt-datatable/KTDataTable.vue";
-import type { Sort } from "@/components/kt-datatable//table-partials/models";
-import ExportCustomerModal from "@/components/modals/forms/otros/ExportCustomerModal.vue";
-import AddLocalidadModal from "@/components/modals/forms/AddLocalidadModal.vue";
-import EditLocalidadModal from "@/components/modals/forms/editLocalidadModal.vue";
-import type { ILocalidad } from "@/core/data/localidades";
-import localidades from "@/core/data/localidades";
-import arraySort from "array-sort";
-import { MenuComponent } from "@/assets/ts/components";
-
-export default defineComponent({
-  name: "customers-listing",
-  components: {
-    Datatable,
-    ExportCustomerModal,
-    AddLocalidadModal,
-    EditLocalidadModal,
-  },
-  setup() {
-    const tableHeader = ref([
-      {
-        columnName: "Nombre de localidad",
-        columnLabel: "name",
-        sortEnabled: true,
-        columnWidth: 250,
-      },
-      {
-        columnName: "Municipio",
-        columnLabel: "municipio",
-        sortEnabled: true,
-        columnWidth: 230,
-      },
-      {
-        columnName: "Actions",
-        columnLabel: "actions",
-        sortEnabled: false,
-        columnWidth: 135,
-      },
-    ]);
-    const selectedIds = ref<Array<number>>([]);
-
-    const tableData = ref<Array<ILocalidad>>(localidades);
-    const initCustomers = ref<Array<ILocalidad>>([]);
-
-    onMounted(() => {
-      initCustomers.value.splice(0, tableData.value.length, ...tableData.value);
-    });
-
-    const selectedLocalidad = ref();
-    const deleteFewCustomers = () => {
-      selectedIds.value.forEach((item) => {
-        deleteCustomer(item);
-      });
-      selectedIds.value.length = 0;
-    };
-
-    const deleteCustomer = (id: number) => {
-      for (let i = 0; i < tableData.value.length; i++) {
-        if (tableData.value[i].id === id) {
-          tableData.value.splice(i, 1);
-        }
-      }
-    };
-
-    const search = ref<string>("");
-    const searchItems = () => {
-      tableData.value.splice(0, tableData.value.length, ...initCustomers.value);
-      if (search.value !== "") {
-        let results: Array<ILocalidad> = [];
-        for (let j = 0; j < tableData.value.length; j++) {
-          if (searchingFunc(tableData.value[j], search.value)) {
-            results.push(tableData.value[j]);
-          }
-        }
-        tableData.value.splice(0, tableData.value.length, ...results);
-      }
-      MenuComponent.reinitialization();
-    };
-
-    const searchingFunc = (obj: any, value: string): boolean => {
-      for (let key in obj) {
-        if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
-          if (obj[key].indexOf(value) != -1) {
-            return true;
-          }
-        }
-      }
-      return false;
-    };
-
-    const sort = (sort: Sort) => {
-      const reverse: boolean = sort.order === "asc";
-      if (sort.label) {
-        arraySort(tableData.value, sort.label, { reverse });
-      }
-    };
-    const onItemSelect = (selectedItems: Array<number>) => {
-      selectedIds.value = selectedItems;
-    };
-
-    const editLocalidad = (localidad) => {
-      selectedLocalidad.value = localidad;
-    };
-
-    return {
-      tableData,
-      tableHeader,
-      deleteCustomer,
-      search,
-      searchItems,
-      selectedIds,
-      deleteFewCustomers,
-      sort,
-      onItemSelect,
-      getAssetPath,
-      selectedLocalidad,
-      editLocalidad,
-    };
-  },
-});
-</script>
+<style scoped></style>

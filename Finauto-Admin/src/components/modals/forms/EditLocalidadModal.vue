@@ -2,7 +2,7 @@
   <div
     class="modal fade"
     id="kt_modal_edit_localidad"
-    ref="addLocalidadModalRef"
+    ref="editLocalidadModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -28,102 +28,43 @@
         </div>
         <!--end::Modal header-->
         <!--begin::Form-->
-        <el-form
-          @submit.prevent="submit()"
-          :model="formData"
-          :rules="rules"
-          ref="formRef"
-        >
-          <!--begin::Modal body-->
-          <div class="modal-body py-10 px-lg-17">
-            <!--begin::Scroll-->
-            <div
-              class="scroll-y me-n7 pe-7"
-              id="kt_modal_edit_localidad_scroll"
-              data-kt-scroll="true"
-              data-kt-scroll-activate="{default: false, lg: true}"
-              data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_edit_localidad_header"
-              data-kt-scroll-wrappers="#kt_modal_edit_localidad_scroll"
-              data-kt-scroll-offset="300px"
-            >
-              <!--begin::Input group-->
-              <div class="fv-row mb-7">
-                <!--begin::Label-->
-                <label class="required fs-6 fw-semibold mb-2">Name</label>
-                <!--end::Label-->
-
-                <!--begin::Input-->
-                <el-form-item prop="name">
-                  <el-input
-                    v-model="formData.name"
-                    type="text"
-                    placeholder=""
-                  />
-                </el-form-item>
-                <!--end::Input-->
-              </div>
-              <!--end::Input group-->
-
-              <!--begin::Input group-->
-              <div class="fv-row mb-7">
-                <!--begin::Label-->
-                <label class="fs-6 fw-semibold mb-2">
-                  <span class="required">municipio</span>
-
-                  <i
-                    class="fas fa-exclamation-circle ms-1 fs-7"
-                    data-bs-toggle="tooltip"
-                    title="municipio address must be active"
-                  ></i>
-                </label>
-                <!--end::Label-->
-
-                <!--begin::Input-->
-                <el-form-item prop="municipio">
-                  <el-input v-model="formData.municipio" />
-                </el-form-item>
-                <!--end::Input-->
-              </div>
-              <!--end::Input group-->
-            </div>
-            <!--end::Scroll-->
+        <Form :validation-schema="schema" @submit="handleSubmit">
+          <!-- Campo: Nombre del metodo -->
+          <div class="mb-4 px-4 py-4 col-11 mx-6">
+            <label class="required form-label">Nombre de la localidad</label>
+            <Field
+              name="nameEs"
+              v-model="formData.nameEs"
+              as="input"
+              type="text"
+              class="form-control"
+              placeholder="Ponga el nombre de la localidad"
+            />
+            <ErrorMessage name="nameEs" class="text-danger" />
           </div>
-          <!--end::Modal body-->
 
-          <!--begin::Modal footer-->
-          <div class="modal-footer flex-center">
-            <!--begin::Button-->
-            <button
-              type="reset"
-              id="kt_modal_edit_localidad_cancel"
-              class="btn btn-light me-3"
-            >
-              Discard
-            </button>
-            <!--end::Button-->
-
-            <!--begin::Button-->
-            <button
-              :data-kt-indicator="loading ? 'on' : null"
-              class="btn btn-lg btn-primary"
-              type="submit"
-            >
-              <span v-if="!loading" class="indicator-label">
-                Submit
-                <KTIcon icon-name="arrow-right" icon-class="fs-2 me-2 me-0" />
-              </span>
-              <span v-if="loading" class="indicator-progress">
-                Please wait...
-                <span
-                  class="spinner-border spinner-border-sm align-middle ms-2"
-                ></span>
-              </span>
-            </button>
-            <!--end::Button-->
+          <!-- Campo: Descripción -->
+          <div class="mb-4 px-4 py-4 col-11 mx-6">
+            <label class="required form-label">Descripción</label>
+            <Field
+              name="descriptionEs"
+              v-model="formData.descriptionEs"
+              as="textarea"
+              class="form-control"
+              placeholder="Ponga la descripción"
+            />
+            <ErrorMessage name="descriptionEs" class="text-danger" />
           </div>
-          <!--end::Modal footer-->
-        </el-form>
+          <!-- Footer del formulario -->
+          <div class="card-footer my-8 d-flex justify-content-end">
+            <a href="#" class="btn btn-bg-secondary" data-bs-dismiss="modal"
+              >Cancelar</a
+            >
+            <button type="submit" class="btn btn-bg-primary mx-3">
+              Actualizar
+            </button>
+          </div>
+        </Form>
         <!--end::Form-->
       </div>
     </div>
@@ -131,14 +72,20 @@
 </template>
 
 <script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref, watchEffect, computed } from "vue";
+import * as yup from "yup";
+import { Form, Field, ErrorMessage, useForm } from "vee-validate";
 import { hideModal } from "@/core/helpers/modal";
-import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useLocalidadStore } from "@/stores/localidad";
 
 export default defineComponent({
-  name: "add-customer-modal",
-  components: {},
+  name: "EditLocalidad",
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+    // Agrega aquí otros componentes, como ImageInput, si es necesario
+  },
   props: {
     localidad: {
       type: Object,
@@ -146,99 +93,74 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const formRef = ref<null | HTMLFormElement>(null);
-    const addLocalidadModalRef = ref<null | HTMLElement>(null);
-    const loading = ref<boolean>(false);
+    const localidadStore = useLocalidadStore();
+    const editLocalidadModalRef = ref<HTMLElement | null>(null);
 
+    // Objeto reactivo para almacenar los datos del formulario
     const formData = ref({
-      name: "",
-      municipio: "",
+      id: "",
+      nameEs: "",
+      nameEn: "",
+      descriptionEs: "",
+      descriptionEn: "",
     });
 
-    watch(
-      () => props.localidad,
-      (newLocalidad) => {
-        if (newLocalidad) {
-          formData.value.name = newLocalidad.name || "";
-          formData.value.municipio = newLocalidad.municipio || "";
-        }
-      },
-      { immediate: true } // Ensure it runs when the component is mounted
-    );
-
-    const rules = ref({
-      name: [
-        {
-          required: true,
-          message: "Customer name is required",
-          trigger: "change",
-        },
-      ],
-      municipio: [
-        {
-          required: true,
-          message: "Customer municipio is required",
-          trigger: "change",
-        },
-      ],
-      role: [
-        {
-          required: true,
-          message: "Role is required",
-          trigger: "change",
-        },
-      ],
+    // Esquema de validación con yup
+    const schema = yup.object({
+      nameEs: yup.string().required("El nombre en español es obligatorio"),
+      nameEn: yup.string(),
+      descriptionEs: yup
+        .string()
+        .required("La descripción en español es obligatoria"),
+      descriptionEn: yup.string(),
     });
 
-    const submit = () => {
-      if (!formRef.value) {
-        return;
+    const { errors } = useForm({ validationSchema: schema });
+
+    // Sincronizamos los datos de la prop "localidad" con el formulario
+    watchEffect(() => {
+      if (props.localidad) {
+        formData.value.id = props.localidad.id || "";
+        formData.value.nameEs = props.localidad.name?.es || "";
+        formData.value.nameEn = props.localidad.name?.en || "";
+        formData.value.descriptionEs = props.localidad.description?.es || "";
+        formData.value.descriptionEn = props.localidad.description?.en || "";
       }
+    });
 
-      formRef.value.validate((valid: boolean) => {
-        if (valid) {
-          loading.value = true;
+    // Función de envío del formulario
+    const handleSubmit = async (
+      values: any,
+      { resetForm }: { resetForm: () => void },
+    ) => {
+      try {
+        // Preparamos el objeto con los datos actualizados
+        const updatedData = {
+          name: { es: values.nameEs, en: values.nameEn || "" },
+          description: {
+            es: values.descriptionEs,
+            en: values.descriptionEn || "",
+          },
+        };
 
-          setTimeout(() => {
-            loading.value = false;
+        console.log(updatedData);
+        // Llamamos a updateLocalidad pasando el ID y el objeto con los datos actualizados
+        await localidadStore.updateLocalidad(formData.value.id, updatedData);
+        await localidadStore.fetchLocalidads(); // Refrescamos la lista de localidads
 
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(addLocalidadModalRef.value);
-            });
-          }, 2000);
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-          return false;
-        }
-      });
+        hideModal(editLocalidadModalRef.value);
+        resetForm();
+      } catch (error) {
+        console.error("Error al actualizar la localidad:", error);
+      }
     };
 
     return {
+      editLocalidadModalRef,
       formData,
-      rules,
-      submit,
-      formRef,
-      loading,
-      addLocalidadModalRef,
-      getAssetPath,
+      errors,
+      schema,
+      handleSubmit,
     };
   },
 });

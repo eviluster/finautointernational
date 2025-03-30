@@ -634,6 +634,10 @@ export default function useDynamicMenu() {
                     heading: "Municipio",
                     route: "/admin/nomencladores/municipality",
                   },
+                  {
+                    heading: "Localidad",
+                    route: "/admin/nomencladores/localidad",
+                  },
                 ],
               },
               {
@@ -651,6 +655,38 @@ export default function useDynamicMenu() {
               {
                 heading: "Importadoras",
                 route: "/admin/nomencladores/importadoras",
+              },
+              {
+                heading: "Tipo de freno",
+                route: "/admin/nomencladores/tipo-freno",
+              },
+              {
+                heading: "Tipo de neumático",
+                route: "/admin/nomencladores/tipo-neumatico",
+              },
+              {
+                heading: "Tipo de suspención",
+                route: "/admin/nomencladores/tipo-suspencion",
+              },
+              {
+                heading: "Tipo de unidad de medida",
+                route: "/admin/nomencladores/tipo-um",
+              },
+              {
+                heading: "Traccion",
+                route: "/admin/nomencladores/traccion",
+              },
+              {
+                heading: "Motor",
+                route: "/admin/nomencladores/motor",
+              },
+              {
+                heading: "Caja cambio",
+                route: "/admin/nomencladores/caja-cambio",
+              },
+              {
+                heading: "Categoría de Pieza y Acccesorio",
+                route: "/admin/nomencladores/categoria-pieza-accesorio",
               },
             ],
           },

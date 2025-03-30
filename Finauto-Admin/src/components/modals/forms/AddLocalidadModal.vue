@@ -6,8 +6,7 @@
     tabindex="-1"
     aria-hidden="true"
   >
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-650px">
+    <div class="modal-dialog modal-dialog-centered mw-650px miModal">
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
@@ -26,198 +25,141 @@
           </div>
           <!--end::Close-->
         </div>
-        <!--end::Modal header-->
-        <!--begin::Form-->
-        <el-form
-          @submit.prevent="submit()"
-          :model="formData"
-          :rules="rules"
+
+        <Form
+          @submit="handleSubmit"
+          :validation-schema="schema"
           ref="formRef"
+          class="my-6"
         >
-          <!--begin::Modal body-->
-          <div class="modal-body py-10 px-lg-17">
-            <!--begin::Scroll-->
-            <div
-              class="scroll-y me-n7 pe-7"
-              id="kt_modal_add_localidad_scroll"
-              data-kt-scroll="true"
-              data-kt-scroll-activate="{default: false, lg: true}"
-              data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_add_localidad_header"
-              data-kt-scroll-wrappers="#kt_modal_add_localidad_scroll"
-              data-kt-scroll-offset="300px"
-            >
-              <!--begin::Input group-->
-              <div class="fv-row mb-7">
-                <!--begin::Label-->
-                <label class="required fs-6 fw-semibold mb-2">Name</label>
-                <!--end::Label-->
-
-                <!--begin::Input-->
-                <el-form-item prop="name">
-                  <el-input
-                    v-model="formData.name"
-                    type="text"
-                    placeholder=""
-                  />
-                </el-form-item>
-                <!--end::Input-->
-              </div>
-              <!--end::Input group-->
-
-              <!--begin::Input group-->
-              <div class="fv-row mb-7">
-                <!--begin::Label-->
-                <label class="fs-6 fw-semibold mb-2">
-                  <span class="required">Municipio</span>
-
-                  <i
-                    class="fas fa-exclamation-circle ms-1 fs-7"
-                    data-bs-toggle="tooltip"
-                    title="Municipio address must be active"
-                  ></i>
-                </label>
-                <!--end::Label-->
-
-                <!--begin::Input-->
-                <el-form-item prop="municipio">
-                  <el-input v-model="formData.municipio" />
-                </el-form-item>
-                <!--end::Input-->
-              </div>
-              <!--end::Input group-->
+          <div class="card shadow-sm">
+            <!-- Campo: Nombre del localidad -->
+            <div class="mb-4 px-4 py-4 col-11 mx-6">
+              <label class="required form-label">Nombre del localidad</label>
+              <Field
+                name="name"
+                as="input"
+                type="text"
+                class="form-control"
+                placeholder="Ponga el nombre del localidad"
+              />
+              <ErrorMessage name="name" class="text-danger" />
             </div>
-            <!--end::Scroll-->
-          </div>
-          <!--end::Modal body-->
 
-          <!--begin::Modal footer-->
-          <div class="modal-footer flex-center">
-            <!--begin::Button-->
-            <button
-              type="reset"
-              id="kt_modal_add_localidad_cancel"
-              class="btn btn-light me-3"
-            >
-              Discard
-            </button>
-            <!--end::Button-->
-
-            <!--begin::Button-->
-            <button
-              :data-kt-indicator="loading ? 'on' : null"
-              class="btn btn-lg btn-primary"
-              type="submit"
-            >
-              <span v-if="!loading" class="indicator-label">
-                Submit
-                <KTIcon icon-name="arrow-right" icon-class="fs-2 me-2 me-0" />
-              </span>
-              <span v-if="loading" class="indicator-progress">
-                Please wait...
-                <span
-                  class="spinner-border spinner-border-sm align-middle ms-2"
-                ></span>
-              </span>
-            </button>
-            <!--end::Button-->
+            <!-- Campo: Descripción -->
+            <div class="mb-4 px-4 py-4 col-11 mx-6">
+              <label class="required form-label">Descripción</label>
+              <Field
+                name="description"
+                as="textarea"
+                class="form-control"
+                placeholder="Ponga la descripción"
+              />
+              <ErrorMessage name="description" class="text-danger" />
+            </div>
           </div>
-          <!--end::Modal footer-->
-        </el-form>
-        <!--end::Form-->
+
+          <!-- Footer del formulario -->
+          <div class="card-footer my-8 d-flex justify-content-end">
+            <a href="#" class="btn btn-bg-secondary" data-bs-dismiss="modal"
+              >Cancelar</a
+            >
+            <button type="submit" class="btn btn-bg-primary mx-3">
+              Guardar
+            </button>
+          </div>
+        </Form>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, ref } from "vue";
+import * as yup from "yup";
+import { Form, Field, ErrorMessage, useForm } from "vee-validate";
 import { hideModal } from "@/core/helpers/modal";
-import { countries } from "@/core/data/countries";
+import { useLocalidadStore } from "@/stores/localidad";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-
+interface AddLocalidadFormFields {
+  name: string;
+  description: string;
+}
 export default defineComponent({
-  name: "add-customer-modal",
-  components: {},
+  name: "AddLocalidad",
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
+
   setup() {
-    const formRef = ref<null | HTMLFormElement>(null);
-    const addLocalidadModalRef = ref<null | HTMLElement>(null);
-    const loading = ref<boolean>(false);
+    const localidadStore = useLocalidadStore();
+    const formRef = ref<HTMLFormElement | null>(null);
+    const addLocalidadModalRef = ref<HTMLElement | null>(null);
 
-    const formData = ref({
-      name: "",
-      municipio: "",
+    const schema = yup.object({
+      name: yup.string().required("El nombre es obligatorio"),
+      description: yup.string().required("La descripción es obligatoria"),
     });
 
-    const rules = ref({
-      name: [
-        {
-          required: true,
-          message: "Customer name is required",
-          trigger: "change",
-        },
-      ],
-      municipio: [
-        {
-          required: true,
-          message: "Customer municipio is required",
-          trigger: "change",
-        },
-      ],
+    const { errors } = useForm<AddLocalidadFormFields>({
+      validationSchema: schema,
     });
+    const selectedOption = ref(null);
 
-    const submit = () => {
-      if (!formRef.value) {
-        return;
+    const handleSubmit = async (
+      values: any,
+      { resetForm }: { resetForm: () => void },
+    ) => {
+      const newLocalidad = {
+        name: { es: values.name, en: "" },
+        description: { es: values.description, en: "" },
+      };
+
+      try {
+        const response = await localidadStore.addLocalidad(newLocalidad);
+        await localidadStore.fetchLocalidads();
+        console.log("Localidad agregada:", response);
+        Swal.fire({
+          text: "Localidad agregada correctamente",
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+        });
+      } catch (error: any) {
+        console.error("Error al agregar localidad:", error);
+
+        Swal.fire({
+          text: "Error al crear la localidad",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
+        });
+      } finally {
+        hideModal(addLocalidadModalRef.value);
+        resetForm();
       }
-
-      formRef.value.validate((valid: boolean) => {
-        if (valid) {
-          loading.value = true;
-
-          setTimeout(() => {
-            loading.value = false;
-
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(addLocalidadModalRef.value);
-            });
-          }, 2000);
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-          return false;
-        }
-      });
     };
 
     return {
-      formData,
-      rules,
-      submit,
+      schema,
+      handleSubmit,
       formRef,
-      loading,
       addLocalidadModalRef,
-      getAssetPath,
-      countries,
+      errors,
+      selectedOption,
     };
   },
 });
 </script>
+
+<style scoped></style>

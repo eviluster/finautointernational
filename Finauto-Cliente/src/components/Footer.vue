@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-dark text-white pt-4 pb-4">
+  <footer class=" text-white pt-4 pb-4">
     <div class="container">
       <div class="row">
         <!-- Columna 1: Nombre de la empresa, enlaces legales -->
@@ -139,10 +139,10 @@
 
 <style scoped>
   /* Ajustes opcionales para el footer */
-  footer {
+  /* footer { */
     /* Ajusta la altura mínima si lo deseas */
     /* min-height: 200px; */
-  }
+  /* } */
   .list-unstyled.enumciados li {
     margin-bottom: 20px;
   }

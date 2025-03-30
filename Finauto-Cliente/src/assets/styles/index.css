@@ -264,6 +264,8 @@ h2 {
 .servicios-container li {
     color: #FFF;
     transition: all 0.3s ease; /* Suaviza la transición */
+    margin: 0%;
+    width: fit-content;
 }
 .servicios-container li:hover{
     font-size: 20px; /* Aumenta el tamaño del texto */
@@ -442,9 +444,20 @@ h2 {
 
 /*******Socios*******/
 
+.socios-container{
+    background-color: #000;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    align-items: center;
+    justify-items: center;
+    padding: 20px;
+}
+
 .socios-container img {
-    width: 100%;
+    max-width: 100%;
     height: auto;
+    filter: brightness(0) invert(1); /* Mantiene los logos en blanco como en tu ejemplo */
 }
 
 
@@ -768,6 +781,9 @@ nav {
     .hamburger {
       display: flex;
     }
+    .slide img{
+        height: 400px;
+    }
 
     .productos-container{
         display: flex;
@@ -776,6 +792,10 @@ nav {
     }
     .producto{
         margin: 0;        
+    }
+    .quienes-somos{
+        padding-left: 5%;
+        padding-right: 5%;
     }
 
     .first,
@@ -803,12 +823,13 @@ nav {
         left: 20px;
     }
     .servicios-container{
-        height: 215px;
+        height: 170px;
     }
     .servicios-container h2{
         font-size: 1.5rem;
-        width: 550px;
-        right: 70px;        
+        width: 181px;
+        right: 81px;   
+        padding: 0%;     
     }
     .servicios-container a{
         font-size: 1.0rem;
@@ -826,6 +847,9 @@ nav {
     }
     .ofert-slide a{
         margin: 30px;
+    }
+    .copyrigth{
+        font-size: 12px;
     }
   }
 

@@ -418,6 +418,16 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "/admin/nomencladores/localidad",
+        name: "localidad",
+        component: () =>
+          import("@/views/administracion/nomencladores/localidadList.vue"),
+        meta: {
+          pageTitle: "Listado de Localidades",
+          breadcrumbs: ["Administracion", "Nomencladores", "Localidades"],
+        },
+      },
+      {
         path: "/admin/nomencladores/servicios",
         name: "servicios",
         component: () =>
@@ -456,6 +466,103 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           pageTitle: "Listado de Importadoras",
           breadcrumbs: ["Administracion", "Nomencladores", "Importadoras"],
+        },
+      },
+
+      {
+        path: "/admin/nomencladores/tipo-freno",
+        name: "tipo-freno",
+        component: () =>
+          import("@/views/administracion/nomencladores/tipoFrenoList.vue"),
+        meta: {
+          pageTitle: "Tipos de frenos",
+          breadcrumbs: ["Administracion", "Nomencladores", "Tipo de freno"],
+        },
+      },
+      {
+        path: "/admin/nomencladores/tipo-neumatico",
+        name: "tipo-neumatico",
+        component: () =>
+          import("@/views/administracion/nomencladores/tipoNeumaticoList.vue"),
+        meta: {
+          pageTitle: "Tipos de neumáticos",
+          breadcrumbs: ["Administracion", "Nomencladores", "Tipo de neumático"],
+        },
+      },
+      {
+        path: "/admin/nomencladores/tipo-um",
+        name: "tipo-um",
+        component: () =>
+          import(
+            "@/views/administracion/nomencladores/tipoUnidadMedidaList.vue"
+          ),
+        meta: {
+          pageTitle: "Tipos de unidad de medida",
+          breadcrumbs: [
+            "Administracion",
+            "Nomencladores",
+            "Tipo de unidad de medida",
+          ],
+        },
+      },
+      {
+        path: "/admin/nomencladores/traccion",
+        name: "traccion",
+        component: () =>
+          import("@/views/administracion/nomencladores/traccionList.vue"),
+        meta: {
+          pageTitle: "Tracción",
+          breadcrumbs: ["Administracion", "Nomencladores", "Tracción"],
+        },
+      },
+      {
+        path: "/admin/nomencladores/motor",
+        name: "motor",
+        component: () =>
+          import("@/views/administracion/nomencladores/motorList.vue"),
+        meta: {
+          pageTitle: "Motor",
+          breadcrumbs: ["Administracion", "Nomencladores", "Motor"],
+        },
+      },
+      {
+        path: "/admin/nomencladores/caja-cambio",
+        name: "caja-cambio",
+        component: () =>
+          import("@/views/administracion/nomencladores/cajaCambioList.vue"),
+        meta: {
+          pageTitle: "Caja cambio",
+          breadcrumbs: ["Administracion", "Nomencladores", "Caja cambio"],
+        },
+      },
+      {
+        path: "/admin/nomencladores/categoria-pieza-accesorio",
+        name: "categoria-pieza-accesorio",
+        component: () =>
+          import(
+            "@/views/administracion/nomencladores/CategoriaPiezaAccesorioList.vue"
+          ),
+        meta: {
+          pageTitle: "Categoría de Pieza y Acccesorio",
+          breadcrumbs: [
+            "Administracion",
+            "Nomencladores",
+            "Categoría de Pieza y Acccesorio",
+          ],
+        },
+      },
+      {
+        path: "/admin/nomencladores/tipo-suspencion",
+        name: "tipo-suspencion",
+        component: () =>
+          import("@/views/administracion/nomencladores/tipoSuspencionList.vue"),
+        meta: {
+          pageTitle: "Tipos de suspención",
+          breadcrumbs: [
+            "Administracion",
+            "Nomencladores",
+            "Tipo de suspencion",
+          ],
         },
       },
 
