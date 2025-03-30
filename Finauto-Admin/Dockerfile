@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # 2. Instalar dependencias con cacheo optimizado
-RUN npm ci
+RUN npm ci --include=dev
 
 # 3. Copiar solo los archivos relevantes para el build
 COPY index.html .
