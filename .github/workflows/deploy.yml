@@ -33,5 +33,6 @@ jobs:
         script_stop: true
         script: |
           cd /home/finauto/full-proyect-1 || exit 1
-          docker compose down || true
+          docker compose -v --rmi all || true
+          docker system prune -af
           docker compose up -d --build || exit 1
