@@ -17,7 +17,7 @@ RUN npm ci --omit=dev --prefer-offline
 COPY index.html .
 COPY src ./src
 COPY public ./public
-COPY vite.config.js .
+COPY vite.config.mts .
 
 # 4. Construir la aplicación con variables de entorno
 RUN npm run build
