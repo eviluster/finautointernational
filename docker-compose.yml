@@ -37,7 +37,7 @@ services:
       DB_PASSWORD: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-      NODE_ENV: production
+      NODE_ENV: staging
     depends_on:
       db:
         condition: service_healthy
