@@ -1,4 +1,5 @@
 FROM node:22.12
+ENV NODE_OPTIONS="--max-old-space-size=1024"
 WORKDIR /app
 COPY . .
 RUN npm install && npm run build
