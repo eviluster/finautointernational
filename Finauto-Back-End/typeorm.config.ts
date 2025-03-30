@@ -11,7 +11,7 @@ export default new DataSource({
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT),
   username: 'root',
-  password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   entities: ['src/**/entities/*.entity.ts'],
   migrations: ['src/database/migrations/*.ts'],
