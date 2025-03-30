@@ -69,6 +69,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf:/etc/nginx/conf.d/
+      - ./nginx/proxy_params:/etc/nginx/proxy_params
       - ./certs:/etc/ssl
     depends_on:
       - backend
