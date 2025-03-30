@@ -21,7 +21,9 @@ COPY vite.config.js .
 
 # 4. Construir la aplicación con variables de entorno
 #RUN npm run build
-RUN npm run build || echo "Build failed, skipping..." && exit 0
+#RUN npm run build || echo "Build failed, skipping..." && exit 0
+RUN npm run type-check || echo "⚠️ Type-check falló, pero continuando..."
+RUN npm run build
 
 # Etapa de producción
 FROM nginx:1.27.4-alpine AS production-stage
