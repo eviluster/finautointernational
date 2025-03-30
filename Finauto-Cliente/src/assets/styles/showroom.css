@@ -1,0 +1,166 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.rectangulo-diagonal {
+    z-index: -1;
+
+}
+h2{
+    padding-top: 20px;
+    margin: 0;
+
+}
+
+
+.car-offers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 50px;
+}
+
+.car-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.car-card:hover {
+    transform: scale(1.05);
+}
+
+.car-card .main-image {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+}
+
+.car-details {
+    padding: 15px;
+}
+
+.car-details h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.car-details p {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.car-images {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.car-images img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.car-images img:hover {
+    transform: scale(1.1);
+}
+
+.group-icon svg {
+    width: 30px;
+    height: 30px;   
+    /* margin-right: 5px;  */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.group-icon svg:hover {
+    transform: scale(1.05);
+}
+.grop-car{
+    display: flex;
+    justify-content: space-between;
+}
+span{
+    color: #ce3c3c;
+    font-weight: 700;
+    font-size: x-large;
+}
+.group-icon {
+    display: flex;
+    gap: 10px;
+}
+.icon-card {
+    position: relative;
+    display: inline-block;
+}
+
+ /* Estilos del tooltip */
+ .icon-card .tooltip {
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Posiciona el tooltip encima del icono */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+/* Flecha del tooltip */
+.icon-card .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Flecha debajo del tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+/* Mostrar el tooltip al pasar el cursor */
+.icon-card:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/* Responsiveness for mobile */
+@media (max-width: 600px) {
+    .car-offers {
+        grid-template-columns: repeat(2, 1fr);
+        /* Mostrar dos columnas en pantallas pequeñas */
+    }
+
+    .car-card .main-image {
+        height: 150px;
+        object-fit: contain;
+
+    }
+    .group-icon svg{
+        width: 20px;
+        height: 20px;
+    }
+    span{
+        font-size: medium;
+    }
+    .car-card{
+        width: 100% !important;
+    }
+
+}

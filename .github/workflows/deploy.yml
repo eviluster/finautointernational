@@ -1,0 +1,37 @@
+name: Deploy via SCP
+
+on:
+  push:
+    branches: [staging]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - name: 🛠️ Checkout código
+      uses: actions/checkout@v4
+
+    - name: 📤 Transferir archivos al VPS
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "./"
+        target: "/home/finauto/full-proyect-1"
+        strip_components: 1
+        
+    - name: 🚀 Ejecutar despliegue en VPS
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script_stop: true  # Stop if any command fails
+        script: |
+          cd /home/finauto/full-proyect-1 || exit 1
+          docker-compose down || true  # Continue even if down fails
+          docker-compose up -d --build || exit 1
