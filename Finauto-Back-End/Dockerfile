@@ -20,5 +20,5 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 
 # Expone el puerto y ejecuta la aplicación
-EXPOSE 5000
+#EXPOSE 5000
 CMD ["node", "dist/src/main.js"]
