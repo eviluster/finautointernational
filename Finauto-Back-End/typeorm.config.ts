@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || 'staging';
 
 config({
   path: `.env.${env}`,
