@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-24.04
     
     steps:
-    - name: 🛠️ Checkout código
+    - name: Checkout código
       uses: actions/checkout@v4
 
     - name: 📤 Transferir archivos al VPS
