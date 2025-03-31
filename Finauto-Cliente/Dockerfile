@@ -13,7 +13,7 @@ RUN npm ci --omit=dev --force && \
 # 3. Copiar solo lo esencial y forzar build
 COPY . .
 #RUN mkdir -p dist && \
-RUB npm run build 
+RUN npm run build 
 #|| echo "Build fallido - Generando placeholder" > dist/index.html
 
 # 4. Etapa de producción a prueba de fallos
