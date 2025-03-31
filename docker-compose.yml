@@ -47,8 +47,8 @@ services:
   front-admin:
     build: ./Finauto-Admin
     container_name: front-admin
-    environment:
-      VITE_API_URL: https://api.finautointernational.com
+   # environment:
+   #   VITE_API_URL: https://api.finautointernational.com
     expose:
     #ports:
       - "80"
@@ -58,8 +58,8 @@ services:
   front-cliente:
     build: ./Finauto-Cliente
     container_name: front-cliente
-    environment:
-      VITE_API_URL: https://api.finautointernational.com
+    #environment:
+    #  VITE_API_URL: https://api.finautointernational.com
     expose:
     #ports:
       - "80"
