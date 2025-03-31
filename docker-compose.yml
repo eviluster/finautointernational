@@ -13,6 +13,7 @@ services:
       retries: 10
     volumes:
       - ./db-data:/var/lib/postgresql/data
+     # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - kia-network
 
@@ -68,9 +69,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf:/etc/nginx/conf.d/
-      - ./nginx/proxy_params:/etc/nginx/proxy_params
-      - ./certs:/etc/ssl
+      - ./nginx/conf:/etc/nginx/conf.d     # Montar directorio de configuraciones
+      - ./nginx/proxy_params:/etc/nginx/proxy_params  # Montar archivo individual
+      - ./certbot/www:/var/www/certbot     # Desafío HTTP de LetsEncrypt
+      - ./certbot/conf:/etc/letsencrypt
     depends_on:
       - backend
       - front-cliente
