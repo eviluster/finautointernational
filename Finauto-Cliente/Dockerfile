@@ -10,8 +10,11 @@ RUN npm install
 COPY . .
 
 # Deshabilitamos el type-check en tiempo de build
-RUN npm set-script type-check "echo Skipping type-check..." && \
-    npm run build
+RUN if grep -q '"type-check"' package.json; then \
+    sed -i 's/"type-check": *"[^"]*"/"type-check": "echo Skipping type-check..."/' package.json; \
+  else \
+    echo 'No type-check script found'; \
+  fi && npm run build
 
 # Etapa 2: Producción con NGINX
 FROM nginx:alpine
