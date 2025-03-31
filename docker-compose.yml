@@ -13,7 +13,6 @@ services:
       retries: 10
     volumes:
       - ./db-data:/var/lib/postgresql/data
-     # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - kia-network
 
@@ -50,6 +49,8 @@ services:
     container_name: front-admin
     environment:
       VITE_API_URL: https://api.finautointernational.com
+    expose:
+      - "80"
     networks:
       - kia-network
 
@@ -58,26 +59,25 @@ services:
     container_name: front-cliente
     environment:
       VITE_API_URL: https://api.finautointernational.com
+    expose:
+      - "80"
     networks:
       - kia-network
 
-  nginx:
-    image: nginx:stable-alpine
-    container_name: nginx-proxy
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-proxy-manager
     restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'      # HTTP
+      - '81:81'      # Admin UI
+      - '443:443'    # HTTPS
     volumes:
-      - ./nginx/conf:/etc/nginx/conf.d     # Montar directorio de configuraciones
-      - ./nginx/proxy_params:/etc/nginx/proxy_params  # Montar archivo individual
-      - ./certbot/www:/var/www/certbot     # Desafío HTTP de LetsEncrypt
-      - ./certbot/conf:/etc/letsencrypt
-    depends_on:
-      - backend
-      - front-cliente
+      - ./nginx/data:/data
+      - ./nginx/letsencrypt:/etc/letsencrypt
     networks:
       - kia-network
 
 networks:
   kia-network:
+    driver: bridge
