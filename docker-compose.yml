@@ -50,7 +50,7 @@ services:
     environment:
       VITE_API_URL: https://api.finautointernational.com
     expose:
-      - "80"
+      - "8081:80"
     networks:
       - kia-network
 
@@ -60,7 +60,7 @@ services:
     environment:
       VITE_API_URL: https://api.finautointernational.com
     expose:
-      - "80"
+      - ":808080"
     networks:
       - kia-network
 
