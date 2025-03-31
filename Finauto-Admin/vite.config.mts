@@ -16,4 +16,10 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 3000,
   },
+
+  // para publicar y se acceda por cualquier ip
+  server: {
+    host: '0.0.0.0',
+    port: 8081
+  }
 });

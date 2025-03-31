@@ -49,8 +49,8 @@ services:
     container_name: front-admin
    # environment:
    #   VITE_API_URL: https://api.finautointernational.com
-    expose:
-    #ports:
+    #expose:
+    ports:
       - "8081:80"
     networks:
       - kia-network
@@ -60,8 +60,8 @@ services:
     container_name: front-cliente
     #environment:
     #  VITE_API_URL: https://api.finautointernational.com
-    expose:
-    #ports:
+    #expose:
+    ports:
       - "8080:80"
     networks:
       - kia-network
