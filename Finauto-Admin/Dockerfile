@@ -1,4 +1,4 @@
-FROM node:22.12-alpine AS build-stage
+FROM node:22.14-alpine AS build-stage
 
 # 1. Desactivar completamente el type-check
 WORKDIR /app
