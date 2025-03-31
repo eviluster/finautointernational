@@ -51,7 +51,7 @@ services:
    #   VITE_API_URL: https://api.finautointernational.com
     expose:
     #ports:
-      - "80"
+      - "8081:80"
     networks:
       - kia-network
 
@@ -62,7 +62,7 @@ services:
     #  VITE_API_URL: https://api.finautointernational.com
     expose:
     #ports:
-      - "80"
+      - "8080:80"
     networks:
       - kia-network
 
