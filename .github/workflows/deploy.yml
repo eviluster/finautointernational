@@ -32,6 +32,13 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
+          # Crear estructura de archivos crítica
+          mkdir -p ~/full-proyect-1/nginx/conf
+          echo "proxy_set_header Host \$host;" > ~/full-proyect-1/nginx/proxy_params
+          echo "proxy_set_header X-Real-IP \$remote_addr;" >> ~/full-proyect-1/nginx/proxy_params
+          echo "proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> ~/full-proyect-1/nginx/proxy_params
+          echo "proxy_set_header X-Forwarded-Proto \$scheme;" >> ~/full-proyect-1/nginx/proxy_params
+        
           cd /home/finauto/full-proyect-1 || exit 1
           docker compose down -v --rmi all || true
           docker builder prune -af
