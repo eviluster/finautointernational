@@ -10,7 +10,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vue"]
+    "types": ["vue"],
+    "esModuleInterop": true
   },
   "references": [
     {
