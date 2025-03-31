@@ -18,6 +18,7 @@ export default defineConfig({
   },
 
   // para publicar y se acceda por cualquier ip
+  base: '/',
   server: {
     host: '0.0.0.0',
     port: 8081
