@@ -5,9 +5,9 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   // para publicar y escuche por cualquier ip
-  base: '/',
-  server: {
-    host: '0.0.0.0',
-    port: 8080
-  }
+  //base: '/',
+  //server: {
+   // host: '0.0.0.0',
+   // port: 8080
+  //}
 })
