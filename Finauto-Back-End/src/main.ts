@@ -50,6 +50,6 @@ async function bootstrap() {
   app.setGlobalPrefix('v1') 
 
   // iniciando puerto 5000 para dejar free el 3000 para frontend
-  await app.listen(5000, 0.0.0.0);
+  await app.listen(5000, '0.0.0.0');
  }
 bootstrap();
