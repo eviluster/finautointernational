@@ -41,14 +41,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    ports:
+      - "5000:5000"
     networks:
       - kia-network
 
   front-admin:
     build: ./Finauto-Admin
     container_name: front-admin
-   # environment:
-   #   VITE_API_URL: https://api.finautointernational.com
+    environment:
+      VITE_API_BASE_URL: http://82.163.73.169:5000/v1
     #expose:
     ports:
       - "8081:80"
@@ -58,8 +60,8 @@ services:
   front-cliente:
     build: ./Finauto-Cliente
     container_name: front-cliente
-    #environment:
-    #  VITE_API_URL: https://api.finautointernational.com
+    environment:
+      VITE_API_BASE_URL: http://82.163.73.169:5000/v1
     #expose:
     ports:
       - "8080:80"
