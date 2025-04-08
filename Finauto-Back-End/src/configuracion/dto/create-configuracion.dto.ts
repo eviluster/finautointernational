@@ -55,7 +55,12 @@ export class CreateConfiguracionDto {
     @IsNotEmpty()
     @IsNumber({ allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0 })
     @Min(1)
-    validezOferta: number;
+    validezOferta: number;    
 
+    @ApiProperty({ type: Number})
+    @IsNotEmpty()
+    @IsNumber({ allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0 })
+    @Min(1)
+    importPrice: number;
     
 }

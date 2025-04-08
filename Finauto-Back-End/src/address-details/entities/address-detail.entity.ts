@@ -20,7 +20,7 @@ export class AddressDetail extends ExtendedEntity {
     eager: false,
   })
   @JoinColumn({ name: 'municipality_id' })
-  municipality: Municipality;
+  municipality_id: Municipality;
 
   // @OneToMany(() => User, (users) => users.addressDetails)
   // user: User[]

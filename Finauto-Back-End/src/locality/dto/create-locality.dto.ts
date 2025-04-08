@@ -8,5 +8,5 @@ export class CreateLocalityDto  extends BaseExtendedDto {
     @IsString()
     @IsNotEmpty()
     @IsUUID()
-    municipality: string;
+    municipality_id: string;
 }

@@ -58,7 +58,7 @@ export class MunicipalityService extends BaseServiceCRUD<Municipality,CreateMuni
           searchDto.province != null &&
           searchDto.province && searchDto.province.trim() !== '')
         { 
-          queryBuilder.andWhere(`municipality.province.id = :provinceId`, { provinceId: searchDto.province });
+          queryBuilder.andWhere(`municipality.province.id = :province`, { province: searchDto.province });
         }
       }
       returnDto.data = await queryBuilder.getMany();

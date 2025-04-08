@@ -11,16 +11,15 @@ import {
 
 @Entity('province')
 export class Province extends ExtendedEntity {
-  @Column({ default: false })
-  isCapital: boolean;
+
 
   @ManyToOne(() => Country, (country) => country.provinces, {
     eager: false,
   })
   @JoinColumn({ name: 'country_id' })
-  country: Country;
+  country_id: Country;
 
-  @OneToMany(() => Municipality, (municipality) => municipality.province, {
+  @OneToMany(() => Municipality, (municipality) => municipality.province_id, {
     cascade: false,
   })
   municipalities: Municipality[];

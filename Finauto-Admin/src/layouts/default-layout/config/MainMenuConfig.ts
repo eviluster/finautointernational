@@ -627,6 +627,10 @@ export default function useDynamicMenu() {
                 route: "/admin/nomencladores",
                 sub: [
                   {
+                    heading: "Pais",
+                    route: "/admin/nomencladores/pais",
+                  },
+                  {
                     heading: "Provincia",
                     route: "/admin/nomencladores/provinces",
                   },
@@ -640,10 +644,7 @@ export default function useDynamicMenu() {
                   },
                 ],
               },
-              {
-                heading: "Servicios",
-                route: "/admin/nomencladores/servicios",
-              },
+
               {
                 heading: "Marcas",
                 route: "/admin/nomencladores/marcas",
@@ -687,6 +688,32 @@ export default function useDynamicMenu() {
               {
                 heading: "Categoría de Pieza y Acccesorio",
                 route: "/admin/nomencladores/categoria-pieza-accesorio",
+              },
+            ],
+          },
+          {
+            sectionTitle: "Tipo de producto",
+            route: "/admin/nomencladores/tipo-producto",
+            keenthemesIcon: "notepad",
+            bootstrapIcon: "bi-calendar3-event",
+
+            sub: [
+              {
+                heading: "Vehiculo",
+                route: "/admin/nomencladores/tipo-producto/vehiculo",
+              },
+              {
+                heading: "Pieza",
+                route: "/admin/nomencladores/tipo-producto/pieza",
+              },
+              {
+                heading: "Equipamiento de garaje",
+                route:
+                  "/admin/nomencladores/tipo-producto/equipamiento-de-garaje",
+              },
+              {
+                heading: "Servicio",
+                route: "/admin/nomencladores/tipo-producto/servicio",
               },
             ],
           },

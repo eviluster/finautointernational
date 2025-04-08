@@ -5,7 +5,7 @@ import { AfterInsert, Entity, OneToMany } from "typeorm";
 
 @Entity('tipo_persona')
 export class TipoPersona extends ExtendedEntity {
-  @OneToMany(() => Persona, (Persona) => Persona.tipoPersona, {
+  @OneToMany(() => Persona, (Persona) => Persona.tipo_persona_id, {
     cascade: false,
   })
   personasJuridicas: Persona[];

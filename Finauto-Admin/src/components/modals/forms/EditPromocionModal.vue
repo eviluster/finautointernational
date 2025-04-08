@@ -92,8 +92,7 @@ import { defineComponent, ref, watch } from "vue";
 import * as yup from "yup";
 import { Form, Field, ErrorMessage, useForm } from "vee-validate";
 import { hideModal } from "@/core/helpers/modal";
-import { useServiceStore } from "@/stores/servicios";
-import { type IServicio } from "@/core/data/servicios";
+import { useServicioStore } from "@/stores/servicios";
 import ImageInput from "@/components/ImageInput.vue";
 
 export default defineComponent({
@@ -131,7 +130,7 @@ export default defineComponent({
       },
       { immediate: true }, // Ensure it runs when the component is mounted
     );
-    const serviceStore = useServiceStore();
+    const serviceStore = useServicioStore();
     const formRef = ref<null | HTMLFormElement>(null);
     const editServicioModalRef = ref<null | HTMLElement>(null);
     const schema = yup.object({
@@ -151,15 +150,15 @@ export default defineComponent({
     ) => {
       console.log("ejecutando");
 
-      const editService: IServicio = {
-        id: idEdit.value,
-        nombre: formData.value.nombre,
-        descripcion: formData.value.descripcion,
-        image: formData.value.image,
-      };
+      // const editService: IServicio = {
+      //   id: idEdit.value,
+      //   nombre: formData.value.nombre,
+      //   descripcion: formData.value.descripcion,
+      //   image: formData.value.image,
+      // };
 
-      serviceStore.updateService(editService);
-      console.log("servicio agregado:", editService);
+      //serviceStore.updateService(editService);
+
       hideModal(editServicioModalRef.value);
       resetForm();
       imageUrl.value = "";

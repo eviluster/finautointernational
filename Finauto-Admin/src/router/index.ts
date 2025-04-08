@@ -397,6 +397,66 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Ecommerce", "Ventas", "Nueva Orden"],
         },
       },
+
+      // Tipos de productos ////////////////////////////////////////////////////////////////////////////////////////////////
+
+      // Para añadir una pieza
+      {
+        path: "/admin/nomencladores/tipo-producto/pieza",
+        name: "new-pieza",
+        component: () => import("@/views/tipo-producto/pieza.vue"),
+        meta: {
+          pageTitle: "Nueva Pieza",
+          breadcrumbs: ["Administracion", "Tipo de producto", "Pieza"],
+        },
+      },
+      // Para añadir un equipamiento de garaje
+      {
+        path: "/admin/nomencladores/tipo-producto/equipamiento-de-garaje",
+        name: "new-equipamiento-de-garaje",
+        component: () =>
+          import("@/views/tipo-producto/equipamiento-garaje.vue"),
+        meta: {
+          pageTitle: "Equipamiento de garaje",
+          breadcrumbs: [
+            "Administracion",
+            "Tipo de producto",
+            "Equipamiento de garaje",
+          ],
+        },
+      },
+      // Para añadir un vehiculo
+      {
+        path: "/admin/nomencladores/tipo-producto/vehiculo",
+        name: "new-vehiculo",
+        component: () => import("@/views/tipo-producto/vehiculo.vue"),
+        meta: {
+          pageTitle: "Nuevo Vehículo",
+          breadcrumbs: ["Administracion", "Tipo de producto", "Vehículo"],
+        },
+      },
+      // Para añadir un servicio
+      {
+        path: "/admin/nomencladores/tipo-producto/servicio",
+        name: "new-servicio",
+        component: () => import("@/views/tipo-producto/servicio.vue"),
+        meta: {
+          pageTitle: "Nuevo Servicio",
+          breadcrumbs: ["Administracion", "Tipo de producto", "Servicio"],
+        },
+      },
+
+      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      {
+        path: "/admin/nomencladores/pais",
+        name: "pais",
+        component: () =>
+          import("@/views/administracion/nomencladores/paisList.vue"),
+        meta: {
+          pageTitle: "Listado de paises",
+          breadcrumbs: ["Administracion", "Nomencladores", "Pais"],
+        },
+      },
       {
         path: "/admin/nomencladores/provinces",
         name: "province",
@@ -413,7 +473,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import("@/views/administracion/nomencladores/municipioList.vue"),
         meta: {
-          pageTitle: "Listado de Provincias",
+          pageTitle: "Listado de Municipios",
           breadcrumbs: ["Administracion", "Nomencladores", "Municipios"],
         },
       },
@@ -427,16 +487,7 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Administracion", "Nomencladores", "Localidades"],
         },
       },
-      {
-        path: "/admin/nomencladores/servicios",
-        name: "servicios",
-        component: () =>
-          import("@/views/administracion/nomencladores/servicioList.vue"),
-        meta: {
-          pageTitle: "Listado de Servicios",
-          breadcrumbs: ["Administracion", "Nomencladores", "Servicios"],
-        },
-      },
+
       {
         path: "/admin/nomencladores/marcas",
         name: "marcas",
@@ -557,11 +608,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import("@/views/administracion/nomencladores/tipoSuspencionList.vue"),
         meta: {
-          pageTitle: "Tipos de suspención",
+          pageTitle: "Tipos de suspensión",
           breadcrumbs: [
             "Administracion",
             "Nomencladores",
-            "Tipo de suspencion",
+            "Tipo de suspensión",
           ],
         },
       },

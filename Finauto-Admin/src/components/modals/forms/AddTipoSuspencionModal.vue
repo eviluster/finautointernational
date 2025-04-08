@@ -12,7 +12,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_provincia_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bold">Añadir una tipo de suspención</h2>
+          <h2 class="fw-bold">Añadir una tipo de suspensión</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -36,7 +36,7 @@
             <!-- Campo: Nombre del tiposuspencion -->
             <div class="mb-4 px-4 py-4 col-11 mx-6">
               <label class="required form-label"
-                >Nombre del tipo de suspención</label
+                >Nombre del tipo de suspensión</label
               >
               <Field
                 name="name"

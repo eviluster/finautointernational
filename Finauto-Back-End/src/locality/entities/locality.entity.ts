@@ -5,6 +5,6 @@ import { Entity, ManyToOne, JoinColumn } from 'typeorm';
 @Entity('locality')
 export class Locality extends ExtendedEntity {
   @ManyToOne(() => Municipality, (municipality) => municipality.localities)
-  @JoinColumn()
-  municipality: Municipality;
+  @JoinColumn({ name: 'municipality_id' })
+  municipality_id: Municipality;
 }

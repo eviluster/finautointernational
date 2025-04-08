@@ -6,7 +6,7 @@ export class CreateMunicipalityDto  extends BaseExtendedDto {
 
   @ApiProperty()
   @IsString()
-  province: string;
+  province_id: string;
 
   @ApiProperty()
   @IsNumber()

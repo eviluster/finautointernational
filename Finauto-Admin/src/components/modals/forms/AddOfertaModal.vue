@@ -84,8 +84,7 @@ import { defineComponent, ref } from "vue";
 import * as yup from "yup";
 import { Form, Field, ErrorMessage, useForm } from "vee-validate";
 import { hideModal } from "@/core/helpers/modal";
-import { useServiceStore } from "@/stores/servicios";
-import { type IServicio } from "@/core/data/servicios";
+import { useServicioStore } from "@/stores/servicios";
 import ImageInput from "@/components/ImageInput.vue";
 
 export default defineComponent({
@@ -98,7 +97,7 @@ export default defineComponent({
   },
 
   setup() {
-    const serviceStore = useServiceStore();
+    const serviceStore = useServicioStore();
     const formRef = ref<null | HTMLFormElement>(null);
     const addServicioModalRef = ref<null | HTMLElement>(null);
     const schema = yup.object({
@@ -118,15 +117,15 @@ export default defineComponent({
     ) => {
       console.log("ejecutando");
 
-      const newService: IServicio = {
-        id: Math.floor(Math.random() * 99999) + 1,
-        nombre: values.nombre,
-        descripcion: values.descripcion,
-        image: imageUrl.value,
-      };
+      // const newService: IServicio = {
+      //   id: Math.floor(Math.random() * 99999) + 1,
+      //   nombre: values.nombre,
+      //   descripcion: values.descripcion,
+      //   image: imageUrl.value,
+      // };
 
-      serviceStore.addService(newService);
-      console.log("servicio agregado:", newService);
+      // serviceStore.addService(newService);
+      // console.log("servicio agregado:", newService);
       hideModal(addServicioModalRef.value);
       resetForm();
       imageUrl.value = "";

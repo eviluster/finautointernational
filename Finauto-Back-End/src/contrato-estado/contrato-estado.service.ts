@@ -61,14 +61,14 @@ UpdateContratoEstadoDto> {
           searchDto.country != null &&
           searchDto.country && searchDto.country.trim() !== '')
         { 
-          queryBuilder.andWhere(`province.country.id = :provinceId`, { provinceId: searchDto.country });
+          queryBuilder.andWhere(`province.country.id = :province`, { province: searchDto.country });
         }
       }
-      if(searchDto.isCapital!= undefined &&
-        searchDto.isCapital != null )
-      { 
-        queryBuilder.andWhere(`province.isCapital = :isCapital`, { isCapital: searchDto.isCapital });
-      }
+      // if(searchDto.isCapital!= undefined &&
+      //   searchDto.isCapital != null )
+      // { 
+      //   queryBuilder.andWhere(`province.isCapital = :isCapital`, { isCapital: searchDto.isCapital });
+      // }
       
       returnDto.data = await queryBuilder.getMany();
   

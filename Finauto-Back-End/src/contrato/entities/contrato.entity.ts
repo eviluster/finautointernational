@@ -1,7 +1,9 @@
 import { BasicInformationEntity } from "src/common/base/entities";
+import { ContratoEstado } from "src/contrato-estado/entities/contrato-estado.entity";
+import { Producto } from "src/producto/entities/producto.entity";
 import { Section } from "src/sections/entities/section.entity";
 import { Vehicle } from "src/vehicle/entities/vehicle.entity";
-import { Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 @Entity('contrato')
 // Arreglar relacion a producto
 export class Contrato extends BasicInformationEntity {
@@ -12,7 +14,12 @@ export class Contrato extends BasicInformationEntity {
 
     @ManyToOne(() => Vehicle,  { nullable:true})
     // (vehicle) => vehicle.contratos,
-    vehicle: Vehicle;
+    producto: Producto;
+    @ManyToOne(() => ContratoEstado, { nullable: true })
+    contratoEstado: ContratoEstado;
+
+    @Column({ type: 'numeric', precision: 10, scale: 2, nullable: true })
+    precio: number;
     // parte=>pieza
 // estados de contrato
 // Abierto1  

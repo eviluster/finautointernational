@@ -184,7 +184,7 @@ export default defineComponent({
             v-model="search"
             @input="searchItems()"
             class="form-control form-control-solid w-250px ps-15"
-            placeholder="Buscar tipo de suspención"
+            placeholder="Buscar tipo de suspensión"
           />
         </div>
         <!--end::Search-->
@@ -217,7 +217,7 @@ export default defineComponent({
             data-bs-target="#kt_modal_add_tiposuspencion"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Añadir tipo de suspención
+            Añadir tipo de suspensión
           </button>
           <!--end::Add tiposuspencion-->
         </div>

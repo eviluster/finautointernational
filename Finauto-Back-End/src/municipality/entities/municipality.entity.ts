@@ -16,10 +16,10 @@ export class Municipality extends ExtendedEntity {
   @ManyToOne(() => Province, (province) => province.municipalities, {
     eager: false,
   })
-  @JoinColumn()
-  province: Province;
+  @JoinColumn({ name: 'province_id' })
+  province_id: Province;
 
-  @OneToMany(() => Locality, (locality) => locality.municipality, {
+  @OneToMany(() => Locality, (locality) => locality.municipality_id, {
     cascade: false,
   })
   localities: Locality[];
@@ -29,7 +29,7 @@ export class Municipality extends ExtendedEntity {
 
   @OneToMany(
     () => AddressDetail,
-    (addressDetails) => addressDetails.municipality,
+    (addressDetails) => addressDetails.municipality_id,
   )
   addresses: AddressDetail[];
 }

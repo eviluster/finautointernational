@@ -6,17 +6,10 @@
     tabindex="-1"
     aria-hidden="true"
   >
-    <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
-      <!--begin::Modal content-->
       <div class="modal-content">
-        <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_edit_provincia_header">
-          <!--begin::Modal title-->
           <h2 class="fw-bold">Editar Servicio</h2>
-          <!--end::Modal title-->
-
-          <!--begin::Close-->
           <div
             id="kt_modal_edit_provincia_close"
             data-bs-dismiss="modal"
@@ -24,154 +17,187 @@
           >
             <KTIcon icon-name="cross" icon-class="fs-1" />
           </div>
-          <!--end::Close-->
         </div>
-        <!--end::Modal header-->
-        <!--begin::Form-->
-        <Form 
-    @submit="handleSubmit" 
-    :validation-schema="schema"  
-    ref="formRef"
-    class="my-6"
-  >
-    <div class="card shadow-sm">
-      <!-- Sección de imagen -->
-      <div class="mb-4 px-4 py-4 col-11 mx-6">
-        <ImageInput 
-         v-model="formData.image"
-          :error="errors.image || ''" 
-        />
-      </div>
 
-      <!-- Campo: Nombre del servicio -->
-      <div class="mb-4 px-4 py-4 col-11 mx-6">
-        <label class="required form-label">Nombre del servicio</label>
-        <Field 
-          name="nombre" 
-          v-model="formData.nombre"
-          as="input" 
-          type="text" 
-          class="form-control" 
-          placeholder="Ponga el nombre del servicio" 
-        />
-        <ErrorMessage name="nombre" class="text-danger" />
-      </div>
+        <Form
+          @submit="handleSubmit"
+          :validation-schema="schema"
+          ref="formRef"
+          class="my-6"
+        >
+          <div class="card shadow-sm">
+            <!-- Galería de imágenes -->
+            <div class="mb-4 px-4 py-4 col-11 mx-6">
+              <ImageInput
+                v-model="formData.galery"
+                :error="errors.galery || ''"
+              />
+            </div>
 
-      <!-- Campo: Descripción -->
-      <div class="mb-4 px-4 py-4 col-11 mx-6">
-        <label class="required form-label">Descripción</label>
-        <Field 
-          name="descripcion" 
-          v-model="formData.descripcion"
-          as="textarea" 
-          class="form-control" 
-          placeholder="Ponga la descripción" 
-        />
-        <ErrorMessage name="descripcion" class="text-danger" />
-      </div>
-    </div>
+            <!-- Nombre -->
+            <div class="mb-4 px-4 py-4 col-11 mx-6">
+              <label class="required form-label">Nombre del servicio</label>
+              <Field
+                name="name"
+                v-model="formData.name"
+                as="input"
+                type="text"
+                class="form-control"
+                placeholder="Ponga el nombre del servicio"
+              />
+              <ErrorMessage name="name" class="text-danger" />
+            </div>
 
-    <!-- Footer del formulario -->
-    <div class="card-footer my-8 d-flex justify-content-end">
-      <a href="#" class="btn btn-bg-secondary" data-bs-dismiss="modal">Cancelar</a>
-      <button type="submit" class="btn btn-bg-primary mx-3">Actualizar</button>
-    </div>
-  </Form>
-        <!--end::Form-->
+            <!-- Descripción -->
+            <div class="mb-4 px-4 py-4 col-11 mx-6">
+              <label class="required form-label">Descripción</label>
+              <Field
+                name="description"
+                v-model="formData.description"
+                as="textarea"
+                class="form-control"
+                placeholder="Ponga la descripción"
+              />
+              <ErrorMessage name="description" class="text-danger" />
+            </div>
+
+            <!-- Precio Base -->
+            <div class="mb-4 px-4 py-4 col-11 mx-6">
+              <label class="required form-label">Precio Base</label>
+              <Field
+                name="precioBase"
+                v-model.number="formData.precioBase"
+                as="input"
+                type="number"
+                class="form-control"
+                placeholder="Ponga el precio base"
+              />
+              <ErrorMessage name="precioBase" class="text-danger" />
+            </div>
+          </div>
+
+          <div class="card-footer my-8 d-flex justify-content-end">
+            <a href="#" class="btn btn-bg-secondary" data-bs-dismiss="modal"
+              >Cancelar</a
+            >
+            <button type="submit" class="btn btn-bg-primary mx-3">
+              Actualizar
+            </button>
+          </div>
+        </Form>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent ,ref ,watch } from "vue";
-  import * as yup from "yup";
-  import { Form, Field, ErrorMessage ,useForm} from "vee-validate";
-  import { hideModal } from "@/core/helpers/modal";
-  import { useServiceStore } from "@/stores/servicios"; 
-  import { type IServicio } from "@/core/data/servicios"; 
-  import ImageInput from "@/components/ImageInput.vue";
-  
-  export default defineComponent({
-    name: "AddServicio",
-    components: {
-      Form,
-      Field,
-      ErrorMessage,
-      ImageInput,
-    },
-    props: {
+import { defineComponent, ref, watch } from "vue";
+import * as yup from "yup";
+import { Form, Field, ErrorMessage, useForm } from "vee-validate";
+import { hideModal } from "@/core/helpers/modal";
+import { useServicioStore } from "@/stores/servicios";
+import ImageInput from "@/components/ImageInputTest.vue";
+
+interface EditServicioForm {
+  name: string;
+  description: string;
+  precioBase: number;
+  galery: string[];
+}
+
+export default defineComponent({
+  name: "EditServicio",
+  components: { Form, Field, ErrorMessage, ImageInput },
+  props: {
     servicio: {
-      type: Object,
+      type: Object as () => {
+        id: string; // ahora id es string
+        name: { es: string; en: string };
+        description: { es: string; en: string };
+        precioBase: number;
+        galery: string[];
+      },
       required: true,
     },
   },
+  setup(props) {
+    const servicioStore = useServicioStore();
+    const formRef = ref<HTMLFormElement | null>(null);
+    const editServicioModalRef = ref<HTMLElement | null>(null);
 
-    setup(props) {
-      const idEdit = ref()
-      const formData = ref({
-      image:"",
-      nombre: "",
-      descripcion: "",
+    // id como string
+    const idEdit = ref<string>("");
+
+    const formData = ref<EditServicioForm>({
+      name: "",
+      description: "",
+      precioBase: 0,
+      galery: [],
     });
 
     watch(
       () => props.servicio,
-      (ServiceToEdit) => {
-        if (ServiceToEdit) {
-          idEdit.value =ServiceToEdit.id;
-          formData.value.image = ServiceToEdit.image || "";
-          formData.value.nombre = ServiceToEdit.nombre || "";
-          formData.value.descripcion = ServiceToEdit.descripcion || "";
+      (srv) => {
+        if (srv) {
+          idEdit.value = srv.id; // srv.id ya es string
+          formData.value.name = srv.name.es;
+          formData.value.description = srv.description.es;
+          formData.value.precioBase = srv.precioBase;
+          formData.value.galery = srv.galery || [];
         }
       },
-      { immediate: true } // Ensure it runs when the component is mounted
+      { immediate: true },
     );
-      const serviceStore = useServiceStore();  
-      const formRef = ref<null | HTMLFormElement>(null);
-     const editServicioModalRef = ref<null | HTMLElement>(null);
-     const schema = yup.object({
-      nombre: yup.string().required("El nombre es obligatorio"),
-      descripcion: yup.string().required("La descripción es obligatoria"),
-      image: yup.string().required("La imagen es obligatoria")
+
+    const schema = yup.object({
+      name: yup.string().required("El nombre es obligatorio"),
+      description: yup.string().required("La descripción es obligatoria"),
+      precioBase: yup
+        .number()
+        .typeError("El precio debe ser un número")
+        .required("El precio base es obligatorio"),
+      galery: yup
+        .array()
+        .of(yup.string())
+        .min(1, "Se requiere al menos una imagen")
+        .max(5, "Solo se permiten hasta 5 imágenes"),
     });
 
-    const { errors } = useForm({ validationSchema: schema });
+    const { errors } = useForm<EditServicioForm>({
+      validationSchema: schema,
+    });
 
-      
-    // URL de la imagen (usada en el ImageInput mediante v-model)
-    const imageUrl = ref<string>("");
-
-   
-
-      const handleSubmit = (values: any, { resetForm }: { resetForm: () => void }) => {
-        console.log("ejecutando");
-
-      const editService :IServicio = {
-        id: idEdit.value, 
-        nombre: formData.value.nombre,
-        descripcion: formData.value.descripcion,
-        image: formData.value.image,
+    const handleSubmit = async (
+      values: EditServicioForm,
+      { resetForm }: { resetForm: () => void },
+    ) => {
+      const updatedData = {
+        name: { es: values.name, en: "" },
+        description: { es: values.description, en: "" },
+        precioBase: values.precioBase,
+        // Usamos formData.galery en vez de values.galery
+        galery: formData.value.galery,
       };
 
-        serviceStore.updateService(editService);
-        console.log("servicio agregado:", editService);
+      try {
+        await servicioStore.updateServicio(idEdit.value, updatedData);
+        await servicioStore.fetchServicios();
+      } catch (err) {
+        console.error("Error actualizando servicio:", err);
+      } finally {
         hideModal(editServicioModalRef.value);
         resetForm();
-        imageUrl.value = ""; 
-      };
+      }
+    };
 
-   
-    
-      return {
-        schema,
-        handleSubmit,
-        formRef,
-        editServicioModalRef,
-        imageUrl,
-        errors,
-        formData
-      };
-    },
-  });
+    return {
+      formRef,
+      editServicioModalRef,
+      formData,
+      schema,
+      errors,
+      handleSubmit,
+    };
+  },
+});
 </script>

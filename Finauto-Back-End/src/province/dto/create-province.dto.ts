@@ -6,7 +6,7 @@ export class CreateProvinceDto  extends BaseExtendedDto{
 
   @ApiProperty()
   @IsString()
-  countryId: string;
+  country_id: string;
 
   // @ApiProperty()
   // @IsBoolean()

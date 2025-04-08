@@ -2,33 +2,20 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PagoService } from './pago.service';
 import { CreatePagoDto } from './dto/create-pago.dto';
 import { UpdatePagoDto } from './dto/update-pago.dto';
+import { BaseControllerCRUD } from 'src/common/base/class/base.controller.crud.class';
 
 @Controller('pago')
-export class PagoController {
-  constructor(private readonly pagoService: PagoService) {}
-
-  @Post()
-  create(@Body() createPagoDto: CreatePagoDto) {
-    return this.pagoService.create(createPagoDto);
+export class PagoController extends BaseControllerCRUD<
+CreatePagoDto,
+UpdatePagoDto,
+PagoService
+> {
+  constructor(private readonly Service: PagoService) {
+    super(Service);
   }
-
-  @Get()
-  findAll() {
-    return this.pagoService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pagoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePagoDto: UpdatePagoDto) {
-    return this.pagoService.update(+id, updatePagoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pagoService.remove(+id);
-  }
+  
+  // @Get('search-by-field')
+  // async searchByField(@Body() searchDto: SearchEngineDto): Promise<ReturnDto> {
+  //   return await this.Service.searchByField(searchDto);
+  // }
 }

@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-xxl">
+  <nav class="navbar navbar-expand-xl">
     <div class="container-fluid">
       <!-- LOGO -->
       <router-link class="navbar-brand" to="/">

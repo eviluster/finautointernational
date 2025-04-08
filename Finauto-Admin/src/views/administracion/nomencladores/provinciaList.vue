@@ -284,15 +284,14 @@ export default defineComponent({
           </a>
         </template>
         <template v-slot:actions="{ row: provincia }">
-          <a
-            nolink
+          <span
             class="btn btn-sm btn-light btn-active-light-primary"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end"
             data-kt-menu-flip="top-end"
             >Actions
             <KTIcon icon-name="down" icon-class="fs-5 m-0" />
-          </a>
+          </span>
           <!--begin::Menu-->
           <div
             class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"

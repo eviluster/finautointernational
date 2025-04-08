@@ -16,7 +16,10 @@ export class Configuracion extends BasicEntity {
     porcientoMinPrice: number
     
     @Column()
-    tiempoGarantia: number
+    tiempoGarantia: number    
+
+    @Column()
+    importPrice : number
     
     @Column()
     kmGarantia: number

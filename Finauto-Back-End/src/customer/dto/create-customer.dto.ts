@@ -11,4 +11,9 @@ export class CreateCustomerDto  extends BaseExtendedDto {
     @IsEmail()
     email: string;
 
+    lineOne: string;
+    lineTwo: string;
+    cityTown: string;
+    postalCode: string;
+
 }

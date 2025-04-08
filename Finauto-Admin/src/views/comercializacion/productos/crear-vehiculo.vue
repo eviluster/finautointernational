@@ -179,27 +179,33 @@
 
                                 <!-- Marca y Modelo -->
                                 <div class="row">
-                                  <div class="col-md-6">
-                                    <label class="form-label required"
-                                      >Marca</label
-                                    >
+                                  <div class="col-md-6 pb-6">
+                                    <label class="form-label">Marca</label>
                                     <Field
+                                      as="select"
                                       name="marca"
-                                      type="text"
                                       class="form-control"
-                                    />
+                                    >
+                                      <option value="">
+                                        Seleccione una marca
+                                      </option>
+                                    </Field>
                                     <ErrorMessage
                                       name="marca"
                                       class="text-danger"
                                     />
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-6 pb-6">
                                     <label class="form-label">Modelo</label>
                                     <Field
+                                      as="select"
                                       name="modelo"
-                                      type="text"
                                       class="form-control"
-                                    />
+                                    >
+                                      <option value="">
+                                        Seleccione un modelo
+                                      </option>
+                                    </Field>
                                     <ErrorMessage
                                       name="modelo"
                                       class="text-danger"
@@ -207,57 +213,77 @@
                                   </div>
                                 </div>
 
-                                <!-- Dimensiones -->
-                                <div class="mb-3">
-                                  <label class="form-label">Dimensiones</label>
-                                  <Field
-                                    name="dimensiones"
-                                    type="text"
-                                    class="form-control"
-                                  />
-                                  <ErrorMessage
-                                    name="dimensiones"
-                                    class="text-danger"
-                                  />
-                                </div>
-
-                                <!-- Tamaño de la caja de carga -->
-                                <div class="mb-3">
-                                  <label class="form-label"
-                                    >Tamaño de la caja de carga</label
-                                  >
-                                  <Field
-                                    name="tamanoCajaCarga"
-                                    type="text"
-                                    class="form-control"
-                                  />
-                                  <ErrorMessage
-                                    name="tamanoCajaCarga"
-                                    class="text-danger"
-                                  />
-                                </div>
-
-                                <!-- Otros campos -->
+                                <!-- Dimensiones y Tamaño de la caja de carga -->
                                 <div class="row">
-                                  <div class="col-md-6">
-                                    <label class="form-label">Weebare</label>
+                                  <div class="col-md-6 pb-6">
+                                    <label class="form-label"
+                                      >Dimensiones (mm)</label
+                                    >
                                     <Field
-                                      name="weebare"
-                                      type="text"
+                                      as="select"
+                                      name="dimensiones"
                                       class="form-control"
-                                    />
+                                    >
+                                      <option value="">
+                                        Seleccione dimensiones
+                                      </option>
+                                    </Field>
                                     <ErrorMessage
-                                      name="weebare"
+                                      name="dimensiones"
                                       class="text-danger"
                                     />
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-6 pb-6">
+                                    <label class="form-label"
+                                      >Tamaño de la caja de carga (mm)</label
+                                    >
+                                    <Field
+                                      as="select"
+                                      name="tamanoCajaCarga"
+                                      class="form-control"
+                                    >
+                                      <option value="">
+                                        Seleccione tamaño de caja
+                                      </option>
+                                    </Field>
+                                    <ErrorMessage
+                                      name="tamanoCajaCarga"
+                                      class="text-danger"
+                                    />
+                                  </div>
+                                </div>
+
+                                <!-- Distancia entre ejes y Asientos -->
+                                <div class="row">
+                                  <div class="col-md-6 pb-6">
+                                    <label class="form-label"
+                                      >Distancia entre ejes (mm)</label
+                                    >
+                                    <Field
+                                      as="select"
+                                      name="distanciaEjes"
+                                      class="form-control"
+                                    >
+                                      <option value="">
+                                        Seleccione distancia entre ejes
+                                      </option>
+                                    </Field>
+                                    <ErrorMessage
+                                      name="distanciaEjes"
+                                      class="text-danger"
+                                    />
+                                  </div>
+                                  <div class="col-md-6 pb-6">
                                     <label class="form-label">Asientos</label>
                                     <Field
+                                      as="select"
                                       name="asientos"
-                                      type="number"
                                       class="form-control"
-                                    />
+                                    >
+                                      <option value="">
+                                        Seleccione número de asientos
+                                      </option>
+                                    </Field>
                                     <ErrorMessage
                                       name="asientos"
                                       class="text-danger"
@@ -265,138 +291,61 @@
                                   </div>
                                 </div>
 
-                                <!-- Distancia al suelo -->
-                                <div class="mb-3">
-                                  <label class="form-label"
-                                    >Distancia al suelo</label
-                                  >
-                                  <Field
-                                    name="distanciaSuelo"
-                                    type="text"
-                                    class="form-control"
-                                  />
-                                  <ErrorMessage
-                                    name="distanciaSuelo"
-                                    class="text-danger"
-                                  />
-                                </div>
-
-                                <!-- Más especificaciones -->
+                                <!-- Distancia al suelo y Peso en vacío -->
                                 <div class="row">
-                                  <div class="col-md-6">
-                                    <label class="form-label">Peso vacío</label>
+                                  <div class="col-md-6 pb-6">
+                                    <label class="form-label"
+                                      >Distancia al suelo (mm)</label
+                                    >
                                     <Field
+                                      as="select"
+                                      name="distanciaSuelo"
+                                      class="form-control"
+                                    >
+                                      <option value="">
+                                        Seleccione distancia al suelo
+                                      </option>
+                                    </Field>
+                                    <ErrorMessage
+                                      name="distanciaSuelo"
+                                      class="text-danger"
+                                    />
+                                  </div>
+                                  <div class="col-md-6 pb-6">
+                                    <label class="form-label"
+                                      >Peso en vacío (kg)</label
+                                    >
+                                    <Field
+                                      as="select"
                                       name="pesoVacio"
-                                      type="number"
                                       class="form-control"
-                                    />
+                                    >
+                                      <option value="">
+                                        Seleccione peso en vacío
+                                      </option>
+                                    </Field>
                                     <ErrorMessage
                                       name="pesoVacio"
                                       class="text-danger"
                                     />
                                   </div>
-                                  <div class="col-md-6">
-                                    <label class="form-label"
-                                      >Desplazamiento</label
-                                    >
-                                    <Field
-                                      name="desplazamiento"
-                                      type="text"
-                                      class="form-control"
-                                    />
-                                    <ErrorMessage
-                                      name="desplazamiento"
-                                      class="text-danger"
-                                    />
-                                  </div>
                                 </div>
 
-                                <!-- Potencia máxima y Torque -->
-                                <div class="row">
-                                  <div class="col-md-6">
-                                    <label class="form-label"
-                                      >Potencia máxima</label
-                                    >
-                                    <Field
-                                      name="potenciaMaxima"
-                                      type="text"
-                                      class="form-control"
-                                    />
-                                    <ErrorMessage
-                                      name="potenciaMaxima"
-                                      class="text-danger"
-                                    />
-                                  </div>
-                                  <div class="col-md-6">
-                                    <label class="form-label">Torque</label>
-                                    <Field
-                                      name="torque"
-                                      type="text"
-                                      class="form-control"
-                                    />
-                                    <ErrorMessage
-                                      name="torque"
-                                      class="text-danger"
-                                    />
-                                  </div>
-                                </div>
-
-                                <!-- Velocidad máxima -->
-                                <div class="mb-3">
+                                <!-- Capacidad del tanque -->
+                                <div class="pb-6">
                                   <label class="form-label"
-                                    >Velocidad máxima</label
+                                    >Capacidad del tanque de combustible
+                                    (l)</label
                                   >
                                   <Field
-                                    name="velocidadMaxima"
-                                    type="text"
-                                    class="form-control"
-                                  />
-                                  <ErrorMessage
-                                    name="velocidadMaxima"
-                                    class="text-danger"
-                                  />
-                                </div>
-
-                                <!-- Tracción y tipo de freno -->
-                                <div class="row">
-                                  <div class="col-md-6">
-                                    <label class="form-label">Tracción</label>
-                                    <Field
-                                      name="traccion"
-                                      type="text"
-                                      class="form-control"
-                                    />
-                                    <ErrorMessage
-                                      name="traccion"
-                                      class="text-danger"
-                                    />
-                                  </div>
-                                  <div class="col-md-6">
-                                    <label class="form-label"
-                                      >Tipo de freno</label
-                                    >
-                                    <Field
-                                      name="tipoFreno"
-                                      type="text"
-                                      class="form-control"
-                                    />
-                                    <ErrorMessage
-                                      name="tipoFreno"
-                                      class="text-danger"
-                                    />
-                                  </div>
-                                </div>
-
-                                <!-- Capacidad del tanque de combustible -->
-                                <div class="mb-3">
-                                  <label class="form-label"
-                                    >Capacidad del tanque de combustible</label
-                                  >
-                                  <Field
+                                    as="select"
                                     name="capacidadTanque"
-                                    type="text"
                                     class="form-control"
-                                  />
+                                  >
+                                    <option value="">
+                                      Seleccione capacidad del tanque
+                                    </option>
+                                  </Field>
                                   <ErrorMessage
                                     name="capacidadTanque"
                                     class="text-danger"

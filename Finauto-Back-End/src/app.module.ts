@@ -43,25 +43,22 @@ import { TipoSuspensionModule } from './tipo-suspension/tipo-suspension.module';
 import { VehicleSuplementModule } from './vehicle-suplement/vehicle-suplement.module';
 import { CuentaBancariaModule } from './cuenta-bancaria/cuenta-bancaria.module';
 import { OfertaModule } from './oferta/oferta.module';
-import { ContratoModule } from './contrato/contrato.module';
 import { ReservaModule } from './reserva/reserva.module';
 import { ComercialModule } from './comercial/comercial.module';
 import { PagoModule } from './pago/pago.module';
 import { ProductoModule } from './producto/producto.module';
 import { ProductoVehiculoSuplementoModule } from './producto-vehiculo-suplemento/producto-vehiculo-suplemento.module';
 import { ProductoEstadoModule } from './producto-estado/producto-estado.module';
-import { ContratoEstadoModule } from './contrato-estado/contrato-estado.module';
-import { OfertaEstadoModule } from './oferta-estado/oferta-estado.module';
 import { CategoriaPiezaAccesorioModule } from './categoria-pieza-accesorio/categoria-pieza-accesorio.module';
 import { PiezaAccesorioModule } from './pieza-accesorio/pieza-accesorio.module';
 import { ServicioModule } from './servicio/servicio.module';
 import { EquipoGarageModule } from './equipo-garage/equipo-garage.module';
 import { CustomerModule } from './customer/customer.module';
-import { CustomerAddressTypeModule } from './customer-address-type/customer-address-type.module';
-import { CustomerAddressModule } from './customer-address/customer-address.module';
 import { VehicleVariationsModule } from './vehicle-variations/vehicle-variations.module';
 import { VehicleVariationsTypeModule } from './vehicle-variations-type/vehicle-variations-type.module';
 import { ParteModule } from './parte/parte.module';
+import { CustomerCuentaModule } from './customer-cuenta/customer-cuenta.module';
+import { FinAutoCuentaModule } from './fin-auto-cuenta/fin-auto-cuenta.module';
 
 @Module({
   imports: [
@@ -112,25 +109,22 @@ import { ParteModule } from './parte/parte.module';
     VehicleSuplementModule,
     CuentaBancariaModule,
     OfertaModule,
-    ContratoModule,
     ReservaModule,
     ComercialModule,
     PagoModule,
     ProductoModule,
     ProductoVehiculoSuplementoModule,
     ProductoEstadoModule,
-    ContratoEstadoModule,
-    OfertaEstadoModule,
     CategoriaPiezaAccesorioModule,
     PiezaAccesorioModule,
     ServicioModule,
     EquipoGarageModule,
     CustomerModule,
-    CustomerAddressTypeModule,
-    CustomerAddressModule,
     VehicleVariationsModule,
     VehicleVariationsTypeModule,
     ParteModule,
+    CustomerCuentaModule,
+    FinAutoCuentaModule,
   ],
   controllers: [],
   providers: [],

@@ -8,5 +8,5 @@ export class Persona extends JuridicPerson {
     eager: false,
   })
   @JoinColumn({ name: 'tipo_persona_id' })
-  tipoPersona: TipoPersona;
+  tipo_persona_id: TipoPersona;
 }

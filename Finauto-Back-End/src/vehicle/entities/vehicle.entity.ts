@@ -95,6 +95,6 @@ export class Vehicle extends BasicInformationEntity {
     @MinLength(1, {each: true})
     galery:string[]
 
-    @OneToMany(() => VehicleSuplement, vehicleSuplement => vehicleSuplement.vehicle)
+    @OneToMany(() => VehicleSuplement, vehicleSuplement => vehicleSuplement.vehicle_id)
     supplements: VehicleSuplement[];
 }

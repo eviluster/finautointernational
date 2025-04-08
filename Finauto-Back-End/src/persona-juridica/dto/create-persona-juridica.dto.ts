@@ -34,5 +34,5 @@ export class CreatePersonaDto  extends BaseExtendedDto {
       @IsString()
       @IsUUID()
       @IsNotEmpty()
-      tipoPersona: RelationalDto
+      tipo_persona_id: RelationalDto
 }

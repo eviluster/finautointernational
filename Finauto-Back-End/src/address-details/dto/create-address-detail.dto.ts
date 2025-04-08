@@ -24,7 +24,7 @@ export class CreateAddressDetailDto {
 
   @ApiProperty()
   @IsString()
-  municipality: string;
+  municipality_id: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
