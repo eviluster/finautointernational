@@ -16,6 +16,7 @@ RUN echo "Contenido de src/pago dentro del contenedor:" && \
     ls -la src/pago/entities || echo "No existe la carpeta 'entities'"
     
 RUN npm run build
+RUN ls -la /app && ls -la /app/src && ls -la /app/src/pago
 
 # Etapa produccion
 FROM node:22.12-alpine
