@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface IVehiculo {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -10,8 +11,28 @@ interface IVehiculo {
     es: string;
     en: string;
   };
-  precioBase: number;
+  PrecioBase: number;
   galery: Array<string>;
+  marca: string;
+  modelo: string;
+  dimensiones: string;
+  tamanoCajaCarga: string;
+  distanciaEjes: number | null;
+  asientos: number | null;
+  traccionDelantera: string;
+  traccionTrasera: string;
+  tipoFreno: string;
+  distanciaSuelo: number | null;
+  pesoVacio: number | null;
+  torque: number | null;
+  velocidadMax: number | null;
+  desplazamiento: number | null;
+  potenciaMax: number | null;
+  tipoNeumatico: string;
+  cajaCambio: string;
+  tipoSuspension: string;
+  capacitdadTanqueCombustible: number | null;
+  engine: string;
 }
 
 export const useVehiculoStore = defineStore("vehiculos", {
@@ -21,7 +42,7 @@ export const useVehiculoStore = defineStore("vehiculos", {
   actions: {
     async fetchVehiculos() {
       try {
-        const { data } = await api.get("/vehiculo/all");
+        const { data } = await api.get("/vehicle/all");
         await console.log(data);
         if (data.isSuccess) {
           this.vehiculos = [...data.data];
@@ -37,7 +58,7 @@ export const useVehiculoStore = defineStore("vehiculos", {
       };
       console.log("Vehiculo a agregar", payload);
       try {
-        const { data } = await api.post("/vehiculo", payload);
+        const { data } = await api.post("/vehicle", payload);
         console.log("Vehiculo agregado", data);
         await this.fetchVehiculos();
         return data;
@@ -60,7 +81,7 @@ export const useVehiculoStore = defineStore("vehiculos", {
       console.log(payload);
 
       try {
-        const { data } = await api.patch("/vehiculo", payload);
+        const { data } = await api.patch("/vehicle", payload);
         const index = this.vehiculos.findIndex(
           (item: any) => item.id === updatedVehiculoID,
         );
@@ -77,7 +98,7 @@ export const useVehiculoStore = defineStore("vehiculos", {
 
     async deleteVehiculo(id: string) {
       try {
-        const { data } = await api.delete("/vehiculo", { data: { id } });
+        const { data } = await api.delete("/vehicle", { data: { id } });
         await this.fetchVehiculos();
         return data;
       } catch (error) {

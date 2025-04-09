@@ -19,7 +19,7 @@
           </div>
         </div>
 
-        <!-- Se agrega @submit para que llame a handleSubmit -->
+        <!-- Formulario (con vee-validate) -->
         <Form
           :validation-schema="schema"
           @submit="handleSubmit"
@@ -28,39 +28,39 @@
           v-slot="{ errors }"
         >
           <div class="card shadow-sm">
+            <!-- Imagenes -->
             <div class="mb-4 px-4 py-4 mx-6">
               <ImageInput v-model="imageUrls" :error="errors.galery || ''" />
             </div>
 
-            <!-- Campo: Nombre del vehiculo -->
+            <!-- Nombre del Vehículo -->
             <div class="mb-4 px-4 py-4 mx-6">
-              <label class="required form-label">Nombre del vehiculo</label>
-              <!-- name cambiado a "name" -->
+              <label class="required form-label">Nombre del vehículo</label>
               <Field
                 name="name"
                 as="input"
                 type="text"
                 class="form-control"
-                placeholder="Ponga el nombre del vehiculo"
+                placeholder="Ingrese el nombre del vehículo"
                 v-model="formFields.name"
               />
               <ErrorMessage name="name" class="text-danger" />
             </div>
 
-            <!-- Campo: Descripción -->
+            <!-- Descripción -->
             <div class="mb-4 px-4 py-4 mx-6">
               <label class="form-label">Descripción</label>
               <Field
                 name="description"
                 as="textarea"
                 class="form-control"
-                placeholder="Ponga la descripción"
+                placeholder="Ingrese una descripción"
                 v-model="formFields.description"
               />
               <ErrorMessage name="description" class="text-danger" />
             </div>
 
-            <!-- Campo: Precio Base -->
+            <!-- Precio Base -->
             <div class="mb-4 px-4 py-4 mx-6">
               <label class="required form-label">Precio Base</label>
               <Field
@@ -68,13 +68,13 @@
                 as="input"
                 type="number"
                 class="form-control"
-                placeholder="Ponga el precio base"
+                placeholder="Ingrese el precio base"
                 v-model="formFields.precioBase"
               />
               <ErrorMessage name="precioBase" class="text-danger" />
             </div>
 
-            <!-- Marca y Modelo -->
+            <!-- Marca y Modelo (nomencladores obtenidos vía API) -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
                 <label class="form-label">Marca</label>
@@ -87,14 +87,15 @@
                   <option value="">Seleccione una marca</option>
                   <option
                     v-for="item in marcas"
-                    :key="item.name.es"
-                    :value="item.name.es"
+                    :key="item.id"
+                    :value="item.id"
                   >
                     {{ item.name.es }}
                   </option>
                 </Field>
                 <ErrorMessage name="marca" class="text-danger" />
               </div>
+
               <div class="col-md-6">
                 <label class="form-label">Modelo</label>
                 <Field
@@ -104,11 +105,10 @@
                   v-model="formFields.modelo"
                 >
                   <option value="">Seleccione un modelo</option>
-                  <!-- Filtramos los modelos según la marca seleccionada -->
                   <option
                     v-for="item in modelos"
-                    :key="item.name.es"
-                    :value="item.name.es"
+                    :key="item.id"
+                    :value="item.id"
                   >
                     {{ item.name.es }}
                   </option>
@@ -117,261 +117,155 @@
               </div>
             </div>
 
-            <!-- Dimensiones y Tamaño de la caja de carga (datos estáticos) -->
+            <!-- Campos que serán ingresados manualmente por el usuario -->
+            <!-- Para "dimensiones" y "tamanoCajaCarga" se espera que el usuario ingrese una lista de números separados por comas (por ejemplo: "4000,1700,1500") -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
-                <label class="form-label">Dimensiones (mm)</label>
-                <Field
-                  as="select"
-                  name="dimensiones"
-                  class="form-control"
-                  v-model="formFields.dimensiones"
-                >
-                  <option value="">Seleccione dimensiones</option>
-                  <option
-                    v-for="item in dimensiones"
-                    :key="item.id"
-                    :value="item.valor"
+                <label class="form-label">
+                  Dimensiones (mm)
+                  <small class="text-muted"
+                    >(Ingrese números separados por comas)</small
                   >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                </label>
+                <Field
+                  name="dimensiones"
+                  as="input"
+                  type="text"
+                  class="form-control"
+                  placeholder="Ej: 4000,1700,1500"
+                  v-model="formFields.dimensiones"
+                />
                 <ErrorMessage name="dimensiones" class="text-danger" />
               </div>
               <div class="col-md-6">
-                <label class="form-label"
-                  >Tamaño de la caja de carga (mm)</label
-                >
-                <Field
-                  as="select"
-                  name="tamanoCajaCarga"
-                  class="form-control"
-                  v-model="formFields.tamanoCajaCarga"
-                >
-                  <option value="">Seleccione tamaño de caja</option>
-                  <option
-                    v-for="item in tamanoCajaCarga"
-                    :key="item.id"
-                    :value="item.valor"
+                <label class="form-label">
+                  Tamaño de la caja de carga (mm)
+                  <small class="text-muted"
+                    >(Ingrese números separados por comas)</small
                   >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                </label>
+                <Field
+                  name="tamanoCajaCarga"
+                  as="input"
+                  type="text"
+                  class="form-control"
+                  placeholder="Ej: 2000,2500"
+                  v-model="formFields.tamanoCajaCarga"
+                />
                 <ErrorMessage name="tamanoCajaCarga" class="text-danger" />
               </div>
             </div>
 
-            <!-- Distancia entre ejes y Asientos (datos estáticos) -->
+            <!-- Los demás campos numéricos se ingresan mediante inputs -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
                 <label class="form-label">Distancia entre ejes (mm)</label>
                 <Field
-                  as="select"
                   name="distanciaEjes"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese distancia entre ejes"
                   v-model="formFields.distanciaEjes"
-                >
-                  <option value="">Seleccione distancia entre ejes</option>
-                  <option
-                    v-for="item in distanciaEjes"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="distanciaEjes" class="text-danger" />
               </div>
               <div class="col-md-6">
                 <label class="form-label">Asientos</label>
                 <Field
-                  as="select"
                   name="asientos"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese el número de asientos"
                   v-model="formFields.asientos"
-                >
-                  <option value="">Seleccione número de asientos</option>
-                  <option
-                    v-for="item in asientos"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="asientos" class="text-danger" />
               </div>
             </div>
 
-            <!-- Tracción y Tipo de frenos (nomencladores obtenidos de "la API") -->
-            <div class="row py-4 mx-6">
-              <div class="col-md-6">
-                <label class="form-label">Tracción</label>
-                <Field
-                  as="select"
-                  name="traccion"
-                  class="form-control"
-                  v-model="formFields.traccion"
-                >
-                  <option value="">Seleccione tracción</option>
-                  <option
-                    v-for="item in tracciones"
-                    :key="item.name.es"
-                    :value="item.name.es"
-                  >
-                    {{ item.name.es }}
-                  </option>
-                </Field>
-                <ErrorMessage name="traccion" class="text-danger" />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Tipo de frenos</label>
-                <Field
-                  as="select"
-                  name="tipoFrenos"
-                  class="form-control"
-                  v-model="formFields.tipoFrenos"
-                >
-                  <option value="">Seleccione tipo de frenos</option>
-                  <option
-                    v-for="item in tipoFrenos"
-                    :key="item.name.es"
-                    :value="item.name.es"
-                  >
-                    {{ item.name.es }}
-                  </option>
-                </Field>
-                <ErrorMessage name="tipoFrenos" class="text-danger" />
-              </div>
-            </div>
-
-            <!-- Distancia al suelo y Peso en vacío (datos estáticos) -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
                 <label class="form-label">Distancia al suelo (mm)</label>
                 <Field
-                  as="select"
                   name="distanciaSuelo"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese distancia al suelo"
                   v-model="formFields.distanciaSuelo"
-                >
-                  <option value="">Seleccione distancia al suelo</option>
-                  <option
-                    v-for="item in distanciaSuelo"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="distanciaSuelo" class="text-danger" />
               </div>
               <div class="col-md-6">
                 <label class="form-label">Peso en vacío (kg)</label>
                 <Field
-                  as="select"
                   name="pesoVacio"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese el peso en vacío"
                   v-model="formFields.pesoVacio"
-                >
-                  <option value="">Seleccione peso en vacío</option>
-                  <option
-                    v-for="item in pesoVacio"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="pesoVacio" class="text-danger" />
               </div>
             </div>
 
-            <!-- Torque y Velocidad máxima (datos estáticos) -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
                 <label class="form-label">Torque (N*m)</label>
                 <Field
-                  as="select"
                   name="torque"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese el torque"
                   v-model="formFields.torque"
-                >
-                  <option value="">Seleccione torque</option>
-                  <option
-                    v-for="item in torque"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="torque" class="text-danger" />
               </div>
               <div class="col-md-6">
                 <label class="form-label">Velocidad máxima (km/h)</label>
                 <Field
-                  as="select"
                   name="velocidadMax"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese velocidad máxima"
                   v-model="formFields.velocidadMax"
-                >
-                  <option value="">Seleccione velocidad máxima</option>
-                  <option
-                    v-for="item in velocidadMax"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="velocidadMax" class="text-danger" />
               </div>
             </div>
 
-            <!-- Desplazamiento y Potencia máxima (datos estáticos) -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
                 <label class="form-label">Desplazamiento (cc)</label>
                 <Field
-                  as="select"
                   name="desplazamiento"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese desplazamiento"
                   v-model="formFields.desplazamiento"
-                >
-                  <option value="">Seleccione desplazamiento</option>
-                  <option
-                    v-for="item in desplazamiento"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="desplazamiento" class="text-danger" />
               </div>
               <div class="col-md-6">
                 <label class="form-label">Potencia máxima (kW)</label>
                 <Field
-                  as="select"
                   name="potenciaMax"
+                  as="input"
+                  type="number"
                   class="form-control"
+                  placeholder="Ingrese la potencia máxima"
                   v-model="formFields.potenciaMax"
-                >
-                  <option value="">Seleccione potencia máxima</option>
-                  <option
-                    v-for="item in potenciaMax"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="potenciaMax" class="text-danger" />
               </div>
             </div>
 
-            <!-- Neumáticos y Caja de cambios (nomencladores API) -->
+            <!-- Nomencladores vía API: Neumáticos, Caja de cambios, Suspensión y Motor -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
                 <label class="form-label">Neumáticos</label>
@@ -384,8 +278,8 @@
                   <option value="">Seleccione neumáticos</option>
                   <option
                     v-for="item in neumaticos"
-                    :key="item.name.es"
-                    :value="item.name.es"
+                    :key="item.id"
+                    :value="item.id"
                   >
                     {{ item.name.es }}
                   </option>
@@ -403,8 +297,8 @@
                   <option value="">Seleccione caja de cambios</option>
                   <option
                     v-for="item in cajaCambios"
-                    :key="item.name.es"
-                    :value="item.name.es"
+                    :key="item.id"
+                    :value="item.id"
                   >
                     {{ item.name.es }}
                   </option>
@@ -413,67 +307,39 @@
               </div>
             </div>
 
-            <!-- Suspensión delantera y trasera (usando el nomenclador "suspensiones") -->
             <div class="row py-4 mx-6">
-              <div class="col-md-6">
-                <label class="form-label">Suspensión delantera</label>
+              <div class="col-md-12">
+                <label class="form-label">Tipo de suspensión</label>
                 <Field
                   as="select"
-                  name="suspensionDelantera"
+                  name="tipoSuspension"
                   class="form-control"
-                  v-model="formFields.suspensionDelantera"
+                  v-model="formFields.tipoSuspension"
                 >
-                  <option value="">Seleccione suspensión delantera</option>
+                  <option value="">Seleccione tipo de suspensión</option>
                   <option
                     v-for="item in suspensiones"
-                    :key="item.name.es"
-                    :value="item.name.es"
-                  >
-                    {{ item.name }}
-                  </option>
-                </Field>
-                <ErrorMessage name="suspensionDelantera" class="text-danger" />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Suspensión trasera</label>
-                <Field
-                  as="select"
-                  name="suspensionTrasera"
-                  class="form-control"
-                  v-model="formFields.suspensionTrasera"
-                >
-                  <option value="">Seleccione suspensión trasera</option>
-                  <option
-                    v-for="item in suspensiones"
-                    :key="item.name.es"
-                    :value="item.name.es"
+                    :key="item.id"
+                    :value="item.id"
                   >
                     {{ item.name.es }}
                   </option>
                 </Field>
-                <ErrorMessage name="suspensionTrasera" class="text-danger" />
+                <ErrorMessage name="tipoSuspension" class="text-danger" />
               </div>
             </div>
 
-            <!-- Capacidad del tanque y Motor (nomencladores API) -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
                 <label class="form-label">Capacidad del tanque (l)</label>
                 <Field
-                  as="select"
+                  as="input"
+                  type="number"
                   name="capacidadTanque"
                   class="form-control"
+                  placeholder="Ingrese capacidad del tanque"
                   v-model="formFields.capacidadTanque"
-                >
-                  <option value="">Seleccione capacidad del tanque</option>
-                  <option
-                    v-for="item in capacidadTanque"
-                    :key="item.id"
-                    :value="item.valor"
-                  >
-                    {{ item.valor }}
-                  </option>
-                </Field>
+                />
                 <ErrorMessage name="capacidadTanque" class="text-danger" />
               </div>
               <div class="col-md-6">
@@ -487,8 +353,8 @@
                   <option value="">Seleccione el motor</option>
                   <option
                     v-for="item in motores"
-                    :key="item.name.es"
-                    :value="item.name.es"
+                    :key="item.id"
+                    :value="item.id"
                   >
                     {{ item.name.es }}
                   </option>
@@ -521,6 +387,7 @@ import { useVehiculoStore } from "@/stores/vehiculo";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import ImageInput from "@/components/ImageInputTest.vue";
 
+// Importación de stores para nomencladores vía API
 import { useMarcaStore } from "@/stores/marcas";
 import { useModeloStore } from "@/stores/modelos";
 import { useTipoFrenoStore } from "@/stores/tipo-freno";
@@ -537,23 +404,23 @@ interface AddVehiculoFormFields {
   galery: string[];
   marca: string;
   modelo: string;
+  // Estos campos ahora serán ingresados por el usuario como inputs
   dimensiones: string;
   tamanoCajaCarga: string;
-  distanciaEjes: string;
-  asientos: string;
+  distanciaEjes: number | null;
+  asientos: number | null;
   traccion: string;
   tipoFrenos: string;
-  distanciaSuelo: string;
-  pesoVacio: string;
-  torque: string;
-  velocidadMax: string;
-  desplazamiento: string;
-  potenciaMax: string;
+  distanciaSuelo: number | null;
+  pesoVacio: number | null;
+  torque: number | null;
+  velocidadMax: number | null;
+  desplazamiento: number | null;
+  potenciaMax: number | null;
   neumaticos: string;
   cajaCambios: string;
-  suspensionDelantera: string;
-  suspensionTrasera: string;
-  capacidadTanque: string;
+  tipoSuspension: string;
+  capacidadTanque: number | null;
   engine: string;
 }
 
@@ -575,7 +442,7 @@ export default defineComponent({
     const addVehiculoModalRef = ref<HTMLElement | null>(null);
     const imageUrls = ref<string[]>([]);
 
-    // Para el formulario se utiliza un objeto reactivo con todos los campos necesarios.
+    // Objeto reactivo para los campos del formulario
     const formFields = ref<AddVehiculoFormFields>({
       name: "",
       description: "",
@@ -583,27 +450,26 @@ export default defineComponent({
       galery: [],
       marca: "",
       modelo: "",
-      dimensiones: "",
-      tamanoCajaCarga: "",
-      distanciaEjes: "",
-      asientos: "",
+      dimensiones: "", // Usuario ingresará un string (por ejemplo, "4000,1700,1500")
+      tamanoCajaCarga: "", // Usuario ingresará un string (por ejemplo, "2000,2500")
+      distanciaEjes: null,
+      asientos: null,
       traccion: "",
       tipoFrenos: "",
-      distanciaSuelo: "",
-      pesoVacio: "",
-      torque: "",
-      velocidadMax: "",
-      desplazamiento: "",
-      potenciaMax: "",
+      distanciaSuelo: null,
+      pesoVacio: null,
+      torque: null,
+      velocidadMax: null,
+      desplazamiento: null,
+      potenciaMax: null,
       neumaticos: "",
       cajaCambios: "",
-      suspensionDelantera: "",
-      suspensionTrasera: "",
-      capacidadTanque: "",
+      tipoSuspension: "",
+      capacidadTanque: null,
       engine: "",
     });
 
-    // Esquema de validación (solo se definen algunos campos, puedes ampliarlo según lo requieras)
+    // Esquema de validación (se puede ampliar)
     const schema = yup.object({
       name: yup.string().required("El nombre es obligatorio"),
       description: yup.string(),
@@ -615,13 +481,14 @@ export default defineComponent({
         .array()
         .of(yup.string())
         .max(5, "Solo se permiten hasta 5 imágenes"),
+      // Puedes agregar validación personalizada para los campos nuevos si es necesario.
     });
 
     const { errors } = useForm<AddVehiculoFormFields>({
       validationSchema: schema,
     });
 
-    // Variables reactivas para nomencladores (datos obtenidos vía "API")
+    // Nomencladores (datos vía API) mediante stores
     const marcas = computed(() => marcaStore.marcas);
     const modelos = computed(() => modeloStore.modelos);
     const tracciones = computed(() => traccionStore.traccion);
@@ -631,57 +498,7 @@ export default defineComponent({
     const motores = computed(() => motorStore.motors);
     const cajaCambios = computed(() => cajacambioStore.cajacambio);
 
-    // Datos estáticos para otros campos
-    const dimensiones = ref([
-      { id: 1, valor: "4000 x 1700 x 1500" },
-      { id: 2, valor: "4500 x 1800 x 1600" },
-    ]);
-    const tamanoCajaCarga = ref([
-      { id: 1, valor: "2000 mm" },
-      { id: 2, valor: "2500 mm" },
-    ]);
-    const distanciaEjes = ref([
-      { id: 1, valor: "2500 mm" },
-      { id: 2, valor: "2800 mm" },
-    ]);
-    const asientos = ref([
-      { id: 1, valor: "2" },
-      { id: 2, valor: "4" },
-      { id: 3, valor: "5" },
-    ]);
-    const distanciaSuelo = ref([
-      { id: 1, valor: "150 mm" },
-      { id: 2, valor: "180 mm" },
-    ]);
-    const pesoVacio = ref([
-      { id: 1, valor: "1200 kg" },
-      { id: 2, valor: "1500 kg" },
-    ]);
-    const torque = ref([
-      { id: 1, valor: "200 N*m" },
-      { id: 2, valor: "250 N*m" },
-    ]);
-    const velocidadMax = ref([
-      { id: 1, valor: "180 km/h" },
-      { id: 2, valor: "200 km/h" },
-    ]);
-    const desplazamiento = ref([
-      { id: 1, valor: "1600 cc" },
-      { id: 2, valor: "2000 cc" },
-    ]);
-    const potenciaMax = ref([
-      { id: 1, valor: "100 kW" },
-      { id: 2, valor: "120 kW" },
-    ]);
-    const capacidadTanque = ref([
-      { id: 1, valor: "45" },
-      { id: 2, valor: "55" },
-    ]);
-    const pesoStatic = ref([
-      // Si fuese necesario, puedes añadir más datos estáticos aquí.
-    ]);
-
-    // Función para simular llamadas a una API que obtienen los nomencladores.
+    // Función para obtener nomencladores vía API (cada store debe tener su método fetch)
     const fetchNomencladores = async () => {
       await cajacambioStore.fetchCajaCambio();
       await motorStore.fetchMotors();
@@ -693,10 +510,23 @@ export default defineComponent({
       await modeloStore.fetchModelos();
     };
 
-    // Llamado a la función de nomencladores al montar el componente.
     onMounted(() => {
       fetchNomencladores();
     });
+
+    function transformarAArrayNumeros(
+      valor: string | number[] | null,
+    ): number[] | null {
+      if (!valor) return null;
+      if (Array.isArray(valor)) return valor;
+      if (typeof valor === "string") {
+        return valor
+          .split(",")
+          .map((n) => Number(n.trim()))
+          .filter((n) => !isNaN(n));
+      }
+      return null;
+    }
 
     // Función para enviar el formulario
     const handleSubmit = async (
@@ -705,38 +535,46 @@ export default defineComponent({
     ) => {
       console.log("Ejecutando...", values);
 
+      // Se procesa la transformación de los campos que llegan como string a array de números
+      const dimensionesArray = transformarAArrayNumeros(values.dimensiones);
+      const tamanoCajaCargaArray = transformarAArrayNumeros(
+        values.tamanoCajaCarga,
+      );
+
       const newVehiculo = {
         name: { es: values.name, en: "" },
         description: { es: values.description, en: "" },
         galery: imageUrls.value,
-        precioBase: values.precioBase,
+        PrecioBase: values.precioBase,
         marca: values.marca,
         modelo: values.modelo,
-        dimensiones: values.dimensiones,
-        tamanoCajaCarga: values.tamanoCajaCarga,
+        dimensiones: dimensionesArray,
+        tamanoCajaCarga: tamanoCajaCargaArray,
         distanciaEjes: values.distanciaEjes,
         asientos: values.asientos,
-        traccion: values.traccion,
-        tipoFrenos: values.tipoFrenos,
+        traccionDelantera: values.traccion,
+        traccionTrasera: values.traccion,
+        tipoFreno: values.tipoFrenos,
         distanciaSuelo: values.distanciaSuelo,
         pesoVacio: values.pesoVacio,
         torque: values.torque,
         velocidadMax: values.velocidadMax,
         desplazamiento: values.desplazamiento,
         potenciaMax: values.potenciaMax,
-        neumaticos: values.neumaticos,
-        cajaCambios: values.cajaCambios,
-        suspensionDelantera: values.suspensionDelantera,
-        suspensionTrasera: values.suspensionTrasera,
-        capacidadTanque: values.capacidadTanque,
+        tipoNeumatico: values.neumaticos,
+        cajaCambio: values.cajaCambios,
+        tipoSuspension: values.tipoSuspension,
+        capacitdadTanqueCombustible: values.capacidadTanque,
         engine: values.engine,
       };
 
       try {
-        const response = await vehiculoStore.addVehiculo(newVehiculo);
+        await vehiculoStore.addVehiculo(newVehiculo);
+        console.log("Datos enviados:", newVehiculo);
+
         await vehiculoStore.fetchVehiculos();
         Swal.fire({
-          text: "Vehiculo agregado correctamente",
+          text: "Vehículo agregado correctamente",
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok",
@@ -745,14 +583,14 @@ export default defineComponent({
         });
       } catch (error) {
         Swal.fire({
-          text: "Error al crear el vehiculo",
+          text: "Error al crear el vehículo",
           icon: "error",
           buttonsStyling: false,
           confirmButtonText: "Ok",
           heightAuto: false,
           customClass: { confirmButton: "btn btn-primary" },
         });
-        console.error("Error al agregar vehiculo:", error);
+        console.error("Error al agregar vehículo:", error);
       } finally {
         hideModal(addVehiculoModalRef.value);
         resetForm();
@@ -763,6 +601,7 @@ export default defineComponent({
     return {
       schema,
       handleSubmit,
+      transformarAArrayNumeros,
       formRef,
       addVehiculoModalRef,
       imageUrls,
@@ -776,18 +615,8 @@ export default defineComponent({
       suspensiones,
       motores,
       cajaCambios,
-      // Datos estáticos
-      dimensiones,
-      tamanoCajaCarga,
-      distanciaEjes,
-      asientos,
-      distanciaSuelo,
-      pesoVacio,
-      torque,
-      velocidadMax,
-      desplazamiento,
-      potenciaMax,
-      capacidadTanque,
+      // No se retornan datos estáticos para los campos que ahora son inputs.
+      // Se retornan también las referencias a los stores en caso de necesitarlos.
       cajacambioStore,
       motorStore,
       traccionStore,

@@ -135,6 +135,7 @@ export default defineComponent({
     ) => {
       try {
         const updatedData = {
+          id: formData.value.id,
           name: { es: values.nameEs, en: values.nameEn || "" },
           description: {
             es: values.descriptionEs,
@@ -144,7 +145,7 @@ export default defineComponent({
 
         console.log(updatedData);
 
-        await modeloStore.updateModelo(formData.value.id, updatedData);
+        await modeloStore.updateModelo(updatedData);
         await modeloStore.fetchModelos(); // Refrescamos la lista de modelos
 
         hideModal(editModeloModalRef.value);

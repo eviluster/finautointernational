@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface IMarca {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -44,9 +45,8 @@ export const useMarcaStore = defineStore("marcas", {
       }
     },
 
-    async updateMarca(updatedMarcaID: string, marca: IMarca) {
+    async updateMarca(marca: IMarca) {
       const payload = {
-        id: updatedMarcaID,
         ...marca,
       };
       console.log(payload);
@@ -54,7 +54,7 @@ export const useMarcaStore = defineStore("marcas", {
       try {
         const { data } = await api.patch("/marcas", payload);
         const index = this.marcas.findIndex(
-          (item: any) => item.id === updatedMarcaID,
+          (item: any) => item.id === marca.id,
         );
 
         if (index !== -1) {

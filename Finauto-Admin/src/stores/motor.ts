@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface IMotor {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -43,9 +44,8 @@ export const useMotorStore = defineStore("motor", {
       }
     },
 
-    async updateMotor(updatedMotorID: string, motor: IMotor) {
+    async updateMotor(motor: IMotor) {
       const payload = {
-        id: updatedMotorID,
         ...motor,
         rules: {
           method: "UPDATE",
@@ -58,7 +58,7 @@ export const useMotorStore = defineStore("motor", {
       try {
         const { data } = await api.patch("/engines", payload);
         const index = this.motors.findIndex(
-          (item: any) => item.id === updatedMotorID,
+          (item: any) => item.id === motor.id,
         );
         if (index !== -1) {
           this.motors[index] = data.data;

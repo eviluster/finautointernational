@@ -136,6 +136,7 @@ export default defineComponent({
       try {
         // Preparamos el objeto con los datos actualizados
         const updatedData = {
+          id: formData.value.id,
           name: { es: values.nameEs, en: values.nameEn || "" },
           description: {
             es: values.descriptionEs,
@@ -145,7 +146,7 @@ export default defineComponent({
 
         console.log(updatedData);
         // Llamamos a updateMarca pasando el ID y el objeto con los datos actualizados
-        await marcaStore.updateMarca(formData.value.id, updatedData);
+        await marcaStore.updateMarca(updatedData);
         await marcaStore.fetchMarcas(); // Refrescamos la lista de marcas
 
         hideModal(editMarcaModalRef.value);

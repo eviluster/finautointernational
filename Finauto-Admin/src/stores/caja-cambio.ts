@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface ICajaCambio {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -43,12 +44,8 @@ export const useCajaCambioStore = defineStore("cajacambio", {
       }
     },
 
-    async updateCajaCambio(
-      updatedCajaCambioID: string,
-      cajacambio: ICajaCambio,
-    ) {
+    async updateCajaCambio(cajacambio: ICajaCambio) {
       const payload = {
-        id: updatedCajaCambioID,
         ...cajacambio,
       };
       console.log(payload);
@@ -57,7 +54,7 @@ export const useCajaCambioStore = defineStore("cajacambio", {
         const { data } = await api.patch("/caja-cambio", payload);
 
         const index = this.cajacambio.findIndex(
-          (item: any) => item.id === updatedCajaCambioID,
+          (item: any) => item.id === cajacambio.id,
         );
 
         if (index !== -1) {

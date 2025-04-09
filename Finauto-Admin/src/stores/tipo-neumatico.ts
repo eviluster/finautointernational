@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface ITipoNeumatico {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -45,12 +46,8 @@ export const useTipoNeumaticoStore = defineStore("tiponeumatico", {
       }
     },
 
-    async updateTipoNeumatico(
-      updatedTipoNeumaticoID: string,
-      tiponeumatico: ITipoNeumatico,
-    ) {
+    async updateTipoNeumatico(tiponeumatico: ITipoNeumatico) {
       const payload = {
-        id: updatedTipoNeumaticoID,
         ...tiponeumatico,
       };
       console.log(payload);
@@ -58,7 +55,7 @@ export const useTipoNeumaticoStore = defineStore("tiponeumatico", {
       try {
         const { data } = await api.patch("/tipo-neumatico", payload);
         const index = this.tiponeumatico.findIndex(
-          (item: any) => item.id === updatedTipoNeumaticoID,
+          (item: any) => item.id === tiponeumatico.id,
         );
 
         if (index !== -1) {

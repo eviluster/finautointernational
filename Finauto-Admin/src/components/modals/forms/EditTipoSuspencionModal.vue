@@ -138,6 +138,7 @@ export default defineComponent({
       try {
         // Preparamos el objeto con los datos actualizados
         const updatedData = {
+          id: values.id,
           name: { es: values.nameEs, en: values.nameEn || "" },
           description: {
             es: values.descriptionEs,
@@ -147,10 +148,7 @@ export default defineComponent({
 
         console.log(updatedData);
         // Llamamos a updateTipoSuspencion pasando el ID y el objeto con los datos actualizados
-        await tiposuspencionStore.updateTipoSuspencion(
-          formData.value.id,
-          updatedData,
-        );
+        await tiposuspencionStore.updateTipoSuspencion(updatedData);
         await tiposuspencionStore.fetchTipoSuspencion(); // Refrescamos la lista de tiposuspencions
 
         hideModal(editTipoSuspencionModalRef.value);

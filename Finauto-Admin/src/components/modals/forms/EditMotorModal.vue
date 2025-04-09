@@ -135,6 +135,7 @@ export default defineComponent({
     ) => {
       try {
         const updatedData = {
+          id: formData.value.id,
           name: { es: values.nameEs, en: values.nameEn || "" },
           description: {
             es: values.descriptionEs,
@@ -144,7 +145,7 @@ export default defineComponent({
 
         console.log(updatedData);
 
-        await motorStore.updateMotor(formData.value.id, updatedData);
+        await motorStore.updateMotor(updatedData);
         await motorStore.fetchMotors(); // Refrescamos la lista de motors
 
         hideModal(editMotorModalRef.value);

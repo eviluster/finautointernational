@@ -138,6 +138,7 @@ export default defineComponent({
       try {
         // Preparamos el objeto con los datos actualizados
         const updatedData = {
+          id: formData.value.id,
           name: { es: values.nameEs, en: values.nameEn || "" },
           description: {
             es: values.descriptionEs,
@@ -147,10 +148,7 @@ export default defineComponent({
 
         console.log(updatedData);
         // Llamamos a updateTipoNeumatico pasando el ID y el objeto con los datos actualizados
-        await tiponeumaticoStore.updateTipoNeumatico(
-          formData.value.id,
-          updatedData,
-        );
+        await tiponeumaticoStore.updateTipoNeumatico(updatedData);
         await tiponeumaticoStore.fetchTipoNeumatico(); // Refrescamos la lista de tiponeumaticos
 
         hideModal(editTipoNeumaticoModalRef.value);

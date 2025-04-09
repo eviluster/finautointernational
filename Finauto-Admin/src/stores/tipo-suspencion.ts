@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface ITipoSuspencion {
+  id: number;
   name: {
     es: string;
     en: string;
@@ -45,12 +46,8 @@ export const useTipoSuspencionStore = defineStore("tiposuspension", {
       }
     },
 
-    async updateTipoSuspencion(
-      updatedTipoSuspencionID: string,
-      tiposuspencion: ITipoSuspencion,
-    ) {
+    async updateTipoSuspencion(tiposuspencion: ITipoSuspencion) {
       const payload = {
-        id: updatedTipoSuspencionID,
         ...tiposuspencion,
       };
       console.log(payload);
@@ -58,7 +55,7 @@ export const useTipoSuspencionStore = defineStore("tiposuspension", {
       try {
         const { data } = await api.patch("/tipo-suspension", payload);
         const index = this.tiposuspencion.findIndex(
-          (item: any) => item.id === updatedTipoSuspencionID,
+          (item: any) => item.id === tiposuspencion.id,
         );
 
         if (index !== -1) {

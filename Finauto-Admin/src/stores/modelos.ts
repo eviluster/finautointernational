@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface IModelo {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -43,9 +44,8 @@ export const useModeloStore = defineStore("modelos", {
       }
     },
 
-    async updateModelo(updatedModeloID: string, modelo: IModelo) {
+    async updateModelo(modelo: IModelo) {
       const payload = {
-        id: updatedModeloID,
         ...modelo,
         rules: {
           method: "UPDATE",
@@ -58,7 +58,7 @@ export const useModeloStore = defineStore("modelos", {
       try {
         const { data } = await api.patch("/modelos", payload);
         const index = this.modelos.findIndex(
-          (item: any) => item.id === updatedModeloID,
+          (item: any) => item.id === modelo.id,
         );
         if (index !== -1) {
           this.modelos[index] = data.data;
