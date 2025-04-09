@@ -3,8 +3,8 @@ import { BasicInformationEntity } from 'src/common/base/entities';
 import { Column, Entity } from 'typeorm';
 @Entity('pieza-accesorio')
 export class PiezaAccesorio extends BasicInformationEntity {
-  @Column({})
-  PrecioBase: number;
+  @Column('')
+  precioBase: number;
 
   @Column('text', { array: true, nullable: true })
   @IsArray()

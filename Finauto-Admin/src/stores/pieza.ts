@@ -21,7 +21,7 @@ export const usePiezaStore = defineStore("piezas", {
   actions: {
     async fetchPiezas() {
       try {
-        const { data } = await api.get("/pieza/all");
+        const { data } = await api.get("/pieza-accesorio/all");
         await console.log(data);
         if (data.isSuccess) {
           this.piezas = [...data.data];
@@ -37,7 +37,7 @@ export const usePiezaStore = defineStore("piezas", {
       };
       console.log("Pieza a agregar", payload);
       try {
-        const { data } = await api.post("/pieza", payload);
+        const { data } = await api.post("/pieza-accesorio", payload);
         console.log("Pieza agregado", data);
         await this.fetchPiezas();
         return data;
@@ -60,7 +60,7 @@ export const usePiezaStore = defineStore("piezas", {
       console.log(payload);
 
       try {
-        const { data } = await api.patch("/pieza", payload);
+        const { data } = await api.patch("/pieza-accesorio", payload);
         const index = this.piezas.findIndex(
           (item: any) => item.id === updatedPiezaID,
         );
@@ -77,7 +77,7 @@ export const usePiezaStore = defineStore("piezas", {
 
     async deletePieza(id: string) {
       try {
-        const { data } = await api.delete("/pieza", { data: { id } });
+        const { data } = await api.delete("/pieza-accesorio", { data: { id } });
         await this.fetchPiezas();
         return data;
       } catch (error) {

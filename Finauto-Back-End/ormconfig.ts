@@ -27,8 +27,6 @@ import { PersonaTipo } from 'src/persona-tipo/entities/persona-tipo.entity';
 import { Persona } from 'src/persona-juridica/entities/persona-juridica.entity';
 import { TipoPersona } from 'src/tipo-persona-juridica/entities/tipo-persona-juridica.entity';
 import { Customer } from 'src/customer/entities/customer.entity';
-import { CustomerAddressType } from 'src/customer-address-type/entities/customer-address-type.entity';
-import { CustomerAddress } from 'src/customer-address/entities/customer-address.entity';
 import { VehicleVariation } from 'src/vehicle-variations/entities/vehicle-variation.entity';
 import { VehicleVariationsType } from 'src/vehicle-variations-type/entities/vehicle-variations-type.entity';
 import { EquipoGarage } from 'src/equipo-garage/entities/equipo-garage.entity';
@@ -39,11 +37,18 @@ import { Traccion } from 'src/traccion/entities/traccion.entity';
 import { TipoNeumatico } from 'src/tipo-neumatico/entities/tipo-neumatico.entity';
 import { CajaCambio } from 'src/caja-cambio/entities/caja-cambio.entity';
 import { TipoSuspension } from 'src/tipo-suspension/entities/tipo-suspension.entity';
-import { NombreTipoSuspension } from 'src/nombre-tipo-suspension/entities/nombre-tipo-suspension.entity';
 import { Servicio } from 'src/servicio/entities/servicio.entity';
 import { VehicleSuplement } from 'src/vehicle-suplement/entities/vehicle-suplement.entity';
 import { ProductoVehiculoSuplemento } from 'src/producto-vehiculo-suplemento/entities/producto-vehiculo-suplemento.entity';
-import { Contrato } from 'src/contrato/entities/contrato.entity';
+import { Oferta } from 'src/oferta/entities/oferta.entity';
+import { Reserva } from 'src/reserva/entities/reserva.entity';
+import { Comercial } from 'src/comercial/entities/comercial.entity';
+import { Pago } from 'src/pago/entities/pago.entity';
+import { CuentaBancaria } from 'src/cuenta-bancaria/entities/cuenta-bancaria.entity';
+import { CustomerCuenta } from 'src/customer-cuenta/entities/customer-cuenta.entity';
+import { FinAutoCuenta } from 'src/fin-auto-cuenta/entities/fin-auto-cuenta.entity';
+import { NombreTipoSuspension } from 'src/nombre-tipo-suspension/entities/nombre-tipo-suspension.entity';
+import { PiezaAccesorio } from 'src/pieza-accesorio/entities/pieza-accesorio.entity';
 
 dotenv.config(); // Carga las variables de entorno desde el archivo .env
 
@@ -57,6 +62,9 @@ export const config: TypeOrmModuleOptions = {
   // entities: ['src/**/entities/*.entity.ts'],
 
   entities: [
+    PiezaAccesorio,
+    TipoSuspension,
+    NombreTipoSuspension,
     Traza,
     Configuracion,
     User,
@@ -81,16 +89,12 @@ export const config: TypeOrmModuleOptions = {
     AddressDetail,
     TipoPersona,
     Persona,
-    PersonaTipo, // view
     // New tables
     Customer,
-    CustomerAddress,
-    CustomerAddressType,
     Traccion,
     TipoNeumatico,
     CajaCambio,
     TipoSuspension,
-    NombreTipoSuspension,
     Vehicle,
     VehicleVariation,
     VehicleVariationsType,
@@ -99,13 +103,18 @@ export const config: TypeOrmModuleOptions = {
     EquipoGarage,
     Servicio,
     VehicleSuplement,
-    Producto,
     ProductoVehiculoSuplemento,
-    Contrato,
+    Oferta,
+    Reserva,
+    Comercial,
+    Pago,
+    CuentaBancaria,
+    CustomerCuenta,
+    FinAutoCuenta,
   ],
   // entities: [__dirname + '/**/*.entity{.ts,.js}'],
   migrations: ['src/database/migrations/*.ts'],
-  synchronize: false,
+  synchronize: true,
 };
 
 export default config;

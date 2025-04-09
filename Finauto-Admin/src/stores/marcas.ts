@@ -20,6 +20,7 @@ export const useMarcaStore = defineStore("marcas", {
     async fetchMarcas() {
       try {
         const { data } = await api.get("/marcas/all");
+        await console.log(data);
         if (data.isSuccess) {
           this.marcas = [...data.data];
         }

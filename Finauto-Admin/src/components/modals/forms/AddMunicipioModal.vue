@@ -100,7 +100,7 @@ export default defineComponent({
 
     const schema = yup.object({
       name: yup.string().required("El nombre es obligatorio"),
-      description: yup.string().required("La descripción es obligatoria"),
+      description: yup.string(),
     });
 
     const { errors } = useForm<AddMunicipioFormFields>({

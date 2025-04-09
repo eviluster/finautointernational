@@ -112,10 +112,9 @@ export default defineComponent({
     const addPiezaModalRef = ref<HTMLElement | null>(null);
     const imageUrls = ref<string[]>([]);
 
-    // Alineamos los nombres de los campos con los <Field name="...">
     const schema = yup.object({
       name: yup.string().required("El nombre es obligatorio"),
-      description: yup.string().required("La descripción es obligatoria"),
+      description: yup.string(),
       precioBase: yup
         .number()
         .typeError("El precio debe ser un número")
