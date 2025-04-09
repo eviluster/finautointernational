@@ -8,6 +8,13 @@ RUN npm ci
 
 # Copia todo el backend
 COPY . .
+
+# Verificar que los archivos realmente están dentro del contenedor
+RUN echo "Contenido de src/pago dentro del contenedor:" && \
+    ls -la src/pago && \
+    echo "Contenido de src/pago/entities dentro del contenedor:" && \
+    ls -la src/pago/entities || echo "No existe la carpeta 'entities'"
+    
 RUN npm run build
 
 # Etapa produccion
