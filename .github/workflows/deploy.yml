@@ -25,6 +25,7 @@ jobs:
         
     - name: 🚀 Ejecutar despliegue en VPS
       uses: appleboy/ssh-action@v1.2.0
+      id: deploy
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
@@ -32,14 +33,54 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
-          # Crear estructura de archivos crítica
+          # Backup de la versión actual
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          BACKUP_DIR="/home/finauto/backups/$TIMESTAMP"
+          mkdir -p "$BACKUP_DIR"
+          cp -r /home/finauto/full-proyect-1/* "$BACKUP_DIR/"
+          echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
+
+          # Configuración esencial
           mkdir -p ~/full-proyect-1/nginx/conf
           echo "proxy_set_header Host \$host;" > ~/full-proyect-1/nginx/proxy_params
           echo "proxy_set_header X-Real-IP \$remote_addr;" >> ~/full-proyect-1/nginx/proxy_params
           echo "proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> ~/full-proyect-1/nginx/proxy_params
           echo "proxy_set_header X-Forwarded-Proto \$scheme;" >> ~/full-proyect-1/nginx/proxy_params
-        
-          cd /home/finauto/full-proyect-1 || exit 1
+
+          # Despliegue
+          cd /home/finauto/full-proyect-1
           docker compose down -v --rmi all || true
           docker builder prune -af
-          docker compose up -d --build || exit 1
+          docker compose up -d --build
+
+  rollback:
+    needs: [deploy]
+    if: ${{ failure() }}
+    runs-on: ubuntu-24.04
+    steps:
+    - name: 🔄 Restaurar versión anterior
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          # Obtener último backup
+          LATEST_BACKUP=$(ls -td /home/finauto/backups/* | head -1)
+          
+          if [ -z "$LATEST_BACKUP" ]; then
+            echo "No hay backups disponibles"
+            exit 1
+          fi
+
+          # Restauración
+          echo "🔙 Restaurando backup: $LATEST_BACKUP"
+          rm -rf /home/finauto/full-proyect-1/*
+          cp -r "$LATEST_BACKUP"/* /home/finauto/full-proyect-1/
+          
+          # Reiniciar servicios anteriores
+          cd /home/finauto/full-proyect-1
+          docker compose down -v --rmi all
+          docker compose up -d --build
+          echo "✅ Rollback completado exitosamente"
