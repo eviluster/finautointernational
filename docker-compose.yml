@@ -1,20 +1,20 @@
 services:
   db:
     image: postgres:17-alpine
-    user: "${UID:-1000}:${GID:-1000}"
+    #user: "${UID:-1000}:${GID:-1000}"
     container_name: db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
       # Forzar creación del usuario postgres con UID/GID del host
-    command: |
-      bash -c '
-        groupadd -g $GID postgres_host &&
-        useradd -u $UID -g $GID postgres_host &&
-        chown -R $UID:$GID /var/lib/postgresql/data &&
-        exec docker-entrypoint.sh postgres
-      '
+    #command: |
+    #  bash -c '
+    #    groupadd -g $GID postgres_host &&
+    #    useradd -u $UID -g $GID postgres_host &&
+    #    chown -R $UID:$GID /var/lib/postgresql/data &&
+    #    exec docker-entrypoint.sh postgres
+    #  '
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
