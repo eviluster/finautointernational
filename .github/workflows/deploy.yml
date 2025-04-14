@@ -36,12 +36,12 @@ jobs:
           # Backup de la versión actual
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
           BACKUP_DIR="/home/finauto/backups/$TIMESTAMP"
-          sudo mkdir -p "$BACKUP_DIR"
-          sudo cp -r /home/finauto/full-proyect-1/* "$BACKUP_DIR/"
+          mkdir -p "$BACKUP_DIR"
+          cp -r /home/finauto/full-proyect-1/* "$BACKUP_DIR/"
           echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
 
           # Configuración esencial
-          sudo mkdir -p ~/full-proyect-1/nginx/conf
+          mkdir -p ~/full-proyect-1/nginx/conf
           echo "proxy_set_header Host \$host;" > ~/full-proyect-1/nginx/proxy_params
           echo "proxy_set_header X-Real-IP \$remote_addr;" >> ~/full-proyect-1/nginx/proxy_params
           echo "proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> ~/full-proyect-1/nginx/proxy_params

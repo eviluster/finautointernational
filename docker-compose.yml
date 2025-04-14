@@ -1,11 +1,20 @@
 services:
   db:
     image: postgres:17-alpine
+    user: "${UID:-1000}:${GID:-1000}"
     container_name: db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
+      # Forzar creación del usuario postgres con UID/GID del host
+    command: |
+      bash -c '
+        groupadd -g $GID postgres_host &&
+        useradd -u $UID -g $GID postgres_host &&
+        chown -R $UID:$GID /var/lib/postgresql/data &&
+        exec docker-entrypoint.sh postgres
+      '
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
@@ -25,7 +34,7 @@ services:
    # depends_on:
    #   - db
    # networks:
-   #   - web-network
+   #   - kia-network
 
   backend:
     build: ./Finauto-Back-End
@@ -50,7 +59,7 @@ services:
     build: ./Finauto-Admin
     container_name: front-admin
     environment:
-      VITE_API_BASE_URL: http://82.163.73.169:5000/v1
+      VITE_API_BASE_URL: ${API_BASE_URL}
     #expose:
     ports:
       - "8081:80"
@@ -61,7 +70,7 @@ services:
     build: ./Finauto-Cliente
     container_name: front-cliente
     environment:
-      VITE_API_BASE_URL: http://82.163.73.169:5000/v1
+      VITE_API_BASE_URL: ${API_BASE_URL}
     #expose:
     ports:
       - "8080:80"
@@ -100,3 +109,9 @@ services:
 networks:
   kia-network:
     driver: bridge
+
+logging:
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
