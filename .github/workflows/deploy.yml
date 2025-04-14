@@ -51,8 +51,8 @@ jobs:
           echo "BACKUP_DIR=$BACKUP_DIR" > /tmp/backup_dir.txt
 
           # Corregir docker-compose.yml
-          echo "🔧 Corrigiendo docker-compose.yml..."
-          echo "✅ docker-compose.yml corregido"
+          #echo "🔧 Corrigiendo docker-compose.yml..."
+          #echo "✅ docker-compose.yml corregido"
 
           # Despliegue
           echo "🚀 Iniciando despliegue..."
