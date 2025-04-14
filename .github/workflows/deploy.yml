@@ -12,7 +12,7 @@ jobs:
     - name: Checkout código
       uses: actions/checkout@v4
 
-    - name: 📤 Transferir archivos al VPS (excluyendo db-data)
+    - name: 📤 Transferir archivos al VPS
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -22,12 +22,6 @@ jobs:
         source: "./"
         target: "/home/finauto/full-proyect-1"
         strip_components: 1
-        # Excluir db-data (si la acción lo soporta)
-        rm: true  # Elimina el destino antes de copiar (opcional)
-        # Alternativa si no se puede excluir directamente:
-        # script: |
-        #   mkdir -p /home/finauto/full-proyect-1
-        #   find . -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec scp -r {} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/finauto/full-proyect-1/ \;
         
     - name: 🚀 Ejecutar despliegue en VPS
       uses: appleboy/ssh-action@v1.2.0
@@ -43,8 +37,16 @@ jobs:
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
           BACKUP_DIR="/home/finauto/backups/$TIMESTAMP"
           mkdir -p "$BACKUP_DIR"
+          # Usar find para excluir db-data
           find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec cp -r {} "$BACKUP_DIR/" \;
           echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
+
+          # Configuración esencial
+          #mkdir -p ~/full-proyect-1/nginx/conf
+          #echo "proxy_set_header Host \$host;" > ~/full-proyect-1/nginx/proxy_params
+          #echo "proxy_set_header X-Real-IP \$remote_addr;" >> ~/full-proyect-1/nginx/proxy_params
+          #echo "proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> ~/full-proyect-1/nginx/proxy_params
+          #echo "proxy_set_header X-Forwarded-Proto \$scheme;" >> ~/full-proyect-1/nginx/proxy_params
 
           # Despliegue
           cd /home/finauto/full-proyect-1
@@ -73,11 +75,12 @@ jobs:
             exit 1
           fi
 
-          # Restauración (excluyendo db-data)
+          # Restauración
           echo "🔙 Restaurando backup: $LATEST_BACKUP"
-          find "$LATEST_BACKUP" -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec cp -r {} /home/finauto/full-proyect-1/ \;
-
-          # Reiniciar servicios
+          rm -rf /home/finauto/full-proyect-1/*
+          cp -r "$LATEST_BACKUP"/* /home/finauto/full-proyect-1/
+          
+          # Reiniciar servicios anteriores
           cd /home/finauto/full-proyect-1
           docker compose down -v --rmi all
           docker compose up -d --build
