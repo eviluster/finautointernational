@@ -13,16 +13,21 @@ jobs:
       uses: actions/checkout@v4
 
     - name: 📤 Transferir archivos al VPS (excluyendo db-data)
-      uses: appleboy/ssh-action@v1.2.0
+      uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        script: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-          rsync -avz --exclude='db-data' ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/finauto/full-proyect-1/
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "./"
+        target: "/home/finauto/full-proyect-1"
+        strip_components: 1
+        # Excluir db-data (si la acción lo soporta)
+        rm: true  # Elimina el destino antes de copiar (opcional)
+        # Alternativa si no se puede excluir directamente:
+        # script: |
+        #   mkdir -p /home/finauto/full-proyect-1
+        #   find . -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec scp -r {} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/finauto/full-proyect-1/ \;
         
     - name: 🚀 Ejecutar despliegue en VPS
       uses: appleboy/ssh-action@v1.2.0
@@ -40,13 +45,6 @@ jobs:
           mkdir -p "$BACKUP_DIR"
           find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec cp -r {} "$BACKUP_DIR/" \;
           echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
-
-          # Configuración esencial
-          #mkdir -p ~/full-proyect-1/nginx/conf
-          #echo "proxy_set_header Host \$host;" > ~/full-proyect-1/nginx/proxy_params
-          #echo "proxy_set_header X-Real-IP \$remote_addr;" >> ~/full-proyect-1/nginx/proxy_params
-          #echo "proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> ~/full-proyect-1/nginx/proxy_params
-          #echo "proxy_set_header X-Forwarded-Proto \$scheme;" >> ~/full-proyect-1/nginx/proxy_params
 
           # Despliegue
           cd /home/finauto/full-proyect-1
