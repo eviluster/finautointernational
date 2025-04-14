@@ -20,6 +20,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
           rsync -avz --exclude='db-data' ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/finauto/full-proyect-1/
         
     - name: 🚀 Ejecutar despliegue en VPS
