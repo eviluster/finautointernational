@@ -33,12 +33,12 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
-          # Backup de la versión actual (excluyendo db-data)
+          # Backup de la versión actual (excluyendo db-data y letsencrypt)
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
           BACKUP_DIR="/home/finauto/backups/$TIMESTAMP"
           mkdir -p "$BACKUP_DIR"
-          # Usar find para excluir db-data
-          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec cp -r {} "$BACKUP_DIR/" \;
+          # Usar find para excluir db-data y letsencrypt
+          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'letsencrypt' -exec cp -r {} "$BACKUP_DIR/" \;
           echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
 
           # Configuración esencial
@@ -75,10 +75,12 @@ jobs:
             exit 1
           fi
 
-          # Restauración
+          # Restauración (excluyendo db-data y letsencrypt)
           echo "🔙 Restaurando backup: $LATEST_BACKUP"
-          rm -rf /home/finauto/full-proyect-1/*
-          cp -r "$LATEST_BACKUP"/* /home/finauto/full-proyect-1/
+          # Eliminar todo excepto db-data y letsencrypt
+          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'letsencrypt' -exec rm -rf {} \;
+          # Copiar todo del backup excepto db-data y letsencrypt
+          find "$LATEST_BACKUP" -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'letsencrypt' -exec cp -r {} /home/finauto/full-proyect-1/ \;
           
           # Reiniciar servicios anteriores
           cd /home/finauto/full-proyect-1
