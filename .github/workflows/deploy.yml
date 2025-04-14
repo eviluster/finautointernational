@@ -33,20 +33,22 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
-          # Backup de la versión actual (excluyendo db-data y letsencrypt)
+          # Backup de la versión actual (excluyendo db-data y nginx/letsencrypt)
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
           BACKUP_DIR="/home/finauto/backups/$TIMESTAMP"
           mkdir -p "$BACKUP_DIR"
-          # Usar find para excluir db-data y letsencrypt
-          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'letsencrypt' -exec cp -r {} "$BACKUP_DIR/" \;
-          echo "BACKUP_DIR=$BACKUP_DIR" >> $GITHUB_ENV
-
-          # Configuración esencial
-          #mkdir -p ~/full-proyect-1/nginx/conf
-          #echo "proxy_set_header Host \$host;" > ~/full-proyect-1/nginx/proxy_params
-          #echo "proxy_set_header X-Real-IP \$remote_addr;" >> ~/full-proyect-1/nginx/proxy_params
-          #echo "proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;" >> ~/full-proyect-1/nginx/proxy_params
-          #echo "proxy_set_header X-Forwarded-Proto \$scheme;" >> ~/full-proyect-1/nginx/proxy_params
+          
+          # Usar find para excluir db-data y nginx/letsencrypt
+          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec cp -r {} "$BACKUP_DIR/" \;
+          
+          # Excluir nginx/letsencrypt del backup
+          if [ -d "$BACKUP_DIR/nginx/letsencrypt" ]; then
+            rm -rf "$BACKUP_DIR/nginx/letsencrypt"
+            echo "Excluido nginx/letsencrypt del backup"
+          fi
+          
+          # Guardar la ruta del backup en una variable local
+          echo "BACKUP_DIR=$BACKUP_DIR" > /tmp/backup_dir.txt
 
           # Despliegue
           cd /home/finauto/full-proyect-1
@@ -75,12 +77,20 @@ jobs:
             exit 1
           fi
 
-          # Restauración (excluyendo db-data y letsencrypt)
+          # Restauración (excluyendo db-data y nginx/letsencrypt)
           echo "🔙 Restaurando backup: $LATEST_BACKUP"
-          # Eliminar todo excepto db-data y letsencrypt
-          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'letsencrypt' -exec rm -rf {} \;
-          # Copiar todo del backup excepto db-data y letsencrypt
-          find "$LATEST_BACKUP" -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'letsencrypt' -exec cp -r {} /home/finauto/full-proyect-1/ \;
+          
+          # Eliminar todo excepto db-data y nginx/letsencrypt
+          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec rm -rf {} \;
+          
+          # Copiar todo del backup excepto nginx/letsencrypt
+          cp -r "$LATEST_BACKUP"/* /home/finauto/full-proyect-1/
+          
+          # Eliminar nginx/letsencrypt si existe
+          if [ -d "/home/finauto/full-proyect-1/nginx/letsencrypt" ]; then
+            rm -rf "/home/finauto/full-proyect-1/nginx/letsencrypt"
+            echo "Excluido nginx/letsencrypt de la restauración"
+          fi
           
           # Reiniciar servicios anteriores
           cd /home/finauto/full-proyect-1
