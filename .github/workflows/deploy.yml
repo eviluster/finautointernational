@@ -12,6 +12,21 @@ jobs:
     - name: Checkout código
       uses: actions/checkout@v4
 
+    - name: 📱 Notificar inicio de despliegue a Telegram
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          🚀 *Inicio de despliegue*
+          Repositorio: ${{ github.repository }}
+          Rama: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Autor: ${{ github.actor }}
+          Fecha: ${{ github.event.head_commit.timestamp }}
+          Pipeline: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        format: html
+
     - name: 📤 Transferir archivos al VPS
       uses: appleboy/scp-action@v0.1.4
       with:
@@ -37,22 +52,18 @@ jobs:
           echo "🔍 Verificando directorios..."
           ls -la /home/finauto/full-proyect-1/
           
-          # Backup de la versión actual (excluyendo db-data y nginx/letsencrypt)
+          # Backup de la versión actual (excluyendo db-data, certbot y nginx/data)
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
           BACKUP_DIR="/home/finauto/backups/$TIMESTAMP"
           mkdir -p "$BACKUP_DIR"
           echo "📦 Creando backup en $BACKUP_DIR"
           
-          # Usar find para excluir db-data y nginx/letsencrypt
-          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -path '*/nginx/letsencrypt*' -exec cp -r {} "$BACKUP_DIR/" \;
+          # Usar find para excluir db-data, certbot y nginx/data
+          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'certbot' ! -path '*/nginx/data*' ! -path '*/nginx/letsencrypt*' -exec cp -r {} "$BACKUP_DIR/" \;
           echo "✅ Backup completado"
           
           # Guardar la ruta del backup en una variable local
           echo "BACKUP_DIR=$BACKUP_DIR" > /tmp/backup_dir.txt
-
-          # Corregir docker-compose.yml
-          #echo "🔧 Corrigiendo docker-compose.yml..."
-          #echo "✅ docker-compose.yml corregido"
 
           # Despliegue
           echo "🚀 Iniciando despliegue..."
@@ -62,11 +73,43 @@ jobs:
           docker compose up -d --build
           echo "✅ Despliegue completado"
 
+    - name: 📱 Notificar fallo de despliegue a Telegram
+      if: failure()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          ❌ *Fallo en el despliegue*
+          Repositorio: ${{ github.repository }}
+          Rama: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Autor: ${{ github.actor }}
+          Fecha: ${{ github.event.head_commit.timestamp }}
+          Pipeline: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          Se iniciará el proceso de rollback.
+        format: html
+
   rollback:
     needs: [deploy]
     if: ${{ failure() }}
     runs-on: ubuntu-24.04
     steps:
+    - name: 📱 Notificar inicio de rollback a Telegram
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          🔄 *Inicio de rollback*
+          Repositorio: ${{ github.repository }}
+          Rama: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Autor: ${{ github.actor }}
+          Fecha: ${{ github.event.head_commit.timestamp }}
+          Pipeline: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        format: html
+
     - name: 🔄 Restaurar versión anterior
       uses: appleboy/ssh-action@v1.2.0
       with:
@@ -86,19 +129,15 @@ jobs:
           
           echo "📦 Último backup encontrado: $LATEST_BACKUP"
 
-          # Restauración (excluyendo db-data y nginx/letsencrypt)
-          echo "🔙 Restaurando backup..."
+          # Restauración (excluyendo db-data, certbot y nginx/data)
+          echo " Restaurando backup..."
           
-          # Eliminar todo excepto db-data
-          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' -exec rm -rf {} \;
+          # Eliminar todo excepto db-data y certbot
+          find /home/finauto/full-proyect-1 -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'certbot' -exec rm -rf {} \;
           
-          # Copiar todo del backup excepto nginx/letsencrypt
-          find "$LATEST_BACKUP" -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -path '*/nginx/letsencrypt*' -exec cp -r {} /home/finauto/full-proyect-1/ \;
+          # Copiar todo del backup excepto nginx/data y nginx/letsencrypt
+          find "$LATEST_BACKUP" -mindepth 1 -maxdepth 1 ! -name 'db-data' ! -name 'certbot' ! -path '*/nginx/data*' ! -path '*/nginx/letsencrypt*' -exec cp -r {} /home/finauto/full-proyect-1/ \;
           echo "✅ Restauración completada"
-          
-          # Corregir docker-compose.yml
-          echo "🔧 Corrigiendo docker-compose.yml..."
-          echo "✅ docker-compose.yml corregido"
           
           # Reiniciar servicios anteriores
           echo "🔄 Reiniciando servicios..."
@@ -106,3 +145,20 @@ jobs:
           docker compose down -v --rmi all
           docker compose up -d --build
           echo "✅ Rollback completado exitosamente"
+
+    - name: 📱 Notificar fallo de rollback a Telegram
+      if: failure()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        message: |
+          ❌ *Fallo en el rollback*
+          Repositorio: ${{ github.repository }}
+          Rama: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Autor: ${{ github.actor }}
+          Fecha: ${{ github.event.head_commit.timestamp }}
+          Pipeline: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          Se requiere intervención manual.
+        format: html
