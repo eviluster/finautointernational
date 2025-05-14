@@ -27,8 +27,6 @@ import { PersonaTipo } from 'src/persona-tipo/entities/persona-tipo.entity';
 import { Persona } from 'src/persona-juridica/entities/persona-juridica.entity';
 import { TipoPersona } from 'src/tipo-persona-juridica/entities/tipo-persona-juridica.entity';
 import { Customer } from 'src/customer/entities/customer.entity';
-import { VehicleVariation } from 'src/vehicle-variations/entities/vehicle-variation.entity';
-import { VehicleVariationsType } from 'src/vehicle-variations-type/entities/vehicle-variations-type.entity';
 import { EquipoGarage } from 'src/equipo-garage/entities/equipo-garage.entity';
 import { Parte } from 'src/parte/entities/parte.entity';
 import { Producto } from 'src/producto/entities/producto.entity';
@@ -38,9 +36,6 @@ import { TipoNeumatico } from 'src/tipo-neumatico/entities/tipo-neumatico.entity
 import { CajaCambio } from 'src/caja-cambio/entities/caja-cambio.entity';
 import { TipoSuspension } from 'src/tipo-suspension/entities/tipo-suspension.entity';
 import { Servicio } from 'src/servicio/entities/servicio.entity';
-import { VehicleSuplement } from 'src/vehicle-suplement/entities/vehicle-suplement.entity';
-import { ProductoVehiculoSuplemento } from 'src/producto-vehiculo-suplemento/entities/producto-vehiculo-suplemento.entity';
-import { Oferta } from 'src/oferta/entities/oferta.entity';
 import { Reserva } from 'src/reserva/entities/reserva.entity';
 import { Comercial } from 'src/comercial/entities/comercial.entity';
 import { Pago } from 'src/pago/entities/pago.entity';
@@ -48,9 +43,16 @@ import { CuentaBancaria } from 'src/cuenta-bancaria/entities/cuenta-bancaria.ent
 import { CustomerCuenta } from 'src/customer-cuenta/entities/customer-cuenta.entity';
 import { FinAutoCuenta } from 'src/fin-auto-cuenta/entities/fin-auto-cuenta.entity';
 import { NombreTipoSuspension } from 'src/nombre-tipo-suspension/entities/nombre-tipo-suspension.entity';
+import { Galery } from 'src/galery/entities/galery.entity';
 import { PiezaAccesorio } from 'src/pieza-accesorio/entities/pieza-accesorio.entity';
-
+import { Calendar } from 'src/calendar/entities/calendar.entity';
+import { Catprod } from './src/catprod/entities/catprod.entity';
 dotenv.config(); // Carga las variables de entorno desde el archivo .env
+
+// Agrega este console.log para depurar el valor de la variable de entorno DB_PASS
+console.log('Valor de DB_PASS:', process.env.DB_PASS.toString());
+// Agrega este console.log para depurar el valor de la variable de entorno DB_USER
+console.log('Valor de DB_USER:', process.env.DB_USER);
 
 export const config: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -61,56 +63,56 @@ export const config: TypeOrmModuleOptions = {
   database: process.env.DB_NAME,
   // entities: ['src/**/entities/*.entity.ts'],
 
+  logging: true,
+  logger: 'advanced-console',
+
   entities: [
-    PiezaAccesorio,
-    TipoSuspension,
-    NombreTipoSuspension,
-    Traza,
-    Configuracion,
-    User,
-    Role,
-    Permission,
-    RolePermission,
-    UserRole,
-    Notification,
-    Section,
-    Marca,
-    Modelo,
-    Tipo,
-    Engine,
-    TipoUm,
-    TipoFreno,
-    Um,
-    Proveedor,
-    Country,
-    Province,
-    Municipality,
-    Locality,
-    AddressDetail,
-    TipoPersona,
-    Persona,
-    // New tables
     Customer,
-    Traccion,
-    TipoNeumatico,
+    AddressDetail,
     CajaCambio,
-    TipoSuspension,
-    Vehicle,
-    VehicleVariation,
-    VehicleVariationsType,
-    Parte,
-    Producto,
-    EquipoGarage,
-    Servicio,
-    VehicleSuplement,
-    ProductoVehiculoSuplemento,
-    Oferta,
-    Reserva,
     Comercial,
-    Pago,
+    Configuracion,
+    Country,
     CuentaBancaria,
     CustomerCuenta,
+    Engine,
+    EquipoGarage,
     FinAutoCuenta,
+    Locality,
+    Marca,
+    Modelo,
+    Municipality,
+    NombreTipoSuspension,
+    Notification,
+    Pago,
+    Parte,
+    Permission,
+    Persona,
+    Producto,
+    Proveedor,
+    Province,
+    Reserva,
+    Role,
+    RolePermission,
+    Section,
+    Servicio,
+    Tipo,
+    TipoFreno,
+    TipoNeumatico,
+    TipoPersona,
+    TipoSuspension,
+    TipoUm,
+    Traccion,
+    Traza,
+    Um,
+    User,
+    UserRole,
+    Vehicle,
+    TipoSuspension,
+    Galery,
+    PiezaAccesorio,
+    Calendar,
+    Catprod,
   ],
   // entities: [__dirname + '/**/*.entity{.ts,.js}'],
   migrations: ['src/database/migrations/*.ts'],
