@@ -120,38 +120,18 @@
           </router-link>
         </template>
         <template v-slot:bl="{ row: customer }">
-          <router-link
-            to="/apps/subscriptions/view-subscription"
-            href=""
-            class="text-gray-800 text-hover-primary mb-1"
-          >
-            {{ customer.bl }}
-          </router-link>
+          {{ customer.bl }}
         </template>
         <template v-slot:numCont="{ row: customer }">
-          <router-link
-            to="/apps/subscriptions/view-subscription"
-            href=""
-            class="text-gray-800 text-hover-primary mb-1"
-          >
-            {{ customer.numCont }}
-          </router-link>
+          {{ customer.numCont }}
         </template>
         <template v-slot:cantidad="{ row: customer }">
-          <router-link
-            to="/apps/subscriptions/view-subscription"
-            href=""
-            class="text-gray-800 text-hover-primary mb-1"
-          >
-            {{ customer.cantidad }}
-          </router-link>
+          {{ customer.cantidad }}
         </template>
         <template v-slot:status="{ row: customer }">
-          <a href="#" class="text-gray-600 text-hover-primary mb-1">
-            <div :class="`badge badge-light-${customer.color}`">
-              {{ customer.status }}
-            </div>
-          </a>
+          <div :class="`badge badge-light-${customer.color}`">
+            {{ customer.status }}
+          </div>
         </template>
         <template v-slot:total="{ row: customer }">
           <div class="badge-ligth">{{ formatCurrency(customer.total) }}</div>

@@ -78,13 +78,7 @@
                   <div
                     class="card-toolbar flex-row-fluid justify-content-end gap-5"
                   >
-                    <!--begin::Daterangepicker-->
-                    <input
-                      class="form-control form-control-solid w-100 mw-250px"
-                      placeholder="Pick date range"
-                      id="kt_ecommerce_report_sales_daterangepicker"
-                    />
-                    <!--end::Daterangepicker-->
+                    <input type="date" id="date" required />
 
                     <div class="m-0">
                       <!--begin::Menu toggle-->
@@ -375,13 +369,65 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, ref, computed, onMounted } from "vue";
 import { useMarcaStore } from "@/stores/marcas";
 import { useModeloStore } from "@/stores/modelos";
-
+import { DatePicker } from "v-calendar";
 export default defineComponent({
+  components: { DatePicker },
   name: "SalesReport",
   setup() {
     onMounted(async () => {
       await marcaStore.fetchMarcas();
       await modeloStore.fetchModelos();
+    });
+
+    const dateRange = ref({
+      start: null,
+      end: null,
+    });
+
+    // Para mostrar u ocultar el picker
+    const showCalendar = ref(false);
+    const toggleCalendar = () => {
+      showCalendar.value = !showCalendar.value;
+    };
+
+    // Cuando se actualice el rango, se cierra el calendario
+    const updateDateRange = (newRange) => {
+      dateRange.value = newRange;
+      // Aquí puedes agregar lógica adicional, como validar el rango o actualizar datos
+      showCalendar.value = false;
+    };
+
+    // Opcional: definir límites para la selección
+    const minDate = ref(new Date(2020, 0, 1));
+    const maxDate = ref(new Date());
+
+    // Computed para formatear la fecha a mostrar en el input
+    const formattedDateRange = computed(() => {
+      const { start, end } = dateRange.value;
+      if (start && end) {
+        // Puedes ajustar el formateo según tus necesidades o usar una librería como dayjs/moment
+        const format = (date) => new Date(date).toLocaleDateString();
+        return `${format(start)} - ${format(end)}`;
+      }
+      return "";
+    });
+
+    function onUpdateDateRange(val) {
+      dateRange.value = val;
+      // Opcional: cerrar al seleccionar ambos límites
+      if (val.start && val.end) {
+        showCalendar.value = false;
+      }
+    }
+    // Cerrar si hacen click fuera
+    function onClickOutside(e) {
+      if (showCalendar.value) {
+        showCalendar.value = false;
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener("click", onClickOutside);
     });
 
     const marcaStore = useMarcaStore();
@@ -440,7 +486,14 @@ export default defineComponent({
       productos,
       marcas,
       modelos,
+      formattedDateRange,
+      minDate,
+      maxDate,
+      showCalendar,
+      updateDateRange,
+      toggleCalendar,
       applyFilters,
+      onUpdateDateRange,
     };
   },
 });
@@ -453,5 +506,24 @@ export default defineComponent({
 }
 .card-header {
   display: initial !important;
+}
+/* Estilo para posicionar y darle formato al contenedor del calendario */
+.calendar-wrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
+}
+/* Animación simple para mostrar/ocultar */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

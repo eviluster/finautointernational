@@ -68,22 +68,16 @@ export const useVehiculoStore = defineStore("vehiculos", {
       }
     },
 
-    async updateVehiculo(updatedVehiculoID: string, vehiculo: IVehiculo) {
+    async updateVehiculo(vehiculo: IVehiculo) {
       const payload = {
-        id: updatedVehiculoID,
         ...vehiculo,
-        rules: {
-          method: "UPDATE",
-          comparisonKind: "UINQUE",
-          field: ["name"],
-        },
       };
       console.log(payload);
 
       try {
         const { data } = await api.patch("/vehicle", payload);
         const index = this.vehiculos.findIndex(
-          (item: any) => item.id === updatedVehiculoID,
+          (item: any) => item.id === vehiculo.id,
         );
         if (index !== -1) {
           this.vehiculos[index] = data.data;

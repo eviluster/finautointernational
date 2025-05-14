@@ -213,17 +213,6 @@ export default defineComponent({
           class="d-flex justify-content-end"
           data-kt-customer-table-toolbar="base"
         >
-          <!--begin::Export-->
-          <button
-            type="button"
-            class="btn btn-light-primary me-3"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_customers_export_modal"
-          >
-            <KTIcon icon-name="exit-up" icon-class="fs-2" />
-            Export
-          </button>
-          <!--end::Export-->
           <!--begin::Add Servicio-->
           <button
             type="button"
@@ -310,38 +299,45 @@ export default defineComponent({
           {{ servicio.precioBase }}
         </template>
         <template v-slot:actions="{ row: servicio }">
-          <span
-            class="btn btn-sm btn-light btn-active-light-primary"
-            data-kt-menu-trigger="click"
-            data-kt-menu-placement="bottom-end"
-            data-kt-menu-flip="top-end"
-            >Actions
-            <KTIcon icon-name="down" icon-class="fs-5 m-0" />
-          </span>
-          <!--begin::Menu-->
-          <div
-            class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-            data-kt-menu="true"
-          >
-            <!--begin::Menu item-->
-            <div class="menu-item px-3">
-              <router-link
-                to="/apps/servicios/servicio-details"
-                class="menu-link px-3"
-                @click="editServicio(servicio)"
-                data-bs-toggle="modal"
-                data-bs-target="#kt_modal_edit_servicio"
-                >Editar</router-link
-              >
-            </div>
-            <!--end::Menu item-->
-            <!--begin::Menu item-->
-            <div class="menu-item px-3">
-              <a @click="deleteServicio(servicio.id)" class="menu-link px-3"
-                >Delete</a
-              >
-            </div>
-            <!--end::Menu item-->
+          <!-- Contenedor Dropdown -->
+          <div class="dropdown">
+            <!-- Botón que despliega el menú (se usa data-bs-toggle="dropdown") -->
+            <button
+              class="btn btn-sm btn-light btn-active-light-primary dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Actions
+            </button>
+
+            <!-- Menú desplegable -->
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="dropdownMenuButton"
+            >
+              <li class="dropdown-item">
+                <router-link
+                  to="/apps/servicios/servicio-details"
+                  class="text-decoration-none"
+                  @click="editServicio(servicio)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_modal_edit_servicio"
+                >
+                  Editar
+                </router-link>
+              </li>
+              <li class="dropdown-item">
+                <a
+                  href="#"
+                  class="text-decoration-none"
+                  @click.prevent="deleteServicio(servicio.id)"
+                >
+                  Delete
+                </a>
+              </li>
+            </ul>
           </div>
           <!--end::Menu-->
         </template>

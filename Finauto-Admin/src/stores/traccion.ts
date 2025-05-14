@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface ITraccion {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -43,9 +44,8 @@ export const useTraccionStore = defineStore("traccion", {
       }
     },
 
-    async updateTraccion(updatedTraccionID: string, traccion: ITraccion) {
+    async updateTraccion(traccion: ITraccion) {
       const payload = {
-        id: updatedTraccionID,
         ...traccion,
       };
       console.log(payload);
@@ -54,7 +54,7 @@ export const useTraccionStore = defineStore("traccion", {
         const { data } = await api.patch("/traccion", payload);
 
         const index = this.traccion.findIndex(
-          (item: any) => item.id === updatedTraccionID,
+          (item: any) => item.id === traccion.id,
         );
 
         if (index !== -1) {

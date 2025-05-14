@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import api from "@/services/api";
 
 interface ITipoFreno {
+  id: string;
   name: {
     es: string;
     en: string;
@@ -45,9 +46,8 @@ export const useTipoFrenoStore = defineStore("tipofreno", {
       }
     },
 
-    async updateTipoFreno(updatedTipoFrenoID: string, tipofreno: ITipoFreno) {
+    async updateTipoFreno(tipofreno: ITipoFreno) {
       const payload = {
-        id: updatedTipoFrenoID,
         ...tipofreno,
       };
       console.log(payload);
@@ -55,7 +55,7 @@ export const useTipoFrenoStore = defineStore("tipofreno", {
       try {
         const { data } = await api.patch("/tipo-freno", payload);
         const index = this.tipofreno.findIndex(
-          (item: any) => item.id === updatedTipoFrenoID,
+          (item: any) => item.id === tipofreno.id,
         );
 
         if (index !== -1) {

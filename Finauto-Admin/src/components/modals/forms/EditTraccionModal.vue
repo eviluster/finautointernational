@@ -136,6 +136,7 @@ export default defineComponent({
       try {
         // Preparamos el objeto con los datos actualizados
         const updatedData = {
+          id: formData.value.id,
           name: { es: values.nameEs, en: values.nameEn || "" },
           description: {
             es: values.descriptionEs,
@@ -145,7 +146,7 @@ export default defineComponent({
 
         console.log(updatedData);
         // Llamamos a updateTraccion pasando el ID y el objeto con los datos actualizados
-        await traccionStore.updateTraccion(formData.value.id, updatedData);
+        await traccionStore.updateTraccion(updatedData);
         await traccionStore.fetchTraccion(); // Refrescamos la lista de traccions
 
         hideModal(editTraccionModalRef.value);

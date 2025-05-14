@@ -37,21 +37,13 @@ const routes: Array<RouteRecordRaw> = [
 
       {
         path: "/apps/productos/addproduct",
-        component: asideLayoutVue,
-        children: [
-          {
-            path: "vehiculo",
-            component: () =>
-              import("@/views/comercializacion/productos/crear-vehiculo.vue"),
-          },
-          {
-            path: "piezas",
-            component: () =>
-              import(
-                "@/views/comercializacion/productos/crear-piezas-garaje.vue"
-              ),
-          },
-        ],
+        name: "addproduct",
+        component: () =>
+          import("@/views/comercializacion/productos/AddProduct.vue"),
+        meta: {
+          pageTitle: "Añadir Productos",
+          breadcrumbs: ["Apps", "Añadir Productos"],
+        },
       },
       {
         path: "/apps/productos/productlisting",
@@ -184,14 +176,37 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Apps", "Customers"],
         },
       },
+
+      // {
+      //   path: "/apps/customers/customers-listing",
+      //   name: "apps-customers-listing",
+      //   component: () =>
+      //     import("@/views/comercializacion/customers/create.vue"),
+      //   meta: {
+      //     pageTitle: "Customers Listing",
+      //     breadcrumbs: ["Apps", "Customers"],
+      //   },
+      // },
       {
-        path: "/apps/customers/customer-details",
+        path: "/apps/customers/customer-details/:id",
         name: "apps-customers-details",
         component: () =>
           import("@/views/comercializacion/customers/CustomerDetails.vue"),
         meta: {
           pageTitle: "Customers Details",
           breadcrumbs: ["Apps", "Customers"],
+        },
+        // Opcional: Permite que el parámetro "id" se pase como prop al componente
+        props: true,
+      },
+      {
+        path: "/comercializacion/comerciales",
+        name: "comerciales-listing",
+        component: () =>
+          import("@/views/comercializacion/comerciales/ComercialesListing.vue"),
+        meta: {
+          pageTitle: "Comerciales Listing",
+          breadcrumbs: ["Comercialización", "Comerciales"],
         },
       },
       {
@@ -305,6 +320,37 @@ const routes: Array<RouteRecordRaw> = [
 
       //CONFIGURACION
       {
+        path: "/configuracion/generalList",
+        name: "configuracion-generalList",
+        component: () => import("@/views/configuracion/generalList.vue"),
+        meta: {
+          pageTitle: "Lista de configuraciones",
+          breadcrumbs: ["Configuracion", "Lista de configuraciones"],
+        },
+      },
+
+      {
+        path: "/configuracion/addgeneral",
+        name: "configuracion-addgeneral",
+        component: () => import("@/views/configuracion/addgeneral.vue"),
+        meta: {
+          pageTitle: "Agregar configuración",
+          breadcrumbs: ["Configuracion", "Agregar configuración"],
+        },
+      },
+
+      {
+        path: "/configuracion/editarConfiguracion",
+        name: "configuracion-editarConfiguracion",
+        component: () =>
+          import("@/components/modals/forms/EditConfiguracionModal.vue"),
+        meta: {
+          pageTitle: "Agregar configuración",
+          breadcrumbs: ["Configuracion", "Agregar configuración"],
+        },
+      },
+
+      {
         path: "/configuracion/metodos-de-pago",
         name: "configuracion-metodos-de-pago",
         component: () => import("@/views/configuracion/metodosList.vue"),
@@ -322,15 +368,16 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Configuracion", "Tarjetas de credito"],
         },
       },
-      // {
-      //   path: "/configuracion/cuentas-bancarias",
-      //   name: "configuracion-cuentas-bancarias",
-      //   component: () => import("@/views/configuracion/tarjetasList.vue"),
-      //   meta: {
-      //     pageTitle: "Cuentas bancarias",
-      //     breadcrumbs: ["Configuracion", "Cuentas bancarias"],
-      //   },
-      // },
+      {
+        path: "/configuracion/cuentas-bancarias",
+        name: "configuracion-cuentas-bancarias",
+        component: () =>
+          import("@/views/configuracion/cuentasBancariasList.vue"),
+        meta: {
+          pageTitle: "Cuentas bancarias",
+          breadcrumbs: ["Configuracion", "Cuentas bancarias"],
+        },
+      },
 
       {
         path: "/configuracion/impuestos",
@@ -587,6 +634,23 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "/admin/nomencladores/categoria-producto",
+        name: "categoria-producto",
+        component: () =>
+          import(
+            "@/views/administracion/nomencladores/CategoriaProductoList.vue"
+          ),
+        meta: {
+          pageTitle: "Categoría de Productos",
+          breadcrumbs: [
+            "Administracion",
+            "Nomencladores",
+            "Categoría de Productos",
+          ],
+        },
+      },
+
+      {
         path: "/admin/nomencladores/categoria-pieza-accesorio",
         name: "categoria-pieza-accesorio",
         component: () =>
@@ -599,6 +663,22 @@ const routes: Array<RouteRecordRaw> = [
             "Administracion",
             "Nomencladores",
             "Categoría de Pieza y Acccesorio",
+          ],
+        },
+      },
+      {
+        path: "/admin/nomencladores/categoria-equipo",
+        name: "categoria-equipo",
+        component: () =>
+          import(
+            "@/views/administracion/nomencladores/CategoriaEquipoList.vue"
+          ),
+        meta: {
+          pageTitle: "Categoría de Equipo",
+          breadcrumbs: [
+            "Administracion",
+            "Nomencladores",
+            "Categoría de Equipo",
           ],
         },
       },

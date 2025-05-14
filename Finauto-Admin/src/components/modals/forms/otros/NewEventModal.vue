@@ -1,288 +1,217 @@
 <template>
   <div
-    class="modal fade show"
+    class="modal fade"
     id="kt_modal_add_event"
-    aria-modal="true"
-    role="dialog"
-    ref="newTargetModalRef"
+    ref="modalRef"
+    tabindex="-1"
+    aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered mw-650px">
       <div class="modal-content">
         <el-form
-          class="form fv-plugins-bootstrap5 fv-plugins-framework"
           id="kt_modal_add_event_form"
-          @submit.prevent="submit()"
-          :model="targetData"
+          @submit.prevent="submit"
+          :model="formData"
           :rules="rules"
           ref="formRef"
+          class="form fv-plugins-bootstrap5 fv-plugins-framework"
         >
           <div class="modal-header">
             <h2 class="fw-bold">Add a New Event</h2>
             <div
               class="btn btn-icon btn-sm btn-active-icon-primary"
-              id="kt_modal_add_event_close"
-              data-bs-dismiss="modal"
+              @click="close"
             >
               <KTIcon icon-name="cross" icon-class="fs-1" />
             </div>
           </div>
-          <!--end::Modal header-->
-          <!--begin::Modal body-->
+
           <div class="modal-body py-10 px-lg-17">
-            <!--begin::Input group-->
-            <div class="fv-row mb-9 fv-plugins-icon-container">
-              <!--begin::Label-->
-              <label class="fs-6 fw-semibold required mb-2">Event Name</label>
-              <!--end::Label-->
-              <!--begin::Input-->
-              <el-form-item prop="eventName">
-                <el-input
-                  v-model="targetData.eventName"
-                  type="text"
-                  name="eventName"
+            <!-- Fecha -->
+            <div class="fv-row mb-9">
+              <label class="fs-6 fw-semibold mb-2 required">Fecha</label>
+              <el-form-item prop="fecha">
+                <el-date-picker
+                  v-model="formData.fecha"
+                  type="date"
+                  placeholder="Selecciona fecha"
                 />
               </el-form-item>
-              <!--end::Input-->
-              <div class="fv-plugins-message-container invalid-feedback"></div>
             </div>
-            <!--end::Input group-->
-            <!--begin::Input group-->
-            <div class="fv-row mb-9">
-              <!--begin::Label-->
-              <label class="fs-6 fw-semibold mb-2">Event Description</label>
-              <!--end::Label-->
-              <!--begin::Input-->
-              <el-input
-                v-model="targetData.eventDescription"
-                type="text"
-                placeholder=""
-                name="eventDescription"
-              />
-              <!--end::Input-->
+
+            <div v-if="!formData.fullDay">
+              <!-- Hora de Inicio -->
+              <el-form-item label="Hora de Inicio" prop="startTime">
+                <el-time-picker
+                  v-model="formData.startTime"
+                  placeholder="Selecciona hora"
+                  format="HH:mm"
+                  value-format="HH:mm"
+                  :picker-options="{ step: '00:05' }"
+                />
+              </el-form-item>
+
+              <!-- Hora de Fin -->
+              <el-form-item label="Hora de Fin" prop="endTime">
+                <el-time-picker
+                  v-model="formData.endTime"
+                  placeholder="Selecciona hora"
+                  format="HH:mm"
+                  value-format="HH:mm"
+                  :picker-options="{ step: '00:05' }"
+                />
+              </el-form-item>
             </div>
-            <!--end::Input group-->
-            <!--begin::Input group-->
+
+            <!-- Full Day -->
             <div class="fv-row mb-9">
-              <!--begin::Label-->
-              <label class="fs-6 fw-semibold mb-2">Event Location</label>
-              <!--end::Label-->
-              <!--begin::Input-->
-              <el-input
-                v-model="targetData.eventLocation"
-                type="text"
-                placeholder=""
-                name="eventLocation"
-              />
-              <!--end::Input-->
-            </div>
-            <!--end::Input group-->
-            <!--begin::Input group-->
-            <div class="fv-row mb-9">
-              <!--begin::Checkbox-->
               <label class="form-check form-check-custom form-check-solid">
-                <el-checkbox v-model="targetData.allDay" type="checkbox" />
+                <el-checkbox v-model="formData.fullDay" />
                 <span class="form-check-label fw-semibold">All Day</span>
               </label>
-              <!--end::Checkbox-->
             </div>
-            <!--end::Input group-->
-            <!--begin::Input group-->
-            <div class="row row-cols-lg-2 g-10">
-              <div class="col">
-                <div
-                  class="fv-row mb-9 fv-plugins-icon-container fv-plugins-bootstrap5-row-valid"
-                >
-                  <!--begin::Label-->
-                  <label class="fs-6 fw-semibold mb-2 required"
-                    >Event Start Date</label
-                  >
-                  <!--end::Label-->
-                  <!--begin::Input-->
-                  <el-date-picker
-                    v-model="targetData.eventStartDate"
-                    type="date"
-                    :teleported="false"
-                    name="eventStartDate"
+
+            <!-- State -->
+            <div class="fv-row mb-9">
+              <label class="fs-6 fw-semibold mb-2 required">State</label>
+              <el-form-item prop="state">
+                <el-select v-model="formData.state" placeholder="Select state">
+                  <el-option
+                    v-for="opt in stateOptions"
+                    :key="opt"
+                    :label="opt"
+                    :value="opt"
                   />
-                  <!--end::Input-->
-                  <div
-                    class="fv-plugins-message-container invalid-feedback"
-                  ></div>
-                </div>
-              </div>
+                </el-select>
+              </el-form-item>
             </div>
-            <!--end::Input group-->
-            <!--begin::Input group-->
-            <div class="row row-cols-lg-2 g-10">
-              <div class="col">
-                <div
-                  class="fv-row mb-9 fv-plugins-icon-container fv-plugins-bootstrap5-row-valid"
-                >
-                  <!--begin::Label-->
-                  <label class="fs-6 fw-semibold mb-2 required"
-                    >Event End Date</label
-                  >
-                  <!--end::Label-->
-                  <!--begin::Input-->
-                  <el-date-picker
-                    v-model="targetData.eventEndDate"
-                    type="date"
-                    :teleported="false"
-                    name="eventName"
-                  />
-                  <!--end::Input-->
-                  <div
-                    class="fv-plugins-message-container invalid-feedback"
-                  ></div>
-                </div>
-              </div>
-            </div>
-            <!--end::Input group-->
           </div>
-          <!--end::Modal body-->
-          <!--begin::Modal footer-->
+
           <div class="modal-footer flex-center">
-            <!--begin::Button-->
-            <button
-              data-bs-dismiss="modal"
-              type="reset"
-              id="kt_modal_add_event_cancel"
-              class="btn btn-light me-3"
-            >
+            <button type="button" class="btn btn-light me-3" @click="close">
               Cancel
             </button>
-            <!--end::Button-->
-            <!--begin::Button-->
             <button
-              :data-kt-indicator="loading ? 'on' : null"
-              class="btn btn-lg btn-primary"
               type="submit"
+              class="btn btn-lg btn-primary"
+              :data-kt-indicator="loading ? 'on' : null"
             >
-              <span v-if="!loading" class="indicator-label">
-                Submit
-                <KTIcon icon-name="arrow-right" icon-class="fs-3 ms-2 me-0" />
-              </span>
-              <span v-if="loading" class="indicator-progress">
+              <span v-if="!loading">Create Event</span>
+              <span v-else class="indicator-progress">
                 Please wait...
                 <span
                   class="spinner-border spinner-border-sm align-middle ms-2"
                 ></span>
               </span>
             </button>
-            <!--end::Button-->
           </div>
-          <!--end::Modal footer-->
-          <div></div>
         </el-form>
-        <!--end::Form-->
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
+//import { Modal } from "bootstrap";
+import Swal from "sweetalert2";
+import { CalendarStateEnum } from "@/core/enums/CalendarStateEnum";
 import { hideModal } from "@/core/helpers/modal";
-import Swal from "sweetalert2/dist/sweetalert2.js";
 
-interface NewAddressData {
-  eventName: string;
-  eventDescription: string;
-  eventLocation: string;
-  allDay: boolean;
-  eventStartDate: string;
-  eventEndDate: string;
+interface NewEventData {
+  fecha: Date;
+  startTime: string; // "HH:mm"
+  endTime?: string; // "HH:mm"
+  fullDay: boolean;
+  state: CalendarStateEnum;
 }
 
 export default defineComponent({
-  name: "new-event-modal",
-  components: {},
-  setup() {
-    const formRef = ref<null | HTMLFormElement>(null);
-    const newTargetModalRef = ref<null | HTMLElement>(null);
-    const loading = ref<boolean>(false);
-
-    const targetData = ref<NewAddressData>({
-      eventName: "",
-      eventDescription: "",
-      eventLocation: "",
-      allDay: true,
-      eventStartDate: "",
-      eventEndDate: "",
+  name: "NewEventModal",
+  emits: ["save"],
+  setup(_, { emit }) {
+    const modalRef = ref<HTMLElement | null>(null);
+    const formRef = ref<any>(null);
+    const loading = ref(false);
+    const formData = ref<NewEventData>({
+      fecha: new Date(),
+      startTime: "00:00",
+      endTime: undefined,
+      fullDay: false,
+      state: CalendarStateEnum.Pending,
     });
 
-    const rules = ref({
-      eventName: [
-        {
-          required: true,
-          message: "Please input event name",
-          trigger: "blur",
-        },
+    const stateOptions = Object.values(CalendarStateEnum);
+
+    const rules = {
+      fecha: [
+        { required: true, message: "Fecha es obligatoria", trigger: "change" },
       ],
-    });
-
-    const submit = () => {
-      if (!formRef.value) {
-        return;
-      }
-
-      formRef.value.validate((valid: boolean) => {
-        if (valid) {
-          loading.value = true;
-
-          setTimeout(() => {
-            loading.value = false;
-
-            Swal.fire({
-              text: "Form has been successfully submitted!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn btn-primary",
-              },
-            }).then(() => {
-              hideModal(newTargetModalRef.value);
-            });
-          }, 2000);
-        } else {
-          Swal.fire({
-            text: "Sorry, looks like there are some errors detected, please try again.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn btn-primary",
-            },
-          });
-          return false;
-        }
-      });
+      inicio: [
+        { required: true, message: "Inicio es obligatorio", trigger: "change" },
+      ],
+      state: [
+        { required: true, message: "State es obligatorio", trigger: "change" },
+      ],
     };
 
+    //let bsModal: Modal;
+    watch(modalRef, () => {}, { immediate: true });
+
+    watch(
+      () => formData.value,
+      () => {},
+      { deep: true },
+    );
+
+    // Show/Hide manually via bootstrap API
+    function close() {
+      hideModal(modalRef.value!);
+    }
+
+    function submit() {
+      formRef.value.validate((valid: boolean) => {
+        if (!valid) return;
+        loading.value = true;
+
+        // Parseamos los HH:mm a números
+        const [h1, m1] = formData.value.startTime.split(":").map(Number);
+        const [h2, m2] = (formData.value.endTime || formData.value.startTime)
+          .split(":")
+          .map(Number);
+
+        const payload = {
+          fecha: formData.value.fecha,
+          inicio: h1 + m1 / 60, // podrías también usar minutero separado
+          fin: h2 + m2 / 60,
+          fullDay: formData.value.fullDay,
+          state: formData.value.state,
+        };
+
+        setTimeout(() => {
+          loading.value = false;
+          emit("save", payload);
+        }, 300);
+      });
+    }
+
     return {
+      modalRef,
       formRef,
-      newTargetModalRef,
       loading,
-      targetData,
+      formData,
       rules,
+      stateOptions,
+      close,
       submit,
-      getAssetPath,
     };
   },
 });
 </script>
 
-<style lang="scss">
-.el-select {
-  width: 100%;
-}
-
-.el-date-editor.el-input,
-.el-date-editor.el-input__inner {
+<style scoped>
+.el-date-editor,
+.el-input-number {
   width: 100%;
 }
 </style>

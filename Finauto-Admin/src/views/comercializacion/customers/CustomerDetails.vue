@@ -10,22 +10,21 @@
           <!--begin::Summary-->
           <div class="d-flex flex-center flex-column mb-5">
             <!--begin::Avatar-->
-            <div class="symbol symbol-100px symbol-circle mb-7">
-              <img :src="getAssetPath('media/avatars/300-1.jpg')" alt="image" />
-            </div>
+
             <!--end::Avatar-->
 
             <!--begin::Name-->
             <a
-              href="#"
-              class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1"
+              v-if="customerDetails"
+              nolink
+              class="fs-2 text-gray-800 text-hover-primary fw-bold mb-1"
             >
-              Max Smith
+              {{ customerDetails.name.es }}
             </a>
             <!--end::Name-->
 
             <!--begin::Position-->
-            <div class="fs-5 fw-semibold text-muted mb-6">Software Enginer</div>
+
             <!--end::Position-->
           </div>
           <!--end::Summary-->
@@ -66,29 +65,33 @@
           <div class="separator separator-dashed my-3"></div>
 
           <!--begin::Details content-->
-          <div id="kt_customer_view_details" class="collapse show">
+          <div
+            id="kt_customer_view_details"
+            class="collapse show"
+            v-if="customerDetails"
+          >
             <div class="py-5 fs-6">
               <!--begin::Badge-->
-              <div class="badge badge-light-info d-inline">Premium user</div>
+
               <!--begin::Badge-->
               <!--begin::Details item-->
               <div class="fw-bold mt-5">Account ID</div>
-              <div class="text-gray-600">ID-45453423</div>
+              <div class="text-gray-600">ID-{{ customerDetails.id }}</div>
               <!--begin::Details item-->
               <!--begin::Details item-->
               <div class="fw-bold mt-5">Billing Email</div>
               <div class="text-gray-600">
-                <a href="#" class="text-gray-600 text-hover-primary"
-                  >info@keenthemes.com</a
-                >
+                {{ customerDetails.email }}
               </div>
               <!--begin::Details item-->
               <!--begin::Details item-->
               <div class="fw-bold mt-5">Billing Address</div>
               <div class="text-gray-600">
-                101 Collin Street, <br />Melbourne 3000 VIC <br />Australia
+                {{ customerDetails.addessLineOne }}
               </div>
-
+              <div class="text-gray-600" v-if="customerDetails.addressLineTwo">
+                {{ customerDetails.addressLineTwo }}
+              </div>
               <div class="fw-bold mt-5">Número de teléfono</div>
               <div class="text-gray-600">909 0932 90</div>
             </div>
@@ -121,24 +124,6 @@
           >
         </li>
         <!--end:::Tab item-->
-
-        <!--begin:::Tab item-->
-        <li class="nav-item ms-auto">
-          <!--begin::Action menu-->
-          <a
-            href="#"
-            class="btn btn-primary ps-7"
-            data-kt-menu-trigger="click"
-            data-kt-menu-attach="parent"
-            data-kt-menu-placement="bottom-end"
-          >
-            Dowload
-            <KTIcon icon-name="download" icon-class="fs-2 me-0" />
-          </a>
-          <Dropdown3></Dropdown3>
-          <!--end::Menu-->
-        </li>
-        <!--end:::Tab item-->
       </ul>
       <!--end:::Tabs-->
 
@@ -165,29 +150,46 @@
   <NewCardModal></NewCardModal>
 </template>
 
-<script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
+<script setup>
+import { defineComponent, onMounted, ref } from "vue";
 import Dropdown3 from "@/components/dropdown/Dropdown3.vue";
 import NewCardModal from "@/components/modals/forms/NewCardModal.vue";
 import PaymentRecords from "@/components/customers/cards/overview/PaymentRecords.vue";
 import PaymentMethods from "@/components/customers/cards/overview/PaymentMethods.vue";
-
 import Earnings from "@/components/customers/cards/statments/Earnings.vue";
+import api from "@/services/api";
+// Define los props esperados en el componente
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+const customerDetails = ref(null);
 
-export default defineComponent({
-  name: "customer-details",
-  components: {
-    PaymentRecords,
-    PaymentMethods,
-    Earnings,
-    Dropdown3,
-    NewCardModal,
-  },
-  setup() {
-    return {
-      getAssetPath,
-    };
-  },
+const getDataCustomer = async () => {
+  const payload = {
+    queryType: "one",
+    id: props.id,
+    skip: 0,
+    take: 10,
+  };
+  try {
+    const response = await api.post("/customer/search", payload);
+    if (response.data.isSuccess) {
+      customerDetails.value = response.data.data[0];
+      console.log(customerDetails.value.cityTown);
+    } else {
+      customerDetails.value = null;
+    }
+  } catch (error) {
+    console.error("Error al obtener los detalles del cliente:", error);
+    customerDetails.value = null;
+  }
+};
+// Utiliza el parámetro "id" en el hook onMounted o en cualquier otra parte de la lógica del componente
+onMounted(() => {
+  console.log("El ID del cliente es:", props.id);
+  getDataCustomer();
 });
 </script>

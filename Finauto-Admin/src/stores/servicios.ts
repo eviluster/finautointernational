@@ -51,11 +51,6 @@ export const useServicioStore = defineStore("servicios", {
       const payload = {
         id: updatedServicioID,
         ...servicio,
-        rules: {
-          method: "UPDATE",
-          comparisonKind: "UINQUE",
-          field: ["name"],
-        },
       };
       console.log(payload);
 

@@ -136,6 +136,7 @@ export default defineComponent({
       try {
         // Preparamos el objeto con los datos actualizados
         const updatedData = {
+          id: values.id,
           name: { es: values.nameEs, en: values.nameEn || "" },
           description: {
             es: values.descriptionEs,
@@ -145,7 +146,7 @@ export default defineComponent({
 
         console.log(updatedData);
         // Llamamos a updateTipoFreno pasando el ID y el objeto con los datos actualizados
-        await tipofrenoStore.updateTipoFreno(formData.value.id, updatedData);
+        await tipofrenoStore.updateTipoFreno(updatedData);
         await tipofrenoStore.fetchTipoFreno(); // Refrescamos la lista de tipofrenos
 
         hideModal(editTipoFrenoModalRef.value);

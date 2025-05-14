@@ -526,11 +526,13 @@ export default function useDynamicMenu() {
                 heading: "customersListing",
                 route: "/apps/customers/customers-listing",
               },
-              {
-                heading: "customerDetails",
-                route: "/apps/customers/customer-details",
-              },
             ],
+          },
+          {
+            heading: "Comerciales",
+            route: "/comercializacion/comerciales",
+            keenthemesIcon: "notepad",
+            bootstrapIcon: "bi-calendar3-event",
           },
           {
             sectionTitle: "Ecommerce",
@@ -609,10 +611,6 @@ export default function useDynamicMenu() {
                 heading: "Roles",
                 route: "/admin/user/roles",
               },
-              {
-                heading: "Permisos",
-                route: "/admin/user/permisos",
-              },
             ],
           },
 
@@ -644,7 +642,6 @@ export default function useDynamicMenu() {
                   },
                 ],
               },
-
               {
                 heading: "Marcas",
                 route: "/admin/nomencladores/marcas",
@@ -686,8 +683,16 @@ export default function useDynamicMenu() {
                 route: "/admin/nomencladores/caja-cambio",
               },
               {
+                heading: "Categoría de Productos",
+                route: "/admin/nomencladores/categoria-producto",
+              },
+              {
                 heading: "Categoría de Pieza y Acccesorio",
                 route: "/admin/nomencladores/categoria-pieza-accesorio",
+              },
+              {
+                heading: "Categoría de Equipo",
+                route: "/admin/nomencladores/categoria-equipo",
               },
             ],
           },
@@ -734,9 +739,18 @@ export default function useDynamicMenu() {
         route: "/configuracion",
         pages: [
           {
+            heading: "Lista de configuraciones",
+            route: "/configuracion/generalList",
+          },
+          {
+            heading: "Agregar configuración",
+            route: "/configuracion/addgeneral",
+          },
+          {
             heading: "Metodos de pago",
             route: "/configuracion/metodos-de-pago",
           },
+
           {
             heading: "Tarjetas de credito",
             route: "/configuracion/tarjetas-credito",

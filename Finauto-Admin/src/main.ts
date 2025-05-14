@@ -2,7 +2,8 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { Tooltip } from "bootstrap";
 import App from "./App.vue";
-
+import VCalendar from "v-calendar";
+import "v-calendar/dist/style.css";
 /*
 TIP: To get started with clean router change path to @/router/clean.ts.
  */
@@ -20,7 +21,7 @@ import { initKtIcon } from "@/core/plugins/keenthemes";
 import "@/core/plugins/prismjs";
 
 const app = createApp(App);
-
+app.use(VCalendar, {});
 app.use(createPinia());
 app.use(router);
 app.use(ElementPlus);

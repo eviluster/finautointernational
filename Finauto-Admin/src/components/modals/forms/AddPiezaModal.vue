@@ -47,7 +47,7 @@
 
             <!-- Campo: Descripción -->
             <div class="mb-4 px-4 py-4 col-11 mx-6">
-              <label class="required form-label">Descripción</label>
+              <label class="form-label">Descripción</label>
               <!-- Cambiado name="descripcion" → name="description" -->
               <Field
                 name="description"
@@ -133,6 +133,17 @@ export default defineComponent({
       values: AddPiezaFormFields,
       { resetForm }: { resetForm: () => void },
     ) => {
+      if (imageUrls.value.length === 0) {
+        Swal.fire({
+          text: "Debe subir al menos una imagen",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: { confirmButton: "btn btn-primary" },
+        });
+        return;
+      }
       console.log("ejecutando", values);
 
       const newPieza = {

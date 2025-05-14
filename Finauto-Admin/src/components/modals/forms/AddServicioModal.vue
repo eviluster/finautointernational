@@ -134,6 +134,17 @@ export default defineComponent({
       values: AddServicioFormFields,
       { resetForm }: { resetForm: () => void },
     ) => {
+      if (imageUrls.value.length === 0) {
+        Swal.fire({
+          text: "Debe subir al menos una imagen",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: { confirmButton: "btn btn-primary" },
+        });
+        return;
+      }
       console.log("ejecutando", values);
 
       const newServicio = {

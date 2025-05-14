@@ -6,15 +6,15 @@
       </div>
     </div>
     <div class="card-body text-center pt-0">
-      <div 
+      <div
         class="image-input image-input-outline mb-3"
         :class="{ 'image-input-empty': !imagePreview }"
         @dragover.prevent
         @dragenter.prevent
         @drop="handleImageDrop"
       >
-        <div 
-          class="image-input-wrapper w-150px h-150px" 
+        <div
+          class="image-input-wrapper w-150px h-150px"
           :style="imagePreview ? `background-image: url(${imagePreview})` : ''"
         ></div>
         <!-- Botón para seleccionar archivo -->
@@ -22,16 +22,16 @@
           <i class="bi bi-pencil text-white"></i>
         </label>
         <!-- Input oculto para cargar imagen -->
-        <input 
-          type="file" 
-          class="hidden-input" 
-          accept="image/png, image/jpg, image/jpeg" 
+        <input
+          type="file"
+          class="hidden-input"
+          accept="image/png, image/jpg, image/jpeg"
           @change="handleImageUpload"
           ref="imageInput"
         />
         <!-- Botón para cancelar selección -->
         <span class="btn-cancel" @click="restorePreviousImage">
-          <i class="bi bi-x text-white"></i> 
+          <i class="bi bi-x text-white"></i>
         </span>
         <!-- Botón para eliminar imagen -->
         <span class="btn-delete" @click="removeImage">
@@ -48,9 +48,9 @@
     </div>
   </div>
 </template>
-  
-  <script lang="ts">
- import { defineComponent, ref, nextTick, watch } from "vue";
+
+<script lang="ts">
+import { defineComponent, ref, nextTick, watch } from "vue";
 import { useField } from "vee-validate";
 
 export default defineComponent({
@@ -58,13 +58,17 @@ export default defineComponent({
   props: {
     modelValue: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
     // Registrar el campo 'image' en el formulario
-    const { value: imageField, errorMessage, setValue } = useField<string>("image");
+    const {
+      value: imageField,
+      errorMessage,
+      setValue,
+    } = useField<string>("image");
 
     // Usamos un valor local para la vista previa
     const imagePreview = ref<string>(props.modelValue);
@@ -77,7 +81,7 @@ export default defineComponent({
       (newValue) => {
         imagePreview.value = newValue;
         setValue(newValue);
-      }
+      },
     );
 
     const triggerFileInput = () => {
@@ -91,6 +95,8 @@ export default defineComponent({
       if (file) {
         previousImage.value = imagePreview.value;
         const url = URL.createObjectURL(file);
+        console.log(url);
+
         imagePreview.value = url;
         emit("update:modelValue", url);
         setValue(url);
@@ -131,13 +137,12 @@ export default defineComponent({
       restorePreviousImage,
       removeImage,
       errorMessage,
-      imageField
-    }
-  }
-})
+      imageField,
+    };
+  },
+});
+</script>
 
-  </script>
-  
 <style scoped>
 /* 🎨 Contenedor general del input */
 .image-input {
@@ -236,4 +241,3 @@ export default defineComponent({
   background: #bd2130;
 }
 </style>
-

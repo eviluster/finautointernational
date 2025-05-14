@@ -64,14 +64,14 @@
             <div class="mb-4 px-4 py-4 mx-6">
               <label class="required form-label">Precio Base</label>
               <Field
-                name="precioBase"
+                name="PrecioBase"
                 as="input"
                 type="number"
                 class="form-control"
                 placeholder="Ingrese el precio base"
-                v-model="formFields.precioBase"
+                v-model="formFields.PrecioBase"
               />
-              <ErrorMessage name="precioBase" class="text-danger" />
+              <ErrorMessage name="PrecioBase" class="text-danger" />
             </div>
 
             <!-- Marca y Modelo (nomencladores obtenidos vía API) -->
@@ -265,6 +265,48 @@
               </div>
             </div>
 
+            <!-- Nomencladores vía API: Traccion de delantera y trasera -->
+            <div class="row py-4 mx-6">
+              <div class="col-md-6">
+                <label class="form-label">Tracción de delantera</label>
+                <Field
+                  as="select"
+                  name="traccionDelantera"
+                  class="form-control"
+                  v-model="formFields.traccionDelantera"
+                >
+                  <option value="">Seleccione la tracción</option>
+                  <option
+                    v-for="item in traccionesDelantera"
+                    :key="item.id"
+                    :value="item.id"
+                  >
+                    {{ item.name.es }}
+                  </option>
+                </Field>
+                <ErrorMessage name="traccionDelantera" class="text-danger" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Tracción de trasera</label>
+                <Field
+                  as="select"
+                  name="traccionTrasera"
+                  class="form-control"
+                  v-model="formFields.traccionTrasera"
+                >
+                  <option value="">Seleccione la tracción</option>
+                  <option
+                    v-for="item in traccionesTrasera"
+                    :key="item.id"
+                    :value="item.id"
+                  >
+                    {{ item.name.es }}
+                  </option>
+                </Field>
+                <ErrorMessage name="traccionTrasera" class="text-danger" />
+              </div>
+            </div>
+
             <!-- Nomencladores vía API: Neumáticos, Caja de cambios, Suspensión y Motor -->
             <div class="row py-4 mx-6">
               <div class="col-md-6">
@@ -306,9 +348,9 @@
                 <ErrorMessage name="cajaCambios" class="text-danger" />
               </div>
             </div>
-
+            <!-- Tipo de suspensión y tipo de freno -->
             <div class="row py-4 mx-6">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <label class="form-label">Tipo de suspensión</label>
                 <Field
                   as="select"
@@ -326,6 +368,26 @@
                   </option>
                 </Field>
                 <ErrorMessage name="tipoSuspension" class="text-danger" />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Tipo de freno</label>
+                <Field
+                  as="select"
+                  name="tipoFreno"
+                  class="form-control"
+                  v-model="formFields.tipoFreno"
+                >
+                  <option value="">Seleccione tipo de freno</option>
+                  <option
+                    v-for="item in tipoFrenos"
+                    :key="item.id"
+                    :value="item.id"
+                  >
+                    {{ item.name.es }}
+                  </option>
+                </Field>
+                <ErrorMessage name="tipoFreno" class="text-danger" />
               </div>
             </div>
 
@@ -400,7 +462,7 @@ import { useCajaCambioStore } from "@/stores/caja-cambio";
 interface AddVehiculoFormFields {
   name: string;
   description: string;
-  precioBase: number;
+  PrecioBase: number;
   galery: string[];
   marca: string;
   modelo: string;
@@ -409,8 +471,9 @@ interface AddVehiculoFormFields {
   tamanoCajaCarga: string;
   distanciaEjes: number | null;
   asientos: number | null;
-  traccion: string;
-  tipoFrenos: string;
+  traccionDelantera: string;
+  traccionTrasera: string;
+  tipoFreno: string;
   distanciaSuelo: number | null;
   pesoVacio: number | null;
   torque: number | null;
@@ -437,7 +500,6 @@ export default defineComponent({
     const tipoSuspencionStore = useTipoSuspencionStore();
     const marcaStore = useMarcaStore();
     const modeloStore = useModeloStore();
-
     const formRef = ref<HTMLFormElement | null>(null);
     const addVehiculoModalRef = ref<HTMLElement | null>(null);
     const imageUrls = ref<string[]>([]);
@@ -446,7 +508,7 @@ export default defineComponent({
     const formFields = ref<AddVehiculoFormFields>({
       name: "",
       description: "",
-      precioBase: 0,
+      PrecioBase: 0,
       galery: [],
       marca: "",
       modelo: "",
@@ -454,8 +516,9 @@ export default defineComponent({
       tamanoCajaCarga: "", // Usuario ingresará un string (por ejemplo, "2000,2500")
       distanciaEjes: null,
       asientos: null,
-      traccion: "",
-      tipoFrenos: "",
+      traccionDelantera: "",
+      traccionTrasera: "",
+      tipoFreno: "",
       distanciaSuelo: null,
       pesoVacio: null,
       torque: null,
@@ -473,15 +536,52 @@ export default defineComponent({
     const schema = yup.object({
       name: yup.string().required("El nombre es obligatorio"),
       description: yup.string(),
-      precioBase: yup
+      PrecioBase: yup
         .number()
         .typeError("El precio debe ser un número")
         .required("El precio base es obligatorio"),
       galery: yup
         .array()
         .of(yup.string())
+        .min(1, "Debe subir al menos una imagen")
         .max(5, "Solo se permiten hasta 5 imágenes"),
-      // Puedes agregar validación personalizada para los campos nuevos si es necesario.
+
+      // Nomencladores (datos vía API) mediante stores
+      asientos: yup
+        .number()
+        .nullable()
+        .typeError("Los asientos deben ser un número"),
+      distanciaSuelo: yup
+        .number()
+        .nullable()
+        .typeError("La distancia al suelo debe ser un número"),
+      pesoVacio: yup
+        .number()
+        .nullable()
+        .typeError("El peso en vacío debe ser un número"),
+      desplazamiento: yup
+        .number()
+        .nullable()
+        .typeError("El desplazamiento debe ser un número"),
+      distanciaEjes: yup
+        .number()
+        .nullable()
+        .typeError("La distancia de los ejes debe ser un número"),
+      potenciaMax: yup
+        .number()
+        .nullable()
+        .typeError("La potencia máxima debe ser un número"),
+      torque: yup.number().nullable().typeError("La torque debe ser un número"),
+      velocidadMax: yup
+        .number()
+        .nullable()
+        .typeError("La velocidad máxima debe ser un número"),
+      capacidadTanque: yup
+        .number()
+        .nullable()
+        .typeError("La capacidad del tanque debe ser un número"),
+
+      // Nomencladores (datos vía API) mediante stores
     });
 
     const { errors } = useForm<AddVehiculoFormFields>({
@@ -491,7 +591,8 @@ export default defineComponent({
     // Nomencladores (datos vía API) mediante stores
     const marcas = computed(() => marcaStore.marcas);
     const modelos = computed(() => modeloStore.modelos);
-    const tracciones = computed(() => traccionStore.traccion);
+    const traccionesDelantera = computed(() => traccionStore.traccion);
+    const traccionesTrasera = computed(() => traccionStore.traccion);
     const tipoFrenos = computed(() => tipoFrenoStore.tipofreno);
     const neumaticos = computed(() => tipoNeumaticoStore.tiponeumatico);
     const suspensiones = computed(() => tipoSuspencionStore.tiposuspencion);
@@ -529,44 +630,114 @@ export default defineComponent({
     }
 
     // Función para enviar el formulario
-    const handleSubmit = async (
+    const handleSubmit: any = async (
       values: AddVehiculoFormFields,
       { resetForm }: { resetForm: () => void },
     ) => {
+      if (imageUrls.value.length === 0) {
+        Swal.fire({
+          text: "Debe subir al menos una imagen",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: { confirmButton: "btn btn-primary" },
+        });
+        return;
+      }
       console.log("Ejecutando...", values);
 
-      // Se procesa la transformación de los campos que llegan como string a array de números
+      // Se procesa la transformación de los campos que llegan como string a array de números.
+      // Si el usuario no ingresa nada, la función devuelve [] (vacío) en lugar de null.
       const dimensionesArray = transformarAArrayNumeros(values.dimensiones);
       const tamanoCajaCargaArray = transformarAArrayNumeros(
         values.tamanoCajaCarga,
       );
 
-      const newVehiculo = {
+      // Construimos el objeto base con los campos obligatorios
+      const newVehiculo: any = {
         name: { es: values.name, en: "" },
         description: { es: values.description, en: "" },
         galery: imageUrls.value,
-        PrecioBase: values.precioBase,
-        marca: values.marca,
-        modelo: values.modelo,
+        PrecioBase: values.PrecioBase,
         dimensiones: dimensionesArray,
         tamanoCajaCarga: tamanoCajaCargaArray,
-        distanciaEjes: values.distanciaEjes,
         asientos: values.asientos,
-        traccionDelantera: values.traccion,
-        traccionTrasera: values.traccion,
-        tipoFreno: values.tipoFrenos,
-        distanciaSuelo: values.distanciaSuelo,
-        pesoVacio: values.pesoVacio,
-        torque: values.torque,
-        velocidadMax: values.velocidadMax,
-        desplazamiento: values.desplazamiento,
-        potenciaMax: values.potenciaMax,
-        tipoNeumatico: values.neumaticos,
-        cajaCambio: values.cajaCambios,
-        tipoSuspension: values.tipoSuspension,
-        capacitdadTanqueCombustible: values.capacidadTanque,
-        engine: values.engine,
       };
+
+      // Asigna cada campo opcional solo si no es una cadena vacía
+      if (values.marca !== "") {
+        newVehiculo.marca = values.marca;
+      }
+
+      if (values.modelo !== "") {
+        newVehiculo.modelo = values.modelo;
+      }
+
+      if (values.traccionDelantera !== "") {
+        newVehiculo.traccionDelantera = values.traccionDelantera;
+      }
+
+      if (values.traccionTrasera !== "") {
+        newVehiculo.traccionTrasera = values.traccionTrasera;
+      }
+
+      if (values.tipoFreno !== "") {
+        newVehiculo.tipoFreno = values.tipoFreno;
+      }
+
+      if (values.neumaticos !== "") {
+        newVehiculo.tipoNeumatico = values.neumaticos;
+      }
+
+      if (values.cajaCambios !== "") {
+        newVehiculo.cajaCambio = values.cajaCambios;
+      }
+
+      if (values.tipoSuspension !== "") {
+        newVehiculo.tipoSuspension = values.tipoSuspension;
+      }
+
+      if (values.engine !== "") {
+        newVehiculo.engine = values.engine;
+      }
+      // Agregar de forma condicional los campos opcionales, solo si no son null o undefined.
+      if (values.distanciaEjes !== null && values.distanciaEjes !== undefined) {
+        newVehiculo.distanciaEjes = values.distanciaEjes;
+      }
+      // if (values.asientos !== null && values.asientos !== undefined) {
+      //   newVehiculo.asientos = values.asientos;
+      // }
+      if (
+        values.distanciaSuelo !== null &&
+        values.distanciaSuelo !== undefined
+      ) {
+        newVehiculo.distanciaSuelo = values.distanciaSuelo;
+      }
+      if (values.pesoVacio !== null && values.pesoVacio !== undefined) {
+        newVehiculo.pesoVacio = values.pesoVacio;
+      }
+      if (values.torque !== null && values.torque !== undefined) {
+        newVehiculo.torque = values.torque;
+      }
+      if (values.velocidadMax !== null && values.velocidadMax !== undefined) {
+        newVehiculo.velocidadMax = values.velocidadMax;
+      }
+      if (
+        values.desplazamiento !== null &&
+        values.desplazamiento !== undefined
+      ) {
+        newVehiculo.desplazamiento = values.desplazamiento;
+      }
+      if (values.potenciaMax !== null && values.potenciaMax !== undefined) {
+        newVehiculo.potenciaMax = values.potenciaMax;
+      }
+      if (
+        values.capacidadTanque !== null &&
+        values.capacidadTanque !== undefined
+      ) {
+        newVehiculo.capacitdadTanqueCombustible = values.capacidadTanque;
+      }
 
       try {
         await vehiculoStore.addVehiculo(newVehiculo);
@@ -609,7 +780,8 @@ export default defineComponent({
       formFields,
       marcas,
       modelos,
-      tracciones,
+      traccionesDelantera,
+      traccionesTrasera,
       tipoFrenos,
       neumaticos,
       suspensiones,

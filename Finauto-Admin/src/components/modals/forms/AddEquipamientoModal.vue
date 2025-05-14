@@ -47,7 +47,7 @@
 
             <!-- Campo: Descripción -->
             <div class="mb-4 px-4 py-4 col-11 mx-6">
-              <label class="required form-label">Descripción</label>
+              <label class="form-label">Descripción</label>
               <!-- Cambiado name="descripcion" → name="description" -->
               <Field
                 name="description"
@@ -57,28 +57,27 @@
               />
               <ErrorMessage name="description" class="text-danger" />
             </div>
-          </div>
 
-          <!-- Campo: Precio Base -->
-          <div class="mb-4 px-4 py-4 col-11 mx-6">
-            <label class="required form-label">Precio Base</label>
-            <Field
-              name="precioBase"
-              as="input"
-              type="number"
-              class="form-control"
-              placeholder="Ponga el precio base"
-            />
-            <ErrorMessage name="precioBase" class="text-danger" />
-          </div>
-
-          <div class="card-footer my-8 d-flex justify-content-end">
-            <a href="#" class="btn btn-bg-secondary" data-bs-dismiss="modal"
-              >Cancelar</a
-            >
-            <button type="submit" class="btn btn-bg-primary mx-3">
-              Guardar
-            </button>
+            <!-- Campo: Precio Base -->
+            <div class="mb-4 px-4 py-4 col-11 mx-6">
+              <label class="required form-label">Precio Base</label>
+              <Field
+                name="precioBase"
+                as="input"
+                type="number"
+                class="form-control"
+                placeholder="Ponga el precio base"
+              />
+              <ErrorMessage name="precioBase" class="text-danger" />
+            </div>
+            <div class="card-footer my-8 d-flex justify-content-end">
+              <a href="#" class="btn btn-bg-secondary" data-bs-dismiss="modal"
+                >Cancelar</a
+              >
+              <button type="submit" class="btn btn-bg-primary mx-3">
+                Guardar
+              </button>
+            </div>
           </div>
         </Form>
       </div>
@@ -134,6 +133,17 @@ export default defineComponent({
       values: AddEquipamientoFormFields,
       { resetForm }: { resetForm: () => void },
     ) => {
+      if (imageUrls.value.length === 0) {
+        Swal.fire({
+          text: "Debe subir al menos una imagen",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: { confirmButton: "btn btn-primary" },
+        });
+        return;
+      }
       console.log("ejecutando", values);
 
       const newEquipamiento = {

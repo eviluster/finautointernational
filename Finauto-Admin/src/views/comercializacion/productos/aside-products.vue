@@ -43,7 +43,8 @@
           data-placeholder="Select an option"
           id="kt_ecommerce_add_product_status_select"
         >
-          <option></option>
+          <option disabled selected>Selecciona el estado</option>
+          <option value="offert">Offert</option>
           <option value="published">Published</option>
           <option value="draft">Stock</option>
 
@@ -91,10 +92,7 @@
         </select>
         <!--end::Select2-->
         <!--begin::Description-->
-        <div class="text-muted fs-7">
-          Assign a template from your current theme to define how a single
-          product is displayed.
-        </div>
+
         <!--end::Description-->
       </div>
       <!--end::Card body-->
