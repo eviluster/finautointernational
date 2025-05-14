@@ -1,0 +1,251 @@
+/* .principal-card{
+    margin: 0 50px 20px 50px;
+    background: url('../images/14232.jpg') no-repeat center center/cover;
+} */
+.service-card,
+.service-card2{
+    display: flex;
+}
+h2{
+    text-align: center;
+    color: #00AA4E;
+    text-transform: uppercase;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.service-card,
+.service-card2{    
+    justify-content: flex-start;
+    gap: 17px;
+    background-color: black; 
+    border-bottom: 2px solid white;  
+}
+.service-card,.service-card2{
+    padding-right:10%;
+    padding-left: 10%;
+}
+.service-card2{
+    /* padding-left: 20px; */
+    background-color:#121212 
+}
+.service-card img,
+.service-card2 img{
+    width: 300px;
+    height: 300px;
+}
+.text-service{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: white
+}
+.service-title{
+    text-align: center;
+    padding-top: 30px;
+}
+.link{
+    text-align: center;
+}
+.link a{
+    text-decoration: none;
+    color: #00AA4E;
+   
+}
+.service-card2{
+    flex-direction: row-reverse;
+}
+.description{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Estilos del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+}
+
+.modal-content h2 {
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.register-link {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.register-link:hover {
+    background-color: #218838;
+}
+
+/*Section Promo*/
+.promo-section {
+    background: url('/images/14232.jpg') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.promo-content {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 600px;
+}
+
+.promo-content h1 {
+    /* font-size: 2.5em; */
+    margin-bottom: 20px;
+}
+
+.promo-content p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.protected-link {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #00c853;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.protected-link:hover {
+    background-color: #008c42;
+}
+
+/*formulario de solicitar servicio*/
+.modal-promo{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+.service-form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: auto;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.form-container h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    margin-top: 50px;
+    color: #333;
+}
+
+.form-container p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.service-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.service-form input, .service-form select, .service-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.service-form textarea {
+    resize: none;
+}
+
+.submit-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #00c853;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #008c42;
+}
+
+@media (max-width: 768px) {
+    .service-card, .service-card2{
+        flex-direction: column;
+    }
+    .service-card img,
+    .service-card2 img{
+        width: 100%;
+        height: auto;
+    }
+    
+}

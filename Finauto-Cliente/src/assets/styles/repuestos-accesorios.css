@@ -1,0 +1,230 @@
+h2 {
+    text-align: center;
+    color: #00AA4E;
+    text-transform: uppercase;
+}
+
+.container-xxl {
+    padding-left: 0%;
+    padding-right: 0%;
+    position: relative;
+    overflow: hidden;
+}
+
+.rectangulo-diagonal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 250%;
+    background-color: rgba(0, 170, 78, 0.10);
+    /* Color azul con opacidad */
+    /*transform: skewY(-10deg); */
+    /* Ajusta el ángulo según sea necesario */
+    transform-origin: top left;
+    transform: rotate(342deg);
+    z-index: -1;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 50px;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 20px;
+    width: calc(25% - 20px);
+    /* 4 tarjetas en columnas grandes */
+    box-sizing: border-box;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.card h2 {
+    font-size: 1.5em;
+    margin: 10px 0;
+    text-align: left;
+    color: black;
+    text-transform: none;
+}
+
+.card p {
+    color: #555;
+}
+
+.card .price {
+    font-size: 1.2em;
+    color: #ce3c3c;
+}
+
+.boton-ver-mas {
+    background-color: #ce3c3c;
+    /* Color del botón */
+    color: white;
+    /* Color del texto */
+    border: none;
+    /* Sin borde */
+    padding: 10px 20px;
+    /* Espaciado interno */
+    text-align: center;
+    /* Centrar texto */
+    text-decoration: none;
+    /* Sin subrayado */
+    display: inline-block;
+    /* Permite ajustar el ancho */
+    font-size: 16px;
+    /* Tamaño de la fuente */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    cursor: pointer;
+    /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s;
+    /* Transición suave */
+    width: 100px;
+    height: auto;
+    margin-left: 45%;
+    margin-bottom: 20px;
+}
+
+.boton-ver-mas:hover {
+    background-color: #b83b3b;
+    /* Color al pasar el ratón */
+}
+.group-icon svg {
+    width: 30px;
+    height: 30px;   
+    /* margin-right: 5px;  */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.group-icon svg:hover {
+    transform: scale(1.05);
+}
+.grop-car{
+    display: flex;
+    justify-content: space-between;
+}
+span{
+    color: #ce3c3c;
+    font-weight: 700;
+    font-size: x-large;
+}
+.group-icon {
+    display: flex;
+    gap: 10px;
+}
+.icon-card {
+    position: relative;
+    display: inline-block;
+}
+
+ /* Estilos del tooltip */
+ .icon-card .tooltip {
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Posiciona el tooltip encima del icono */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+/* Flecha del tooltip */
+.icon-card .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Flecha debajo del tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+/* Mostrar el tooltip al pasar el cursor */
+.icon-card:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.search-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-right: 10%;
+    margin-top: 50px;
+}
+
+.search-bar input, .search-bar select {
+    padding: 8px;
+    font-size: 16px;
+    width: 170px;
+    border-radius: 10px;
+    border: 1px, solid;
+}
+
+.search-bar button{
+    border-radius: 5px;
+    height: 37px;
+    width: 54px;
+}
+
+
+footer,
+.copyrigth,
+header,
+.slide,
+.principal-card 
+.boton-ver-mas{
+    position: relative;
+}
+
+
+@media (max-width: 800px) {
+    .card {
+        width: calc(50% - 20px);
+        /* 2 tarjetas en columnas más pequeñas */
+    }
+
+    .rectangulo-diagonal {
+        transform: rotate(355deg);
+        width: 300px;
+    }
+    .group-icon svg{
+        width: 20px;
+        height: 20px;
+    }
+    span{
+        font-size: medium;
+    }
+    .group-icon {
+        
+        gap: 5px;
+    }
+
+}

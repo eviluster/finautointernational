@@ -1,0 +1,14 @@
+/* button{
+    width: auto;
+    height: auto;
+} */
+button.btn.btn-light-primary/*.font-weight-bold*/{
+    background-color: rgb(231, 175, 175);
+    color: white;
+}
+
+button.btn.btn-primary.font-weight-bold{
+    background-color:#ce3c3c;
+    border-color: #ce3c3c;
+
+}

@@ -1,0 +1,136 @@
+h1{
+    color: white;
+}
+h2 {
+    text-align: center;
+    text-transform: uppercase;
+    color: #00AA4E;
+    margin-top: 50px;
+}
+.container-xxl{
+    padding: 0;
+}
+.rectangulo-diagonal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 405%;
+    background-color: rgba(0, 170, 78, 0.10);
+    /* Color azul con opacidad */
+    /*transform: skewY(-10deg); */
+    /* Ajusta el ángulo según sea necesario */
+    transform-origin: top left;
+    transform: rotate(342deg);
+    z-index: -1;
+}
+
+
+
+.text-about-us {
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: left;
+    margin-bottom: 50px;
+}
+
+/****MISION- VISION*****/
+.mision-vision-container {
+    display: flex;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.mision-vision-card {
+    display: flex;
+    flex-direction: column;
+    /* Coloca contenido en columnas */
+    align-items: center;
+    /* Centra horizontalmente el SVG y el texto */
+    justify-content: center;
+    /* Centra verticalmente el contenido */
+    /* text-align: center; /* Alinea el texto de manera centrada */
+    padding: 20px;
+    /* Añade un poco de espacio alrededor */
+    /*border: 1px solid #ccc; /* Opcional: agrega un borde para visualizar la tarjeta */
+    /*border-radius: 8px; /* Opcional: bordes redondeados */
+    /*background-color: #f9f9f9; /* Opcional: color de fondo */
+    height: 300px;
+    /* Establece una altura para la tarjeta */
+}
+
+/* Opcional: ajusta el SVG o texto según sea necesario */
+svg {
+    margin-bottom: 15px;
+    /* Espacio entre el SVG y el texto */
+}
+
+/****HISTORIA*****/
+.history {
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: left;
+}
+
+.foto-dir img {
+    height: 200px;
+}
+
+.rol {
+    color: #00AA4E;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 103%;
+    /* 28.84px */
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.directivos-card{
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+   
+}
+
+.name {
+    color: #20463E;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1;
+    /* 114.286% */
+}
+
+.first-block,
+.second-block,
+.third-block{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+.third-block{
+    margin-bottom: 60px;
+}
+
+
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .mision-vision-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mision-vision-card {
+        height: 350px;
+    }
+    .rectangulo-diagonal {
+        transform: rotate(355deg);
+        width: 150px;
+        height: 600%;
+    }
+}
