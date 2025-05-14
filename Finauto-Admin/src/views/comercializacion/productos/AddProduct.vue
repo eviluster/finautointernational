@@ -1,5 +1,9 @@
 <template>
-  <Form @submit="handleSubmit" v-slot="{ errors }">
+  <Form
+    :initial-values="defaultForm"
+    @submit="handleSubmit"
+    v-slot="{ errors }"
+  >
     <div class="container-fluid py-4">
       <div class="row gx-4 gy-4">
         <!-- Aside column -->
@@ -58,7 +62,7 @@
                 </option>
                 <option value="vehicle">Vehículos</option>
                 <option value="pieza">Piezas</option>
-                <option value="equipoGarage">Producto de garaje</option>
+                <option value="equipoGarage">Equipo de garaje</option>
                 <option value="servicio">Servicio</option>
               </Field>
               <ErrorMessage name="tipo" class="text-danger small" />
@@ -70,7 +74,11 @@
         <main class="col-12 col-md-8 d-flex flex-column">
           <div class="card bg-dark text-light flex-grow-1">
             <div class="card-body">
-              <h5 class="card-title pb-4">Selecciona un elemento del tipo</h5>
+              <h5 class="card-title pb-4 text-center">
+                Selecciona un elemento del tipo
+                <span v-if="tipoLabel"> {{ tipoLabel }} </span>
+              </h5>
+
               <table
                 class="table table-dark table-borderless align-middle mb-4"
               >
@@ -82,11 +90,10 @@
                   </tr>
                 </thead>
               </table>
-
-              <Field name="element" v-slot="{ field }">
+              <Field name="element" v-slot="{ errors: fldErrors }">
                 <Listbox
-                  v-model="field.value"
-                  @update:model-value="(val) => (formFields.element = val)"
+                  :key="formFields.tipo"
+                  v-model="formFields.element"
                   as="div"
                   class="position-relative"
                 >
@@ -94,26 +101,24 @@
                     <div
                       class="d-flex justify-content-between align-items-center"
                     >
-                      <div class="d-flex align-items-center">
-                        <img
-                          v-if="field.value?.galery?.length"
-                          :src="field.value.galery[0]"
-                          class="me-2 rounded"
-                          style="width: 34px; height: 34px; object-fit: cover"
-                          alt=""
-                        />
-                        <span>{{
-                          field.value
-                            ? field.value.name.es
-                            : "-- Selecciona un elemento --"
-                        }}</span>
-                      </div>
+                      <img
+                        v-if="formFields.element?.galery?.length"
+                        :src="formFields.element?.galery[0]"
+                        class="me-2 rounded"
+                        style="width: 34px; height: 34px; object-fit: cover"
+                        alt=""
+                      />
+                      <span class="text-center w-100">{{
+                        formFields.element
+                          ? formFields.element?.name.es
+                          : "-- Selecciona un elemento --"
+                      }}</span>
                       <span>
                         {{
-                          field.value
+                          formFields.element
                             ? formFields.tipo === "vehicle"
-                              ? field.value.PrecioBase
-                              : field.value.precioBase
+                              ? formFields.element?.PrecioBase
+                              : formFields.element?.precioBase
                             : ""
                         }}
                       </span>
@@ -160,22 +165,54 @@
                     </ListboxOptions>
                   </Transition>
                 </Listbox>
-                <ErrorMessage name="element" class="text-danger small" />
+                <div
+                  class="text-danger small"
+                  v-if="fldErrors.length && !formFields.element"
+                >
+                  {{ fldErrors[0] }}
+                </div>
               </Field>
             </div>
-
             <div class="card-body border-top">
               <div class="row gy-3">
-                <!-- Importe adicional -->
-                <div class="col-12">
-                  <p class="text-light mb-2">
-                    <strong>Importe adicional:</strong> {{ currentImport }}
-                  </p>
+                <div class="row justify-content-center gap-1">
+                  <div class="alert alert-warning mt-5 col-4 text-center">
+                    <span>Precio Base: {{ basePrice }}</span>
+                  </div>
+                  <div class="alert alert-warning mt-5 col-3 text-center">
+                    <span>Ganancia: {{ basePricePercentage }}</span>
+                  </div>
+                  <div class="alert alert-warning mt-5 col-4 text-center">
+                    <span>Monto importación: {{ currentImport }}</span>
+                  </div>
                 </div>
 
-                <!-- Precio con mínimo dinámico -->
+                <!-- Nueva categoría -->
                 <div class="col-12 col-md-6">
-                  <label class="form-label">Precio</label>
+                  <label for="catprod" class="form-label text-white"
+                    >Categoría de producto</label
+                  >
+                  <Field
+                    as="select"
+                    id="catprod"
+                    name="catprod"
+                    class="form-select"
+                    v-model="formFields.catprod"
+                  >
+                    <option disabled value="">Selecciona una categoría</option>
+                    <option
+                      v-for="cat in categories"
+                      :key="cat.id"
+                      :value="cat.id"
+                    >
+                      {{ cat.name.es }}
+                    </option>
+                  </Field>
+                  <ErrorMessage name="catprod" class="text-danger small" />
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label class="form-label text-white">Precio</label>
                   <Field
                     as="input"
                     type="number"
@@ -192,7 +229,7 @@
                   class="col-12 col-md-6"
                   v-if="formFields.status === 'offert'"
                 >
-                  <label class="form-label">Precio de oferta</label>
+                  <label class="form-label text-white">Precio de oferta</label>
                   <Field
                     as="input"
                     type="number"
@@ -202,12 +239,11 @@
                   />
                   <ErrorMessage name="offertPrice" class="text-danger small" />
                 </div>
-
                 <div
                   class="col-12 col-md-6"
                   v-if="formFields.status === 'offert'"
                 >
-                  <label class="form-label">Vigencia</label>
+                  <label class="form-label text-white">Vigencia</label>
                   <Field
                     as="input"
                     type="date"
@@ -221,7 +257,6 @@
             </div>
           </div>
 
-          <!-- Sticky footer -->
           <div class="sticky-footer mt-3">
             <button class="btn btn-primary w-100" type="submit">
               Crear Producto
@@ -266,41 +301,55 @@ export default defineComponent({
     const productoStore = useProductoStore();
     const imageUrls = ref<string>("");
 
-    // Campos del formulario
-    const formFields = ref({
-      photo: "",
+    const defaultForm = {
       status: "",
       tipo: "",
-      element: null as any,
+      element: null,
+      catprod: "",
       price: 0,
       offertPrice: 0,
       vigencia: "",
+    };
+    const formFields = ref<{
+      status: string;
+      tipo: string;
+      catprod: string;
+      element: any;
+      price: number;
+      offertPrice: number;
+      vigencia: string;
+    }>({ ...defaultForm });
+
+    const tipoLabels: Record<string, string> = {
+      vehicle: "Vehículos",
+      pieza: "Piezas",
+      equipoGarage: "Equipo de garaje",
+      servicio: "Servicio",
+    };
+
+    const tipoLabel = computed(() => {
+      return tipoLabels[formFields.value.tipo] || "";
     });
 
-    // Configuración
-    const config = ref<{
-      importPriceCar: number;
-      importPriceService: number;
-      importPriceParte: number;
-      importPriceEquipoGarage: number;
-    } | null>(null);
-
+    const config = ref<any>(null);
+    const categories = ref<Array<{ id: string; name: { es: string } }>>([]);
     onMounted(async () => {
-      const { data } = await api.get("/configuracion/all");
-      config.value = data.data[0];
+      const [{ data: cfg }, { data: catData }] = await Promise.all([
+        api.get("/configuracion/all"),
+        api.get("/catprod/all"),
+      ]);
+      config.value = cfg.data[0];
+      categories.value = catData.data;
     });
 
-    // Elementos según tipo
     const elementsOfType = ref<any[]>([]);
     watch(
       () => formFields.value.tipo,
       async (newTipo) => {
+        elementsOfType.value = [];
         formFields.value.element = null;
-        // actualizamos price al mínimo si ya existe config
-        if (minPrice.value) formFields.value.price = minPrice.value;
-        if (!newTipo) {
-          elementsOfType.value = [];
-        } else {
+        formFields.value.price = 0;
+        if (newTipo) {
           const routes: Record<string, string> = {
             pieza: "/pieza-accesorio/all",
             vehicle: "/vehicle/all",
@@ -314,41 +363,44 @@ export default defineComponent({
       { immediate: true },
     );
 
-    // Cálculos dinámicos
-    const currentImport = computed(() => {
+    const currentImport = computed<number>(() => {
       if (!config.value || !formFields.value.tipo) return 0;
+
       switch (formFields.value.tipo) {
         case "vehicle":
-          return config.value.importPriceCar;
+          return Number(config.value.importPriceCar);
         case "servicio":
-          return config.value.importPriceService;
+          return Number(config.value.importPriceService);
         case "pieza":
-          return config.value.importPriceParte;
+          return Number(config.value.importPriceParte);
         case "equipoGarage":
-          return config.value.importPriceEquipoGarage;
+          return Number(config.value.importPriceEquipoGarage);
       }
       return 0;
     });
+    const basePrice = computed<number>(() =>
+      formFields.value.element
+        ? Number(
+            formFields.value.element[
+              formFields.value.tipo === "vehicle" ? "PrecioBase" : "precioBase"
+            ],
+          )
+        : 0,
+    );
+    const porcientoMinPrice = computed<number>(() =>
+      Number(config.value?.porcientoMinPrice || 0),
+    );
+    const basePricePercentage = computed<number>(() =>
+      Math.round((basePrice.value * porcientoMinPrice.value) / 100),
+    );
+    const minPrice = computed(
+      () => basePrice.value + currentImport.value + basePricePercentage.value,
+    );
 
-    const basePrice = computed(() => {
-      const el = formFields.value.element;
-      if (!el) return 0;
-      return formFields.value.tipo === "vehicle"
-        ? el.PrecioBase
-        : el.precioBase;
-    });
-
-    const minPrice = computed(() => basePrice.value + currentImport.value);
-
-    // Si la price actual baja de minPrice, la forzamos
-    watch(minPrice, (m) => {
-      if (formFields.value.price < m) {
-        formFields.value.price = m;
-      }
-    });
-
-    // Validación
     const schema = yup.object({
+      status: yup.string().required("El estado es obligatorio"),
+      tipo: yup.string().required("El tipo es obligatorio"),
+      catprod: yup.string().required("Categoría obligatoria"),
       element: yup
         .object()
         .nullable()
@@ -357,23 +409,22 @@ export default defineComponent({
         .number()
         .min(minPrice.value, `El precio mínimo es ${minPrice.value}`)
         .required("El precio es obligatorio"),
-      offertPrice: yup
-        .number()
-        .typeError("El precio de oferta debe ser un número"),
-      vigencia: yup
-        .string()
-        .matches(
-          /^\d{4}-\d{2}-\d{2}$/,
-          "La vigencia debe tener formato YYYY-MM-DD",
-        ),
+      offertPrice: yup.number().when("status", {
+        is: "offert",
+        then: (s) => s.required("Precio oferta obligatorio"),
+      }),
+      vigencia: yup.string().when("status", {
+        is: "offert",
+        then: (s) => s.matches(/^\d{4}-\d{2}-\d{2}$/, "Formato YYYY-MM-DD"),
+      }),
     });
-    useForm({ validationSchema: schema });
+    useForm({ validationSchema: schema, initialValues: defaultForm });
 
-    // Envío
     const handleSubmit = async (values: any, { resetForm }: any) => {
       try {
         const newProducto: any = {
           status: values.status,
+          catprod: values.catprod,
           photo: imageUrls.value,
           price: values.price,
         };
@@ -381,7 +432,6 @@ export default defineComponent({
           newProducto.offertPrice = values.offertPrice;
           newProducto.vigencia = new Date(values.vigencia).toISOString();
         }
-        // relación según tipo
         const keyMap: Record<string, string> = {
           vehicle: "vehicle",
           pieza: "pieza",
@@ -389,7 +439,6 @@ export default defineComponent({
           equipoGarage: "equipoGarage",
         };
         newProducto[keyMap[formFields.value.tipo]] = formFields.value.element;
-
         const response = await productoStore.addProducto(newProducto);
         if (response.isSuccess) {
           await productoStore.fetchProductos();
@@ -420,13 +469,23 @@ export default defineComponent({
       formFields,
       elementsOfType,
       currentImport,
+      basePrice,
+      porcientoMinPrice,
+      basePricePercentage,
       minPrice,
+      defaultForm,
+      schema,
+      categories,
+      tipoLabel,
       handleSubmit,
     };
   },
 });
-</script>
 
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+</script>
 <style scoped>
 .sticky-footer {
   position: sticky;
@@ -440,5 +499,6 @@ export default defineComponent({
 }
 .max-vh-50 {
   max-height: 50vh;
+  z-index: 23232323 !important;
 }
 </style>

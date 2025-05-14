@@ -2900,6 +2900,13 @@ vue3-apexcharts@^1.5.3:
   resolved "https://registry.npmjs.org/vue3-apexcharts/-/vue3-apexcharts-1.5.3.tgz"
   integrity sha512-yaHTPoj0iVKAtEVg8wEwIwwvf0VG+lPYNufCf3txRzYQOqdKPoZaZ9P3Dj3X+2A1XY9O1kcTk9HVqvLo+rppvQ==
 
+vue3-cookies@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.npmjs.org/vue3-cookies/-/vue3-cookies-1.0.6.tgz"
+  integrity sha512-a1UvVD0qIgxyOqjlSOwnLnqAnz8ASltugEv8yX+96i/WGZAN9fEDci7xO4HIWZE1uToUnRq9JnFhvfDCSo45OA==
+  dependencies:
+    vue "^3.0.0"
+
 vue3-daterange-picker@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/vue3-daterange-picker/-/vue3-daterange-picker-1.0.1.tgz"

@@ -36,14 +36,14 @@
             <!-- Campo: Nombre del categoriapiezaaccesorio -->
             <div class="mb-4 px-4 py-4 col-11 mx-6">
               <label class="required form-label"
-                >Nombre del categoriapiezaaccesorio</label
+                >Nombre de la categoria pieza accesorio</label
               >
               <Field
                 name="name"
                 as="input"
                 type="text"
                 class="form-control"
-                placeholder="Ponga el nombre del categoriapiezaaccesorio"
+                placeholder="Ponga el nombre"
               />
               <ErrorMessage name="name" class="text-danger" />
             </div>

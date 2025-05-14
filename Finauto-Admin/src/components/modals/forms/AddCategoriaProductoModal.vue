@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_add_categoriapiezaaccesorio"
+    id="kt_modal_add_categoriaproducto"
     ref="addCategoriaProductoModalRef"
     tabindex="-1"
     aria-hidden="true"
@@ -12,7 +12,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_provincia_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bold">Añadir una categoría</h2>
+          <h2 class="fw-bold">Añadir una categoría de producto</h2>
           <!--end::Modal title-->
 
           <!--begin::Close-->
@@ -49,12 +49,7 @@
             <!-- Campo: Tipo -->
             <div class="mb-4 px-4 py-4 col-11 mx-6">
               <label class="required form-label">Tipo</label>
-              <Field
-                name="tipo"
-                as="select"
-                class="form-select"
-                v-model="selectedOption"
-              >
+              <Field name="tipo" as="select" class="form-select">
                 <option disabled value="">Seleccione un tipo</option>
                 <option value="vehicle">Vehículo</option>
                 <option value="service">Servicio</option>
@@ -84,7 +79,6 @@
 import { defineComponent, ref } from "vue";
 import * as yup from "yup";
 import { Form, Field, ErrorMessage, useForm } from "vee-validate";
-
 import { hideModal } from "@/core/helpers/modal";
 import { useCategoriaProductoStore } from "@/stores/categoria-producto";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -106,7 +100,6 @@ export default defineComponent({
     const categoriaStore = useCategoriaProductoStore();
     const formRef = ref<HTMLFormElement | null>(null);
     const addCategoriaProductoModalRef = ref<HTMLElement | null>(null);
-    const selectedOption = ref<AddCategoriaFormFields["tipo"] | "">("");
 
     const schema = yup.object({
       name: yup.string().required("El nombre es obligatorio"),
@@ -124,10 +117,9 @@ export default defineComponent({
       values: any,
       { resetForm }: { resetForm: () => void },
     ) => {
-      const { name, tipo } = values as AddCategoriaFormFields;
       const newCategoria = {
-        name: { es: name, en: "" },
-        tipo: tipo,
+        name: { es: values.name, en: "" },
+        tipo: values.tipo,
       };
 
       try {
@@ -155,7 +147,6 @@ export default defineComponent({
       } finally {
         hideModal(addCategoriaProductoModalRef.value);
         resetForm();
-        selectedOption.value = "";
       }
     };
 
@@ -165,7 +156,6 @@ export default defineComponent({
       formRef,
       addCategoriaProductoModalRef,
       errors,
-      selectedOption,
     };
   },
 });

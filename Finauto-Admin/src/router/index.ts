@@ -6,15 +6,14 @@ import {
 import { useAuthStore } from "@/stores/auth";
 import { useConfigStore } from "@/stores/config";
 import asideLayoutVue from "@/layouts/aside-layout.vue";
+import { useCookies } from "vue3-cookies";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     redirect: "/dashboard",
     component: () => import("@/layouts/default-layout/DefaultLayout.vue"),
-    meta: {
-      middleware: "auth",
-    },
+    meta: { requiresAuth: true }, // Proteger todas las rutas hijas
     children: [
       {
         path: "/dashboard",
@@ -762,6 +761,7 @@ const routes: Array<RouteRecordRaw> = [
           import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
         meta: {
           pageTitle: "Sign In",
+          requiresAuth: false,
         },
       },
       {
@@ -771,6 +771,7 @@ const routes: Array<RouteRecordRaw> = [
           import("@/views/crafted/authentication/basic-flow/SignUp.vue"),
         meta: {
           pageTitle: "Sign Up",
+          requiresAuth: false,
         },
       },
       {
@@ -780,6 +781,7 @@ const routes: Array<RouteRecordRaw> = [
           import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
         meta: {
           pageTitle: "Password reset",
+          requiresAuth: false,
         },
       },
     ],
@@ -835,25 +837,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-  const configStore = useConfigStore();
+  const { cookies } = useCookies();
+  const isAuthenticated = !!cookies.get("refresh_token"); // O tu método de verificación
 
-  // current page view title
-  document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
-
-  // reset config to initial state
-  configStore.resetLayoutConfig();
-
-  // verify auth token before each page change
-  authStore.verifyAuth();
-
-  // before page access check if page requires authentication
-  if (to.meta.middleware == "auth") {
-    if (authStore.isAuthenticated) {
-      next();
-    } else {
-      next({ name: "sign-in" });
-    }
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next("/login");
+  } else if (to.name === "login" && isAuthenticated) {
+    next("/"); // Redirigir si ya está autenticado
   } else {
     next();
   }

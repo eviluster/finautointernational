@@ -288,7 +288,7 @@ export default defineComponent({
       </Datatable>
     </div>
 
-    <EditProductoModal :producto="selectedProducto"></EditProductoModal>
+    <!-- <EditProductoModal :producto="selectedProducto"></EditProductoModal> -->
   </div>
 </template>
 

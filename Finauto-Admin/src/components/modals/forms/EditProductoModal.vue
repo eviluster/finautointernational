@@ -18,7 +18,11 @@
             <KTIcon icon-name="cross" icon-class="fs-1" />
           </div>
         </div>
-        <Form :validation-schema="schema" @submit="handleSubmit">
+        <Form
+          :validation-schema="schema"
+          @submit="handleSubmit"
+          v-slot="{ errors }"
+        >
           <div class="row my-6">
             <!-- Aside column -->
             <div class="col-md-4 my-5">
@@ -89,60 +93,45 @@
               <div class="card bg-dark text-light">
                 <div class="card-body">
                   <h5 class="card-title pb-5">
-                    Selecciona un elemento del tipo
+                    Selecciona un elemento del tipo {{ tipoLabel }}
                   </h5>
 
                   <!-- Listbox Element -->
-                  <Field name="element" v-slot="{ field, meta }">
-                    <!-- igual que en AddProducto -->
-                    <!-- ... copia el mismo bloque de Listbox que tienes en AddProducto -->
+                  <Field name="element" v-slot="{ errors: fldErrors }">
                     <Listbox
-                      v-model="field.value"
-                      @update:model-value="
-                        (val) => (formFields.element = val.id)
-                      "
+                      :key="formFields.tipo"
+                      v-model="formFields.element"
                       as="div"
                       class="relative"
                     >
                       <ListboxButton class="form-select w-full text-start">
-                        <span
-                          class="flex items-center"
-                          style="
-                            width: 100% !important;
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                          "
-                        >
+                        <div class="flex items-center justify-between w-full">
+                          <img
+                            v-if="formFields.element?.galery?.length"
+                            :src="formFields.element.galery[0]"
+                            alt=""
+                            class="me-2 rounded"
+                            style="width: 34px; height: 34px; object-fit: cover"
+                          />
+                          <span class="flex-grow-1 text-center">
+                            {{
+                              formFields.element
+                                ? formFields.element.name.es
+                                : "-- Selecciona un elemento --"
+                            }}
+                          </span>
                           <span>
-                            <img
-                              v-if="field.value?.galery?.length"
-                              :src="field.value.galery[0]"
-                              alt=""
-                              class="me-2 rounded"
-                              style="
-                                width: 34px;
-                                height: 34px;
-                                object-fit: cover;
-                              "
-                            />
+                            {{
+                              formFields.element
+                                ? formFields.tipo === "vehicle"
+                                  ? formFields.element.PrecioBase
+                                  : formFields.element.precioBase
+                                : ""
+                            }}
                           </span>
-                          <span>{{
-                            field.value
-                              ? field.value.name.es
-                              : "-- Selecciona un elemento --"
-                          }}</span>
-                          <span
-                            class="ms-2"
-                            v-if="formFields.tipo === 'vehicle'"
-                          >
-                            {{ field.value ? field.value.PrecioBase : "" }}
-                          </span>
-                          <span class="ms-2" v-else>
-                            {{ field.value ? field.value.precioBase : "" }}
-                          </span>
-                        </span>
+                        </div>
                       </ListboxButton>
+
                       <Transition
                         enter="transition ease-out duration-100"
                         enter-from="opacity-0 scale-95"
@@ -152,23 +141,16 @@
                         leave-to="opacity-0 scale-95"
                       >
                         <ListboxOptions
-                          class="absolute mt-1 w-full bg-white dark:bg-gray-700 shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto z-10"
+                          class="absolute mt-1 w-full bg-secondary rounded shadow max-h-60 overflow-auto z-10"
                         >
                           <ListboxOption
                             v-for="option in elementsOfType"
                             :key="option.id"
                             :value="option"
-                            class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100 dark:hover:bg-gray-600"
+                            class="cursor-pointer select-none relative py-2 px-3 hover:bg-dark"
                           >
                             <div
-                              class=""
-                              style="
-                                width: 100% !important;
-                                display: flex;
-                                justify-content: space-between;
-                                padding-right: 20px;
-                                align-items: center;
-                              "
+                              class="flex items-center justify-between w-full"
                             >
                               <img
                                 v-if="option.galery?.length"
@@ -181,23 +163,27 @@
                                   object-fit: cover;
                                 "
                               />
-                              <span class="block truncate text-white">{{
+                              <span class="flex-grow-1 truncate text-white">{{
                                 option.name.es
                               }}</span>
-                              <span
-                                class="block truncate text-white"
-                                v-if="formFields.tipo === 'vehicle'"
-                              >
-                                {{ option.PrecioBase }}
-                              </span>
-                              <span class="block truncate text-white" v-else>
-                                {{ option.precioBase }}
+                              <span class="truncate text-white">
+                                {{
+                                  formFields.tipo === "vehicle"
+                                    ? option.PrecioBase
+                                    : option.precioBase
+                                }}
                               </span>
                             </div>
                           </ListboxOption>
                         </ListboxOptions>
                       </Transition>
                     </Listbox>
+                    <div
+                      class="text-danger small"
+                      v-if="fldErrors.length && !formFields.element"
+                    >
+                      {{ fldErrors[0] }}
+                    </div>
                   </Field>
 
                   <!-- Precios -->
@@ -210,6 +196,7 @@
                         name="price"
                         class="form-control"
                         v-model.number="formFields.price"
+                        :min="minPrice"
                       />
                       <ErrorMessage name="price" class="text-danger" />
                     </div>
@@ -228,7 +215,7 @@
                 </div>
               </div>
 
-              <button class="btn btn-primary mt-5" type="submit">
+              <button class="btn btn-primary mt-5 w-100" type="submit">
                 Guardar Cambios
               </button>
             </div>
@@ -240,20 +227,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from "vue";
+import { defineComponent, ref, computed, onMounted, watch } from "vue";
 import * as yup from "yup";
 import { Form, Field, ErrorMessage, useForm } from "vee-validate";
 import Swal from "sweetalert2";
+import api from "@/services/api";
+import ImageInput from "@/components/ImageInputString.vue";
 import {
   Listbox,
   ListboxButton,
   ListboxOptions,
   ListboxOption,
 } from "@headlessui/vue";
-import { Transition, watchEffect } from "vue";
+import { Transition } from "vue";
 import { useProductoStore } from "@/stores/products";
-import api from "@/services/api";
-import ImageInput from "@/components/ImageInputString.vue";
 
 export default defineComponent({
   name: "EditProducto",
@@ -268,125 +255,154 @@ export default defineComponent({
     ListboxOption,
     Transition,
   },
-  props: {
-    producto: {
-      type: Object,
-      required: true,
-    },
-  },
+  props: { producto: { type: Object, required: true } },
   setup(props) {
     const productoStore = useProductoStore();
-    const imageUrls = ref<string>("");
-    const elementsOfType = ref<Array<any>>([]);
-    const formFields = ref<{
-      id: string;
-      photo: string[];
-      status: string;
-      element: any;
-      tipo: string;
-      price?: number;
-      offertPrice?: number;
-    }>({
-      id: "",
-      photo: [],
-      status: "",
-      element: "",
-      tipo: "",
+    const imageUrls = ref<string>(props.producto.photo || "");
+
+    const formFields = ref({
+      id: props.producto.id || "",
+      status: props.producto.status || "",
+      tipo: getTipoFromProducto(props.producto),
+      element: props.producto[getTipoFromProducto(props.producto)] || null,
+      price: props.producto.price || 0,
+      offertPrice: props.producto.offertPrice || 0,
+      vigencia: props.producto.vigencia
+        ? props.producto.vigencia.substring(0, 10)
+        : "",
     });
 
-    const schema = yup.object({
-      photo: yup.array().of(yup.string()).max(1, "Máximo 1 imagen"),
-      status: yup.string().required("El estado es obligatorio"),
-      tipo: yup.string().required("El tipo es obligatorio"),
-      element: yup.object().nullable().required("Selecciona un elemento"),
-      price: yup.number().typeError("Debe ser un número").required(),
-      offertPrice: yup.number().typeError("Debe ser un número"),
-    });
-
-    const { errors } = useForm({ validationSchema: schema });
-
-    watchEffect(() => {
-      if (props.producto) {
-        console.log(props.producto);
-        const tipo = getTipoFromProducto(props.producto);
-        formFields.value.id = props.producto.id || "";
-        formFields.value.tipo = tipo;
-        formFields.value.status = props.producto.status || "";
-        formFields.value.price = props.producto.price || 0;
-        formFields.value.offertPrice = props.producto.offertPrice || 0;
-        formFields.value.element = props.producto.id;
-        imageUrls.value = extractDataUrl(props.producto.photo);
-        console.log(formFields.value.photo);
-        console.log(imageUrls.value);
-        console.log(props.producto.id);
-      }
-    });
-
-    const handleSubmit = async (values: any) => {
-      const updatedProducto: any = {
-        id: formFields.value.id,
-        status: formFields.value.status,
-        price: formFields.value.price,
-        offertPrice: formFields.value.offertPrice,
-        photo: imageUrls.value,
+    const tipoLabel = computed(() => {
+      const map: Record<string, string> = {
+        vehicle: "Vehículos",
+        pieza: "Piezas",
+        equipoGarage: "Producto de garaje",
+        servicio: "Servicio",
       };
+      return map[formFields.value.tipo] || "";
+    });
 
-      // const tipo = formFields.value.tipo;
-      // updatedProducto[tipo] = formFields.value.element;
+    const config = ref<any>(null);
+    const categories = ref<any[]>([]);
+    onMounted(async () => {
+      const [{ data: cfg }] = await Promise.all([
+        api.get("/configuracion/all"),
+      ]);
+      config.value = cfg.data[0];
+    });
 
-      try {
-        await productoStore.updateProducto(updatedProducto);
-        await productoStore.fetchProductos();
-        Swal.fire("Éxito", "Producto actualizado correctamente", "success");
-      } catch (error) {
-        console.error("Error al actualizar:", error);
-        Swal.fire("Error", "No se pudo actualizar el producto", "error");
-      }
-    };
-
-    // Extrae data URL de la cadena photo
-    const extractDataUrl = (input: string) => {
-      const regex = /data:image\/[a-zA-Z]+;base64,[^\"]+/;
-      const match = input.match(regex);
-      return match ? match[0] : null;
-    };
-
-    const getTipoFromProducto = (producto: any) => {
-      if (producto.vehicle) return "vehicle";
-      if (producto.pieza) return "pieza";
-      if (producto.equipoGarage) return "equipoGarage";
-      if (producto.servicio) return "servicio";
-      return "";
-    };
-
+    const elementsOfType = ref<any[]>([]);
     watch(
       () => formFields.value.tipo,
       async (tipo) => {
         if (!tipo) return;
-        const endpoints: Record<string, string> = {
+        const routes: Record<string, string> = {
           pieza: "/pieza-accesorio/all",
           vehicle: "/vehicle/all",
           servicio: "/servicio/all",
           equipoGarage: "/equipo-garage/all",
         };
-        const { data } = await api.get(endpoints[tipo]);
+        const { data } = await api.get(routes[tipo]);
         elementsOfType.value = data.data;
       },
       { immediate: true },
     );
 
+    const currentImport = computed(() =>
+      config.value
+        ? Number(
+            config.value["importPrice" + capitalize(formFields.value.tipo)],
+          )
+        : 0,
+    );
+    const basePrice = computed(() =>
+      formFields.value.element
+        ? Number(
+            formFields.value.element[
+              formFields.value.tipo === "vehicle" ? "PrecioBase" : "precioBase"
+            ],
+          )
+        : 0,
+    );
+    const porcMin = computed(() =>
+      Number(config.value?.porcientoMinPrice || 0),
+    );
+    const basePricePerc = computed(() =>
+      Math.round((basePrice.value * porcMin.value) / 100),
+    );
+    const minPrice = computed(
+      () => basePrice.value + currentImport.value + basePricePerc.value,
+    );
+
+    const schema = yup.object({
+      photo: yup.string().required(),
+      status: yup.string().required("El estado es obligatorio"),
+      tipo: yup.string().required("El tipo es obligatorio"),
+      element: yup.object().nullable().required("Selecciona un elemento"),
+      price: yup
+        .number()
+        .min(minPrice.value, `Precio mínimo ${minPrice.value}`)
+        .required("El precio es obligatorio"),
+      offertPrice: yup.number().when("status", {
+        is: "offert",
+        then: (s) => s.required("Precio oferta obligatorio"),
+      }),
+      vigencia: yup.string().when("status", {
+        is: "offert",
+        then: (s) => s.matches(/^\d{4}-\d{2}-\d{2}$/, "Formato YYYY-MM-DD"),
+      }),
+    });
+
+    useForm({ validationSchema: schema, initialValues: formFields.value });
+
+    const handleSubmit = async () => {
+      const payload: any = {
+        id: formFields.value.id,
+        status: formFields.value.status,
+        photo: imageUrls.value,
+        price: formFields.value.price,
+      };
+      if (formFields.value.status === "offert") {
+        payload.offertPrice = formFields.value.offertPrice;
+        payload.vigencia = new Date(formFields.value.vigencia).toISOString();
+      }
+      payload[formFields.value.tipo] = formFields.value.element;
+      try {
+        const res = await productoStore.updateProducto(payload); 
+        if (res.isSuccess) {
+          await productoStore.fetchProductos();
+          Swal.fire("Éxito", "Producto actualizado correctamente", "success");
+        } else throw new Error(res.errorMessage.es);
+      } catch (e: any) {
+        Swal.fire("Error", e.message, "error");
+      }
+    };
+
+    function getTipoFromProducto(prod: any) {
+      if (prod.vehicle) return "vehicle";
+      if (prod.pieza) return "pieza";
+      if (prod.equipoGarage) return "equipoGarage";
+      if (prod.servicio) return "servicio";
+      return "";
+    }
+    function capitalize(s: string) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
     return {
       formFields,
-      errors,
+      schema,
       handleSubmit,
       imageUrls,
       elementsOfType,
+      tipoLabel,
+      minPrice,
     };
   },
 });
 </script>
 <style scoped>
-#headlessui-listbox-options-2 {
-  background-color: #272a34 !important;
+.max-h-60 {
+  max-height: 15rem;
 }
 </style>

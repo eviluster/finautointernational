@@ -12,55 +12,25 @@
       <!--begin::Heading-->
       <div class="mb-10 text-center">
         <!--begin::Title-->
-        <h1 class="text-gray-900 mb-3">Create an Account</h1>
+        <h1 class="text-gray-900 mb-3">Crear una cuenta</h1>
         <!--end::Title-->
-
-        <!--begin::Link-->
-        <div class="text-gray-500 fw-semibold fs-4">
-          Already have an account?
-
-          <router-link to="/sign-in" class="link-primary fw-bold">
-            Sign in here
-          </router-link>
-        </div>
-        <!--end::Link-->
       </div>
       <!--end::Heading-->
 
-      <!--begin::Action-->
-      <button type="button" class="btn btn-light-primary fw-bold w-100 mb-10">
-        <img
-          alt="Logo"
-          :src="getAssetPath('media/svg/brand-logos/google-icon.svg')"
-          class="h-20px me-3"
-        />
-        Sign in with Google
-      </button>
-      <!--end::Action-->
-
-      <!--begin::Separator-->
-      <div class="d-flex align-items-center mb-10">
-        <div class="border-bottom border-gray-300 mw-50 w-100"></div>
-        <span class="fw-semibold text-gray-400 fs-7 mx-2">OR</span>
-        <div class="border-bottom border-gray-300 mw-50 w-100"></div>
-      </div>
-      <!--end::Separator-->
-
-      <!--begin::Input group-->
+      <!--begin::Input group: Nombre y Apellido-->
       <div class="row fv-row mb-7">
         <!--begin::Col-->
         <div class="col-xl-6">
-          <label class="form-label fw-bold text-gray-900 fs-6">First Name</label>
+          <label class="form-label fw-bold text-gray-900 fs-6">Nombre</label>
           <Field
             class="form-control form-control-lg form-control-solid"
             type="text"
-            placeholder=""
-            name="first_name"
+            name="name"
             autocomplete="off"
           />
           <div class="fv-plugins-message-container">
             <div class="fv-help-block">
-              <ErrorMessage name="first_name" />
+              <ErrorMessage name="name" />
             </div>
           </div>
         </div>
@@ -68,17 +38,16 @@
 
         <!--begin::Col-->
         <div class="col-xl-6">
-          <label class="form-label fw-bold text-gray-900 fs-6">Last Name</label>
+          <label class="form-label fw-bold text-gray-900 fs-6">Apellido</label>
           <Field
             class="form-control form-control-lg form-control-solid"
             type="text"
-            placeholder=""
-            name="last_name"
+            name="lastname"
             autocomplete="off"
           />
           <div class="fv-plugins-message-container">
             <div class="fv-help-block">
-              <ErrorMessage name="last_name" />
+              <ErrorMessage name="lastname" />
             </div>
           </div>
         </div>
@@ -86,13 +55,14 @@
       </div>
       <!--end::Input group-->
 
-      <!--begin::Input group-->
+      <!--begin::Input group: Email-->
       <div class="fv-row mb-7">
-        <label class="form-label fw-bold text-gray-900 fs-6">Email</label>
+        <label class="form-label fw-bold text-gray-900 fs-6"
+          >Correo electrónico</label
+        >
         <Field
           class="form-control form-control-lg form-control-solid"
           type="email"
-          placeholder=""
           name="email"
           autocomplete="off"
         />
@@ -104,12 +74,54 @@
       </div>
       <!--end::Input group-->
 
-      <!--begin::Input group-->
+      <!--begin::Input group: Nombre de usuario y Teléfono-->
+      <div class="row fv-row mb-7">
+        <!--begin::Col-->
+        <div class="col-xl-6">
+          <label class="form-label fw-bold text-gray-900 fs-6"
+            >Nombre de usuario</label
+          >
+          <Field
+            class="form-control form-control-lg form-control-solid"
+            type="text"
+            name="username"
+            autocomplete="off"
+          />
+          <div class="fv-plugins-message-container">
+            <div class="fv-help-block">
+              <ErrorMessage name="username" />
+            </div>
+          </div>
+        </div>
+        <!--end::Col-->
+
+        <!--begin::Col-->
+        <div class="col-xl-6">
+          <label class="form-label fw-bold text-gray-900 fs-6">Teléfono</label>
+          <Field
+            class="form-control form-control-lg form-control-solid"
+            type="text"
+            name="phone"
+            autocomplete="off"
+          />
+          <div class="fv-plugins-message-container">
+            <div class="fv-help-block">
+              <ErrorMessage name="phone" />
+            </div>
+          </div>
+        </div>
+        <!--end::Col-->
+      </div>
+      <!--end::Input group-->
+
+      <!--begin::Input group: Contraseña-->
       <div class="mb-10 fv-row" data-kt-password-meter="true">
         <!--begin::Wrapper-->
         <div class="mb-1">
           <!--begin::Label-->
-          <label class="form-label fw-bold text-gray-900 fs-6"> Password </label>
+          <label class="form-label fw-bold text-gray-900 fs-6"
+            >Contraseña</label
+          >
           <!--end::Label-->
 
           <!--begin::Input wrapper-->
@@ -117,7 +129,6 @@
             <Field
               class="form-control form-control-lg form-control-solid"
               type="password"
-              placeholder=""
               name="password"
               autocomplete="off"
             />
@@ -151,21 +162,21 @@
         <!--end::Wrapper-->
         <!--begin::Hint-->
         <div class="text-muted">
-          Use 8 or more characters with a mix of letters, numbers & symbols.
+          Usa 8 o más caracteres con una combinación de letras, números y
+          símbolos.
         </div>
         <!--end::Hint-->
       </div>
       <!--end::Input group--->
 
-      <!--begin::Input group-->
+      <!--begin::Input group: Confirmar contraseña-->
       <div class="fv-row mb-5">
         <label class="form-label fw-bold text-gray-900 fs-6"
-          >Confirm Password</label
+          >Confirmar contraseña</label
         >
         <Field
           class="form-control form-control-lg form-control-solid"
           type="password"
-          placeholder=""
           name="password_confirmation"
           autocomplete="off"
         />
@@ -177,20 +188,20 @@
       </div>
       <!--end::Input group-->
 
-      <!--begin::Input group-->
-      <div class="fv-row mb-10">
-        <label class="form-check form-check-custom form-check-solid">
-          <Field
-            class="form-check-input"
-            type="checkbox"
-            name="toc"
-            value="1"
-          />
-          <span class="form-check-label fw-semibold text-gray-700 fs-6">
-            I Agree &
-            <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
-          </span>
-        </label>
+      <!--begin::Input group: Descripción-->
+      <div class="fv-row mb-7">
+        <label class="form-label fw-bold text-gray-900 fs-6">Descripción</label>
+        <Field
+          as="textarea"
+          class="form-control form-control-lg form-control-solid"
+          name="description"
+          rows="4"
+        />
+        <div class="fv-plugins-message-container">
+          <div class="fv-help-block">
+            <ErrorMessage name="description" />
+          </div>
+        </div>
       </div>
       <!--end::Input group-->
 
@@ -202,9 +213,9 @@
           type="submit"
           class="btn btn-lg btn-primary"
         >
-          <span class="indicator-label"> Submit </span>
+          <span class="indicator-label">Registrar</span>
           <span class="indicator-progress">
-            Please wait...
+            Por favor espera...
             <span
               class="spinner-border spinner-border-sm align-middle ms-2"
             ></span>
@@ -213,7 +224,29 @@
       </div>
       <!--end::Actions-->
     </VForm>
+
     <!--end::Form-->
+
+    <!--begin::Input group-->
+    <div class="fv-row my-10">
+      <!--begin::Separator-->
+      <div class="d-flex align-items-center mb-10">
+        <div class="border-bottom border-gray-300 mw-50 w-100"></div>
+        <span class="fw-semibold text-gray-400 fs-7 mx-2">O</span>
+        <div class="border-bottom border-gray-300 mw-50 w-100"></div>
+      </div>
+      <!--end::Separator-->
+
+      <!--begin::Link-->
+      <div class="text-gray-500 fw-semibold fs-4 text-center">
+        ¿Ya tienes una cuenta?
+        <router-link to="/sign-in" class="link-primary fw-bold">
+          Inicia sesión aquí
+        </router-link>
+      </div>
+      <!--end::Link-->
+    </div>
+    <!--end::Input group-->
   </div>
   <!--end::Wrapper-->
 </template>
@@ -230,26 +263,24 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
   name: "sign-up",
-  components: {
-    Field,
-    VForm,
-    ErrorMessage,
-  },
+  components: { Field, VForm, ErrorMessage },
   setup() {
     const store = useAuthStore();
     const router = useRouter();
-
     const submitButton = ref<HTMLButtonElement | null>(null);
 
     const registration = Yup.object().shape({
-      first_name: Yup.string().required().label("Name"),
-      last_name: Yup.string().required().label("Surname"),
-      email: Yup.string().min(4).required().email().label("Email"),
-      password: Yup.string().required().label("Password"),
+      name: Yup.string().required().label("Nombre"),
+      lastname: Yup.string().required().label("Apellido"),
+      email: Yup.string().min(4).required().email().label("Correo electrónico"),
+      username: Yup.string().required().label("Nombre de usuario"),
+      phone: Yup.string().required().label("Teléfono"),
+      password: Yup.string().required().label("Contraseña"),
       password_confirmation: Yup.string()
         .required()
-        .oneOf([Yup.ref("password")], "Passwords must match")
-        .label("Password Confirmation"),
+        .oneOf([Yup.ref("password")], "Las contraseñas deben coincidir")
+        .label("Confirmar contraseña"),
+      description: Yup.string().required().label("Descripción"),
     });
 
     onMounted(() => {
@@ -259,60 +290,44 @@ export default defineComponent({
     });
 
     const onSubmitRegister = async (values: any) => {
-      values = values as User;
+      // Omitimos campos no necesarios
+      const { password_confirmation, ...payload } = values as User & {
+        description: string;
+      };
 
-      // Clear existing errors
-      store.logout();
-
-      // eslint-disable-next-line
-      submitButton.value!.disabled = true;
-
-      // Activate indicator
-      submitButton.value?.setAttribute("data-kt-indicator", "on");
-
-      // Send login request
-      await store.register(values);
+      console.log("Payload de registro:", payload);
+      try {
+        await store.register(payload);
+      } catch (err) {
+        console.error("Error al registrar el usuario:", err);
+      }
 
       const error = Object.values(store.errors);
-
-      if (!error) {
+      if (!error.length) {
         Swal.fire({
-          text: "You have successfully logged in!",
+          text: "¡Te has registrado correctamente!",
           icon: "success",
           buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
+          confirmButtonText: "¡Entendido!",
           heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semibold btn-light-primary",
-          },
-        }).then(function () {
-          // Go to page after successfully login
-          router.push({ name: "dashboard" });
-        });
+          customClass: { confirmButton: "btn fw-semibold btn-light-primary" },
+        }).then(() => router.push({ name: "dashboard" }));
       } else {
         Swal.fire({
           text: error[0] as string,
           icon: "error",
           buttonsStyling: false,
-          confirmButtonText: "Try again!",
+          confirmButtonText: "¡Intentar de nuevo!",
           heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semibold btn-light-danger",
-          },
+          customClass: { confirmButton: "btn fw-semibold btn-light-danger" },
         });
       }
 
       submitButton.value?.removeAttribute("data-kt-indicator");
-      // eslint-disable-next-line
       submitButton.value!.disabled = false;
     };
 
-    return {
-      registration,
-      onSubmitRegister,
-      submitButton,
-      getAssetPath,
-    };
+    return { registration, onSubmitRegister, submitButton, getAssetPath };
   },
 });
 </script>

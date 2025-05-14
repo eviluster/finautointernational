@@ -7,37 +7,23 @@
       id="kt_login_signin_form"
       @submit="onSubmitLogin"
       :validation-schema="login"
-      :initial-values="{ email: 'admin@demo.com', password: 'demo' }"
     >
-      <!--begin::Heading-->
       <div class="text-center mb-10">
-        <!--begin::Title-->
         <h1 class="text-gray-900 mb-3">Sign In</h1>
-        <!--end::Title-->
-
-        <!--begin::Link
-        <div class="text-gray-500 fw-semibold fs-4">
-          New Here?
-
-          <router-link to="/sign-up" class="link-primary fw-bold">
-            Create an Account
-          </router-link>
-        </div>-->
-        <!--end::Link-->
       </div>
       <!--begin::Heading-->
 
-      <div class="mb-10 bg-light-info p-8 rounded">
+      <!-- <div class="mb-10 bg-light-info p-8 rounded">
         <div class="text-info">
           Use account <strong>admin@demo.com</strong> and password
           <strong>demo</strong> to continue.
         </div>
-      </div>
+      </div> -->
 
       <!--begin::Input group-->
       <div class="fv-row mb-10">
         <!--begin::Label-->
-        <label class="form-label fs-6 fw-bold text-gray-900">Email</label>
+        <label class="form-label fs-6 fw-bold text-gray-900">Username</label>
         <!--end::Label-->
 
         <!--begin::Input-->
@@ -45,13 +31,13 @@
           tabindex="1"
           class="form-control form-control-lg form-control-solid"
           type="text"
-          name="email"
+          name="username"
           autocomplete="off"
         />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
-            <ErrorMessage name="email" />
+            <ErrorMessage name="username" />
           </div>
         </div>
       </div>
@@ -62,7 +48,9 @@
         <!--begin::Wrapper-->
         <div class="d-flex flex-stack mb-2">
           <!--begin::Label-->
-          <label class="form-label fw-bold text-gray-900 fs-6 mb-0">Password</label>
+          <label class="form-label fw-bold text-gray-900 fs-6 mb-0"
+            >Password</label
+          >
           <!--end::Label-->
 
           <!--begin::Link-->
@@ -112,24 +100,33 @@
         <!--end::Submit button-->
 
         <!--begin::Separator-->
-        
+
         <!--end::Separator-->
 
         <!--begin::Google link-->
-        
+
         <!--end::Google link-->
 
         <!--begin::Google link-->
-       
+
         <!--end::Google link-->
 
         <!--begin::Google link-->
-        
+
         <!--end::Google link-->
       </div>
       <!--end::Actions-->
     </VForm>
     <!--end::Form-->
+    <div class="text-center mb-10">
+      <div class="text-gray-500 fw-semibold fs-4">
+        New Here?
+
+        <router-link to="/sign-up" class="link-primary fw-bold">
+          Create an Account
+        </router-link>
+      </div>
+    </div>
   </div>
   <!--end::Wrapper-->
 </template>
@@ -158,15 +155,15 @@ export default defineComponent({
 
     //Create form validation object
     const login = Yup.object().shape({
-      email: Yup.string().email().required().label("Email"),
+      username: Yup.string().email().required().label("Email"),
       password: Yup.string().min(4).required().label("Password"),
     });
 
     //Form submit function
     const onSubmitLogin = async (values: any) => {
-      values = values as User;
+      const { password, username } = values as User;
       // Clear existing errors
-      store.logout();
+      // store.logout();
 
       if (submitButton.value) {
         // eslint-disable-next-line
@@ -176,7 +173,7 @@ export default defineComponent({
       }
 
       // Send login request
-      await store.login(values);
+      await store.login({ username, password });
       const error = Object.values(store.errors);
 
       if (error.length === 0) {
@@ -211,7 +208,9 @@ export default defineComponent({
       //Deactivate indicator
       submitButton.value?.removeAttribute("data-kt-indicator");
       // eslint-disable-next-line
+      if (submitButton.value) {
         submitButton.value!.disabled = false;
+      }
     };
 
     return {

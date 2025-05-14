@@ -9,6 +9,7 @@ interface IProducto {
   equipoGarage?: string;
   vehicle?: string;
   price?: number;
+  catprod: string;
   offertPrice?: number;
   photo: Array<string>;
   vigencia?: Date;
