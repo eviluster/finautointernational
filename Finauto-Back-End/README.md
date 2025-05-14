@@ -1,5 +1,5 @@
 # api-parking
-AFAMini Job Test
+Guajiritos Job Test
  
  Casos de uso
 1. Reservar una plaza de aparcamiento: un cliente desea reservar una plaza de aparcamiento
