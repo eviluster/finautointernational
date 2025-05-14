@@ -1,41 +1,60 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
-import { Tooltip } from "bootstrap";
-import App from "./App.vue";
-import VCalendar from "v-calendar";
-import "v-calendar/dist/style.css";
-/*
-TIP: To get started with clean router change path to @/router/clean.ts.
- */
-import router from "./router";
-import ElementPlus from "element-plus";
-import i18n from "@/core/plugins/i18n";
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ClearWhiteSpaceInterceptor } from './common/base/interceptors/white-space.interceptor';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import Debugger from 'debug';
+import { json, urlencoded } from 'body-parser';
 
-//imports for app initialization
-import ApiService from "@/core/services/ApiService";
-import { initApexCharts } from "@/core/plugins/apexcharts";
-import { initInlineSvg } from "@/core/plugins/inline-svg";
-import { initVeeValidate } from "@/core/plugins/vee-validate";
-import { initKtIcon } from "@/core/plugins/keenthemes";
+const debug = Debugger('fin-auto:main');
 
-import "@/core/plugins/prismjs";
+async function bootstrap() {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-const app = createApp(App);
-app.use(VCalendar, {});
-app.use(createPinia());
-app.use(router);
-app.use(ElementPlus);
+  // Validators
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: false,
+      transform: true,
+    }),
+  );
+  app.useGlobalInterceptors(new ClearWhiteSpaceInterceptor());
 
-ApiService.init(app);
-initApexCharts(app);
-initInlineSvg(app);
-initKtIcon(app);
-initVeeValidate();
+  // Allow calls
+  app.enableCors({
+    origin: (origin, callback) => {
+      const whitelist = ['http://localhost:5174', 'http://localhost:5173'];
+      if (!origin || whitelist.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('CORS no permitido'), false);
+      }
+    },
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+  });
 
-app.use(i18n);
+  const options = new DocumentBuilder()
+    .setTitle('FIN AUTO')
+    .setDescription('FIN AUTO API')
+    .setVersion('1.0')
+    .build();
 
-app.directive("tooltip", (el) => {
-  new Tooltip(el);
-});
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
 
-app.mount("#app");
+  // Configurar el tamaño máximo del cuerpo de la solicitud
+  app.use(json({ limit: '20mb' })); // Ajusta el límite según tus necesidades
+  app.use(urlencoded({ limit: '20mb', extended: true }));
+
+  // Global location of DNS/v1/ Rest URL
+  app.setGlobalPrefix('v1');
+
+  // iniciando puerto 5000 para dejar free el 3000 para frontend
+  await app.listen(5000);
+}
+bootstrap();

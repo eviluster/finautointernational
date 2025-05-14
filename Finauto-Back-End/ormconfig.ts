@@ -2,7 +2,6 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { Role } from './src/roles/entities/role.entity';
 import { User } from './src/user/entities/user.entity';
-import { Section } from './src/sections/entities/section.entity';
 import { Marca } from './src/marcas/entities/marca.entity';
 import { Modelo } from './src/modelos/entities/modelo.entity';
 import { Tipo } from './src/tipos/entities/tipo.entity';
@@ -17,18 +16,13 @@ import { Municipality } from './src/municipality/entities/municipality.entity';
 import { Locality } from './src/locality/entities/locality.entity';
 import { AddressDetail } from './src/address-details/entities/address-detail.entity';
 import { Notification } from './src/notifications/entities/notification.entity';
-import { RolePermission } from './src/role-permissions/entities/role-permission.entity';
-import { Permission } from './src/permissions/entities/permission.entity';
-import { UserRole } from './src/user-roles/entities/user-role.entity';
 import { Configuracion } from './src/configuracion/entities/configuracion.entity';
 
 import { Traza } from 'src/trazas/entities/traza.entity';
-import { PersonaTipo } from 'src/persona-tipo/entities/persona-tipo.entity';
 import { Persona } from 'src/persona-juridica/entities/persona-juridica.entity';
 import { TipoPersona } from 'src/tipo-persona-juridica/entities/tipo-persona-juridica.entity';
 import { Customer } from 'src/customer/entities/customer.entity';
 import { EquipoGarage } from 'src/equipo-garage/entities/equipo-garage.entity';
-import { Parte } from 'src/parte/entities/parte.entity';
 import { Producto } from 'src/producto/entities/producto.entity';
 import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
 import { Traccion } from 'src/traccion/entities/traccion.entity';
@@ -85,16 +79,12 @@ export const config: TypeOrmModuleOptions = {
     NombreTipoSuspension,
     Notification,
     Pago,
-    Parte,
-    Permission,
     Persona,
     Producto,
     Proveedor,
     Province,
     Reserva,
     Role,
-    RolePermission,
-    Section,
     Servicio,
     Tipo,
     TipoFreno,
@@ -106,7 +96,6 @@ export const config: TypeOrmModuleOptions = {
     Traza,
     Um,
     User,
-    UserRole,
     Vehicle,
     TipoSuspension,
     Galery,

@@ -14,32 +14,32 @@
       <button
         class="navbar-toggler"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarContent"
+        @click="menuVisible = !menuVisible"
         aria-controls="navbarContent"
-        aria-expanded="false"
+        :aria-expanded="menuVisible"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- CONTENIDO COLAPSABLE -->
-      <div class="collapse navbar-collapse" id="navbarContent">
+      <div
+        class="collapse navbar-collapse"
+        :class="{ show: menuVisible }"
+        id="navbarContent"
+      >
         <!-- MENÚ PRINCIPAL -->
         <ul class="navbar-nav">
           <!-- SHOWROOM (Dropdown) -->
-          <li class="nav-item dropdown menu-item">
+          <li class="nav-item menu-item" @mouseleave="open.showroom = false">
             <a
               class="nav-link dropdown-toggle"
               href="#"
-              id="showroomDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+              @click.prevent="open.showroom = !open.showroom"
             >
               SHOWROOM
             </a>
-            <ul class="dropdown-menu" aria-labelledby="showroomDropdown">
+            <ul class="dropdown-menu" :class="{ show: open.showroom }">
               <li v-for="item in showroom" :key="item.nombre">
                 <router-link
                   class="dropdown-item"
@@ -52,18 +52,15 @@
           </li>
 
           <!-- REPUESTOS Y ACCESORIOS (Dropdown) -->
-          <li class="nav-item dropdown menu-item">
+          <li class="nav-item menu-item" @mouseleave="open.repuestos = false">
             <a
               class="nav-link dropdown-toggle"
               href="#"
-              id="repuestosDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+              @click.prevent="open.repuestos = !open.repuestos"
             >
               REPUESTOS Y ACCESORIOS
             </a>
-            <ul class="dropdown-menu" aria-labelledby="repuestosDropdown">
+            <ul class="dropdown-menu" :class="{ show: open.repuestos }">
               <li v-for="item in repuesto" :key="item.nombre">
                 <router-link
                   class="dropdown-item"
@@ -76,18 +73,15 @@
           </li>
 
           <!-- EQUIPAMIENTO DE GARAGE (Dropdown) -->
-          <li class="nav-item dropdown menu-item">
+          <li class="nav-item menu-item" @mouseleave="open.garaje = false">
             <a
               class="nav-link dropdown-toggle"
               href="#"
-              id="garageDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+              @click.prevent="open.garaje = !open.garaje"
             >
               EQUIPAMIENTO DE GARAGE
             </a>
-            <ul class="dropdown-menu" aria-labelledby="garageDropdown">
+            <ul class="dropdown-menu" :class="{ show: open.garaje }">
               <li v-for="item in garaje" :key="item.nombre">
                 <router-link
                   class="dropdown-item"
@@ -120,7 +114,7 @@
             </router-link>
           </li>
         </ul>
-        <!-- ICONOS A LA DERECHA -->
+
         <div class="d-flex align-items-center iconos">
           <!-- Ícono de búsqueda -->
           <div class="me-3" id="search-icon">
@@ -201,14 +195,14 @@
 </template>
 
 <script setup>
-  import { ref, watch, computed } from "vue";
+  import { ref, reactive, watch, computed } from "vue";
   import { useStore } from "vuex";
 
   const store = useStore();
   const cartCount = ref(0);
-  const isRegistered = computed(() => {
-    return store.state.isRegistered;
-  });
+  const isRegistered = computed(() => store.state.isRegistered);
+
+  // Listas de dropdowns
   const showroom = ref([
     { nombre: "Autos" },
     { nombre: "SUVs/MPV" },
@@ -235,58 +229,44 @@
     { nombre: "EQUIPOS DE RECTIFICACION DE FRENOS Y MOTORES" },
   ]);
 
-  // Estado para controlar la visibilidad del menú hamburguesa
+  // Estado local
   const menuVisible = ref(false);
+  const open = reactive({
+    showroom: false,
+    repuestos: false,
+    garaje: false,
+  });
 
-  // Función para alternar el menú hamburguesa
-  const toggleMenu = () => {
-    menuVisible.value = !menuVisible.value;
-  };
-
-  // Función para manejar la búsqueda
-  const handleSearch = (event) => {
-    event.preventDefault();
-    // Aquí puedes implementar la lógica de búsqueda
-  };
-
+  // Contador de carrito
   const updateCartCount = () => {
-    const newCount = store.state.cart ? store.state.cart.length : 0;
-    cartCount.value = newCount;
-    console.log("Nueva vuenta", newCount);
-    console.log("Cantidad de productos", cartCount.value);
+    cartCount.value = store.state.cart?.length || 0;
   };
-
-  // Llama a updateCartCount en el montaje del componente para inicializar el conteo
   updateCartCount();
-
-  // Si necesitas actualizar el conteo cuando cambie el carrito, puedes usar un watcher
   watch(
     () => store.state.cart,
-    (newCart) => {
-      updateCartCount(); // Actualiza el conteo cuando cambie el carrito
-    },
+    () => updateCartCount(),
     { deep: true }
-  ); // Agrega esta opción para ejecutar el watcher inmediatamente
+  );
 </script>
 
 <style scoped>
+  /* Base */
   li {
     list-style: none;
     width: fit-content;
   }
-  .cart-count {
-    position: absolute;
-    /*top: -8px;
-    right: -8px;*/
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    /*padding: 2px 6px;*/
-    font-size: 12px;
-    min-width: 16px;
-    text-align: center;
+
+  /* Dropdown: oculto por defecto */
+  .dropdown-menu {
+    display: none;
+    background-color: rgba(18, 17, 17, 0.16);
+    backdrop-filter: blur(10px);
   }
 
+  /* Cuando open.xxx=true le añadimos la clase show */
+  .dropdown-menu.show {
+    display: block;
+  }
   nav {
     width: 100%;
     background-color: transparent;
@@ -299,42 +279,34 @@
     padding: 10px 20px;
     z-index: 1000;
   }
-
+  /* Hover en item */
   nav .menu-item:hover > a {
     background-color: rgba(128, 128, 128, 0.5);
   }
-  #navbarContent {
-    justify-content: space-around;
-  }
   .navbar-nav {
     align-items: center;
-  }
-  .d-flex.align-items-center.iconos {
-    justify-content: center;
-    margin: 12px 0;
   }
   nav .menu-item .dropdown-menu {
     background-color: rgba(18, 17, 17, 16%);
     backdrop-filter: blur(10px);
   }
-
-  nav .dropdown-menu li:hover .dropdown-item {
-    background-color: rgba(128, 128, 128, 0.5) !important;
-  }
-
   .dropdown-item {
     color: white !important;
+    background-color: transparent !important;
   }
-
+  /* Resto de tus estilos… */
   .navbar-toggler {
     color: white !important;
     background-color: white !important;
     border: var(--bs-border-width) solid white !important;
   }
-  @media (max-width: 1400px) {
-    .navbar.navbar-expand-xxl {
-      background-color: rgba(18, 17, 17, 16%);
-      backdrop-filter: blur(10px);
-    }
+  .cart-count {
+    position: absolute;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    min-width: 16px;
+    text-align: center;
   }
 </style>

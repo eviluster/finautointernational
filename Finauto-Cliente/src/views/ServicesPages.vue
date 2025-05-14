@@ -4,82 +4,19 @@
 
   <div class="principal-card">
     <div class="service-container">
-      <div class="service-card">
-        <img src="/images/service1.jpg" alt="servicio" />
+      <div
+        v-for="(servicio, index) in servicios"
+        :key="index"
+        :class="index % 2 === 0 ? 'service-card' : 'service-card2'"
+      >
+        <img :src="servicio.galery[0]" alt="servicio" />
         <div class="text-service">
           <div class="service-title">
-            <h3>Nombre Servicio</h3>
+            <h3>{{ servicio.name.es }}</h3>
           </div>
           <div class="description">
             <p>
-              Dolor fugiat pariatur do ut laboris commodo. Proident nostrud
-              labore aliqua incididunt ullamco id. Adipisicing duis cupidatat
-              mollit voluptate eu adipisicing proident deserunt tempor et esse
-              magna. Ad cupidatat eu adipisicing labore ipsum cupidatat
-              cupidatat elit. Laboris cillum esse deserunt reprehenderit
-              consequat commodo est ex culpa sunt pariatur esse dolor. Dolor
-              proident dolore exercitation esse anim in do aliquip dolor mollit.
-              Sint exercitation tempor veniam dolor nulla in mollit excepteur.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="service-card2">
-        <img src="/images/service1.jpg" alt="servicio" />
-        <div class="text-service">
-          <div class="service-title">
-            <h3>Nombre Servicio</h3>
-          </div>
-          <div class="description">
-            <p>
-              Dolor fugiat pariatur do ut laboris commodo. Proident nostrud
-              labore aliqua incididunt ullamco id. Adipisicing duis cupidatat
-              mollit voluptate eu adipisicing proident deserunt tempor et esse
-              magna. Ad cupidatat eu adipisicing labore ipsum cupidatat
-              cupidatat elit. Laboris cillum esse deserunt reprehenderit
-              consequat commodo est ex culpa sunt pariatur esse dolor. Dolor
-              proident dolore exercitation esse anim in do aliquip dolor mollit.
-              Sint exercitation tempor veniam dolor nulla in mollit excepteur.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="service-card">
-        <img src="/images/service1.jpg" alt="servicio" />
-        <div class="text-service">
-          <div class="service-title">
-            <h3>Nombre Servicio</h3>
-          </div>
-          <div class="description">
-            <p>
-              Dolor fugiat pariatur do ut laboris commodo. Proident nostrud
-              labore aliqua incididunt ullamco id. Adipisicing duis cupidatat
-              mollit voluptate eu adipisicing proident deserunt tempor et esse
-              magna. Ad cupidatat eu adipisicing labore ipsum cupidatat
-              cupidatat elit. Laboris cillum esse deserunt reprehenderit
-              consequat commodo est ex culpa sunt pariatur esse dolor. Dolor
-              proident dolore exercitation esse anim in do aliquip dolor mollit.
-              Sint exercitation tempor veniam dolor nulla in mollit excepteur.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="service-card2">
-        <img src="/images/service1.jpg" alt="servicio" />
-        <div class="text-service">
-          <div class="service-title">
-            <h3>Nombre Servicio</h3>
-          </div>
-          <div class="description">
-            <p>
-              Dolor fugiat pariatur do ut laboris commodo. Proident nostrud
-              labore aliqua incididunt ullamco id. Adipisicing duis cupidatat
-              mollit voluptate eu adipisicing proident deserunt tempor et esse
-              magna. Ad cupidatat eu adipisicing labore ipsum cupidatat
-              cupidatat elit. Laboris cillum esse deserunt reprehenderit
-              consequat commodo est ex culpa sunt pariatur esse dolor. Dolor
-              proident dolore exercitation esse anim in do aliquip dolor mollit.
-              Sint exercitation tempor veniam dolor nulla in mollit excepteur.
+              {{ servicio.description.es }}
             </p>
           </div>
         </div>
@@ -127,9 +64,25 @@
 </template>
 
 <script setup>
-  import { computed, ref, watch } from "vue";
+  import { computed, ref, watch, onMounted } from "vue";
   import ServiceForm from "../components/modal/ServiceForm.vue";
   import store from "../store/store";
+  import api from "../services/api";
+
+  const servicios = ref([]);
+
+  onMounted(async () => {
+    fetchServicios();
+  });
+
+  const fetchServicios = async () => {
+    try {
+      const { data } = await api.get("/servicio/all");
+      servicios.value = data.data;
+    } catch (error) {
+      console.error("Error al obtener los servicios:", error);
+    }
+  };
 
   // Referencias para los modales
   const showRegistrationModal = ref(false);
@@ -156,26 +109,6 @@
   const closeRegistrationModal = () => {
     showRegistrationModal.value = false;
   };
-
-  // Función para verificar registro y mostrar modal correspondiente
-  /*const checkRegistration = (event) => {
-  event.preventDefault();
-  // Aquí deberías verificar si el usuario está registrado
-  const isRegistered = true; // Simula el estado de autenticación
-
-  if (!isRegistered) {
-    showRegistrationModal.value = true; // Muestra el modal de registro
-  } else {
-    showServiceFormModal.value = true; // Muestra el formulario de servicio
-  }
-};
-
-// Funciones para cerrar modales
-
-
-const closeServiceFormModal = () => {
-  showServiceFormModal.value = false;
-};*/
 </script>
 
 <style scoped>

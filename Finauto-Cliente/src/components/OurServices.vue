@@ -39,11 +39,11 @@
     </div>
     <div style="float: right; width: 30%; height: 100%">
       <h2>Nuestros Servicios</h2>
-      <li class="first"><a href="/inicio">Servicio1</a></li>
-      <li class="second"><a href="/inicio">Servicio2</a></li>
-      <li class="third"><a href="/inicio">Servicio3</a></li>
-      <li class="four"><a href="/inicio">Servicio4</a></li>
-      <li class="five"><a href="/inicio">Servicio5</a></li>
+      <li class="first"><a href="/services">Servicio1</a></li>
+      <li class="second"><a href="/services">Servicio2</a></li>
+      <li class="third"><a href="/services">Servicio3</a></li>
+      <li class="four"><a href="/services">Servicio4</a></li>
+      <li class="five"><a href="/services">Servicio5</a></li>
     </div>
   </div>
 </template>
