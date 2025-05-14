@@ -13,4 +13,10 @@ export default defineConfig({
       // no sobrescribas '@fullcalendar'
     },
   },
+  // para publicar y escuche por cualquier ip
+  //base: '/',
+  server: {
+    host: '0.0.0.0',
+    port: 8080
+  }
 });
