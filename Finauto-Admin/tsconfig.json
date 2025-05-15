@@ -1,21 +1,24 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "src/**/*.d.ts"],
   "compilerOptions": {
-    "verbatimModuleSyntax": true,
-    "lib": ["es2017"],
-    "ignoreDeprecations": "5.0",
+    "module": "esnext",
+    "target": "esnext",
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     },
     "types": ["vite/client"]
   },
-  "references": [
-    {
-      "path": "./tsconfig.config.json"
-    }
+  "include": [
+    "env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/**/*.d.ts"
   ]
 }

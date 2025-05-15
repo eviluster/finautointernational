@@ -31,8 +31,7 @@ FROM node:22.14-alpine AS builder
 WORKDIR /app
 
 # 1) Copiamos únicamente package.json, lockfile y configs de TS/Vite
-COPY package.json package-lock.json ./
-COPY tsconfig.json tsconfig.config.json vite.config.mts env.d.ts ./
+COPY package.json package-lock.json tsconfig.json vite.config.mts env.d.ts ./
 
 # 2) Instalamos TODO (incluyendo devDependencies) para que vue-tsc, @types/…, etc. estén disponibles
 RUN npm ci
@@ -41,11 +40,6 @@ RUN npm ci
 # 3) Copiamos el resto de la aplicación
 COPY . .
 
-# después de `npm ci` y antes de build:
-  RUN ls -R /app
-  RUN ls -R node_modules/@popperjs/core
-  RUN cat tsconfig.json
-  
 # 4) Hacemos build
 #    - Opcional A: si quieres forzar sólo el bundle sin type-check, usa `npm run build-only`
 #    - Recomendado B: correr la validación de tipos + build con tu script "build"
