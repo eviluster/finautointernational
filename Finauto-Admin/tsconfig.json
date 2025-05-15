@@ -1,23 +1,17 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": [
-    "env.d.ts",
-    "src/**/*",
-    "src/**/*.vue",
-    "src/**/*.ts",
-    "src/**/*.d.ts"
-  ],
+  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "src/**/*.d.ts"],
   "compilerOptions": {
     "verbatimModuleSyntax": true,
     "lib": ["es2017"],
     "ignoreDeprecations": "5.0",
+    "moduleResolution": "node",
     "noImplicitAny": false,
     "baseUrl": ".",
-    "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vue", "vite/client", "pinia"]
+    "types": ["vite/client"]
   },
   "references": [
     {
