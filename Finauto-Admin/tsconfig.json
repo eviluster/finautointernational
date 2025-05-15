@@ -9,11 +9,11 @@
   ],
   "compilerOptions": {
     "verbatimModuleSyntax": true,
-    "moduleResolution": "node",
     "lib": ["es2017"],
     "ignoreDeprecations": "5.0",
     "noImplicitAny": false,
     "baseUrl": ".",
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"]
     },
