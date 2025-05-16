@@ -51,7 +51,7 @@ RUN echo "----- tsconfig.json ----" && cat tsconfig.json
 RUN echo "----- vite.config.mts ----" && cat vite.config.mts
 
 
-RUN npm run build
+RUN npm run build-only
 
 # ─── Etapa 2: Producción ─────────────────────────────────────────────────────────
 FROM nginx:alpine
