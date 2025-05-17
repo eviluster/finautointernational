@@ -45,11 +45,11 @@ COPY . .
 #    - Opcional A: si quieres forzar sólo el bundle sin type-check, usa `npm run build-only`
 #    - Recomendado B: correr la validación de tipos + build con tu script "build"
 
-# >>> DEBUG: verifica que tu tsconfig.json es el correcto
-RUN echo "----- tsconfig.json ----" && cat tsconfig.json
+# # >>> DEBUG: verifica que tu tsconfig.json es el correcto
+# RUN echo "----- tsconfig.json ----" && cat tsconfig.json
 
-# y que vite.config.mts también
-RUN echo "----- vite.config.mts ----" && cat vite.config.mts
+# # y que vite.config.mts también
+# RUN echo "----- vite.config.mts ----" && cat vite.config.mts
 
 
 RUN npm run build-only
