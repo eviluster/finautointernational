@@ -32,7 +32,7 @@ FROM node:22.14-alpine AS builder
 WORKDIR /app
 
 # 1) Copiamos únicamente package.json, lockfile y configs de TS/Vite
-COPY package.json package-lock.json tsconfig.json vite.config.mts env.d.ts ./
+COPY package.json package-lock.json vite.config.js ./
 
 # 2) Instalamos TODO (incluyendo devDependencies) para que vue-tsc, @types/…, etc. estén disponibles
 RUN npm ci
