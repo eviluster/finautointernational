@@ -16,7 +16,7 @@ export default defineConfig({
   // para publicar y escuche por cualquier ip
   //base: '/',
   server: {
-    host: '0.0.0.0',
-    port: 8080
-  }
+    host: "0.0.0.0",
+    port: 8080,
+  },
 });

@@ -30,34 +30,21 @@
 FROM node:22.14-alpine AS builder
 WORKDIR /app
 
-# 1) Copiamos únicamente package.json, lockfile y configs de TS/Vite
+# 1) Copiamos package.json, lockfile y configs de TS/Vite (igual que Admin)
+
 COPY package.json package-lock.json tsconfig.json vite.config.mts env.d.ts ./
 
-# 2) Instalamos TODO (incluyendo devDependencies) para que vue-tsc, @types/…, etc. estén disponibles
+# 2) Instalamos TODO (devDeps incluidos)
 RUN npm ci
 
-
-# 3) Copiamos el resto de la aplicación
+# 3) Copiamos el resto del código
 COPY . .
 
-# 4) Hacemos build
-#    - Opcional A: si quieres forzar sólo el bundle sin type-check, usa `npm run build-only`
-#    - Recomendado B: correr la validación de tipos + build con tu script "build"
-
-# # >>> DEBUG: verifica que tu tsconfig.json es el correcto
-# RUN echo "----- tsconfig.json ----" && cat tsconfig.json
-
-# # y que vite.config.mts también
-# RUN echo "----- vite.config.mts ----" && cat vite.config.mts
-
-
+# 4) Solo bundle, sin type-check
 RUN npm run build-only
 
-# ─── Etapa 2: Producción ─────────────────────────────────────────────────────────
+# Etapa final: servir con NGINX
 FROM nginx:alpine
-# Copiamos el resultado estático del builder
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Exponemos el puerto 80 y lanzamos NGINX
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
