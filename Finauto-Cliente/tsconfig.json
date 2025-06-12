@@ -1,29 +1,17 @@
 {
   "compilerOptions": {
+    "target": "esnext", // o "es2017", según prefieras
     "module": "esnext",
-    "target": "esnext",
+    "lib": ["es2015", "dom", "ES2017"], // <— aquí está la clave: incluir "es2015"
+    "jsx": "preserve",
     "moduleResolution": "node",
     "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
-    "types": [
-      "node", // para los core modules de Node
-      "vite/client", // para import.meta.env
-      "vite" // para poder importar el paquete 'vite'
-    ]
+    }
   },
-  "include": [
-    "env.d.ts",
-    "vite.config.mts",
-    "src/**/*.ts",
-    "src/**/*.vue",
-    "src/**/*.d.ts"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.js"]
 }
